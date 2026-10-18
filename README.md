@@ -219,8 +219,10 @@ default fact probability of 0.5; the YAML schema does not expose a mixing-weight
 key. `facts_per_episode` sets the number of facts or rule-bearing blocks, and
 `support_examples` applies to affix blocks.
 
-Set `data.manifest` to replay a saved validation manifest. Its episode count must
-match `data.eval_episodes`. The manifest records split pools, seeds, and validation
+Set `data.manifest` to replay a saved validation manifest. Its task, episode count,
+facts per episode, and applicable support count must match the YAML. Loading also
+checks split disjointness and each validation record's membership and task type.
+The manifest records split pools, seeds, and validation
 worlds; metadata is not passed to the writer. The two-fact compatibility path
 retains the historical manifest representation and random-number ordering.
 
@@ -286,8 +288,10 @@ complete optimizer-resume checkpoint.
 
 Writer checkpoints separately use format `delta_ngram_writer`,
 `format_version: 1`, with writer parameters, step, configuration, and an optional
-outer optimizer state. The explicit historical-pilot loader accepts the legacy
-D1 format and checks compatibility; it does not reinterpret it as another
+outer optimizer state. The Python loader requires `allow_legacy=True` to accept
+the historical D1 format; the CLI accepts the versioned package format. Legacy
+migration checks the model, seed for random models, addresses, dimensions, and
+the historical fixed right-context window; it does not reinterpret it as another
 operator or a native-table backend.
 
 ## Output locations and accounting
@@ -331,6 +335,19 @@ index. Version, dependency constraints, and entry-point metadata are maintained
 in `pyproject.toml`.
 
 ## Validation status
+
+Compare a completed historical pilot and the refactored run with:
+
+```sh
+python -m delta_ngram.parity --reference ../historical-pilot --candidate ../delta-ngram-runs/pilot_seed17 --out ../delta-ngram-runs/parity.json
+```
+
+The default contract requires seed 17, all 500 training steps, six complete
+evaluations, the entire manifest, and every initial/final writer tensor. It uses
+exact equality with no numeric tolerance. It compares raw generated answers and
+all original scores, losses, and gradient norms. Runtime durations, allocator
+peaks, paths, envelope metadata, and additional new diagnostics are excluded and
+listed in the report. Missing or unequal required artifacts return a nonzero exit.
 
 CPU tests cover state invariants and persistence, operator equations, evidence
 boundaries, shared evaluation behavior, optimizer migration, and numerical parity.

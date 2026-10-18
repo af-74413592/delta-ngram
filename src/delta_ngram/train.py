@@ -11,7 +11,7 @@ import torch
 
 from .checkpoints import save_checkpoint
 from .data import (COLORS, build_manifest, episode_count, episode_queries, legacy_fact_manifest,
-                   manifest_sha256, sample_training_episode, validation_episodes)
+                   manifest_sha256, sample_training_episode, validate_manifest, validation_episodes)
 from .evaluate import evaluate
 from .methods import make_method
 from .reader import FrozenMemoryReader
@@ -46,8 +46,9 @@ def make_manifest(config):
     data = config.values["data"]
     if data["manifest"]:
         manifest = json.loads(Path(data["manifest"]).read_text(encoding="utf-8"))
-        if len(validation_episodes(manifest)) != data["eval_episodes"]:
-            raise ValueError("saved manifest validation count differs from data.eval_episodes")
+        validate_manifest(manifest, expected_task=data["task"], expected_eval_episodes=data["eval_episodes"],
+                          expected_facts_per_episode=data["facts_per_episode"],
+                          expected_support_examples=data["support_examples"])
         return manifest
     if data["task"] == "fact" and data["facts_per_episode"] == 2:
         return legacy_fact_manifest(config.values["seed"], data["eval_episodes"])

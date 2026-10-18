@@ -21,27 +21,48 @@ def save_checkpoint(path, writer, config, step, optimizer=None):
     temporary.replace(path)
 
 
-def load_checkpoint(path, *, allow_legacy=True):
+def load_checkpoint(path, *, allow_legacy=False):
     with torch.serialization.safe_globals([torch.torch_version.TorchVersion]):
         payload = torch.load(path, map_location="cpu", weights_only=True)
-    current = payload.get("format") == FORMAT and payload.get("format_version") == VERSION
+    if not isinstance(payload, dict):
+        raise ValueError("malformed writer checkpoint")
+    current = payload.get("format") == FORMAT and type(payload.get("format_version")) is int and payload.get("format_version") == VERSION
     legacy = allow_legacy and payload.get("protocol") == LEGACY_PROTOCOL and "format" not in payload
     if not (current or legacy):
         raise ValueError("unsupported writer checkpoint format/version")
-    if not isinstance(payload.get("step"), int) or payload["step"] < 0 or "writer_state_dict" not in payload:
+    if type(payload.get("step")) is not int or payload["step"] < 0 or not isinstance(payload.get("writer_state_dict"), dict):
         raise ValueError("malformed writer checkpoint")
+    _validate_identity(payload)
     return payload
+
+
+def _validate_identity(payload):
+    old = payload.get("config")
+    required = {"buckets", "layer_index", "width", "hidden_dim", "orders", "model", "smoke", "seed", "revision"}
+    if not isinstance(old, dict) or not required.issubset(old):
+        raise ValueError("checkpoint is missing required reader/model identity")
+    if payload.get("format") == FORMAT:
+        if type(payload.get("format_version")) is not int or payload["format_version"] != VERSION:
+            raise ValueError("unsupported writer checkpoint format/version")
+        package = old.get("package_config")
+        if not isinstance(package, dict) or not {"model", "reader", "writer", "method", "seed"}.issubset(package):
+            raise ValueError("current checkpoint requires package_config identity")
+        if not isinstance(package["model"], dict) or not {"name_or_path", "revision", "smoke"}.issubset(package["model"]):
+            raise ValueError("current checkpoint is missing model identity")
+    elif "format" in payload or payload.get("protocol") != LEGACY_PROTOCOL:
+        raise ValueError("unsupported writer checkpoint identity")
+    return old
 
 
 def restore_writer(method, payload, config):
     if not method.supports_outer_training:
         raise ValueError("writer checkpoints are only valid for learned forward methods")
-    old = payload["config"]
+    old = _validate_identity(payload)
     values = config.values
     for key, current in (("buckets", method.reader.buckets), ("layer_index", method.reader.layer_index),
                          ("width", method.reader.width), ("hidden_dim", values["writer"]["hidden_dim"]),
                          ("orders", list(method.reader.orders))):
-        if key in old and old[key] != current:
+        if old[key] != current:
             raise ValueError(f"checkpoint {key} differs from the configured reader/writer")
     old_package = old.get("package_config")
     if old_package is not None:
@@ -53,8 +74,17 @@ def restore_writer(method, payload, config):
         for section in ("reader", "writer", "method"):
             if old_package[section] != values[section]:
                 raise ValueError(f"checkpoint {section} configuration differs")
-    elif method.writer.operator.name != "D1":
-        raise ValueError("historical checkpoints are only compatible with the D1 operator")
+    else:
+        if method.writer.operator.name != "D1":
+            raise ValueError("historical checkpoints are only compatible with the D1 operator")
+        if values["writer"]["right_window"] != 4:
+            raise ValueError("historical checkpoints require right_window=4")
+        if old["model"] != values["model"]["name_or_path"] or old["smoke"] != values["model"]["smoke"]:
+            raise ValueError("historical checkpoint model identity differs")
+        if old["smoke"] and old["seed"] != values["seed"]:
+            raise ValueError("historical checkpoint smoke seed differs")
+        if old["revision"] != values["model"]["revision"]:
+            raise ValueError("historical checkpoint requested revision differs")
     expected_revision = old.get("resolved_model_commit") or old.get("revision")
     actual_revision = getattr(method.reader.model.config, "_commit_hash", None) or values["model"]["revision"]
     if expected_revision and actual_revision and expected_revision != actual_revision:
