@@ -79,7 +79,7 @@ def run_metadata(config, method, args, manifest):
                 if config.values["data"]["facts_per_episode"] == 2 else "equal weight per scheduled query"}
     package_root = Path(__file__).parent
     metadata["source_sha256"] = {str(path.relative_to(package_root)): hashlib.sha256(path.read_bytes()).hexdigest()
-                                 for path in sorted(package_root.rglob("*.py"))}
+                                 for path in sorted(package_root.rglob("*.py")) if ".ipynb_checkpoints" not in path.parts}
     return metadata
 
 

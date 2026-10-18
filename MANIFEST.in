@@ -6,6 +6,7 @@ recursive-include configs *.yaml
 recursive-include scripts *.py
 recursive-include tests *.py
 global-exclude __pycache__ *.py[cod]
+global-exclude */.ipynb_checkpoints/*
 global-exclude *.pt *.pth *.safetensors *.jsonl
 prune .git
 prune .venv
