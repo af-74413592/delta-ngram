@@ -1,0 +1,19 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D1
+data:
+  task: fact_e1
+  e1_scenario: independent
+  facts_per_episode: 4
+  eval_episodes: 16
+evaluation:
+  query_styles: [canonical, named_question]
+  openbook_episodes: 0
+  counterfactuals: true
+  row_diagnostics: true
+run:
+  checkpoint: ../../delta-ngram-runs/acceptance-20261018/refactor-seed17-250957b/writer.pt
+  output_dir: ../../delta-ngram-runs/e1-transfer-20261018/d4_d1
+  max_wall_seconds: 600

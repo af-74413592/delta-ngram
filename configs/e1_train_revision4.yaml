@@ -1,0 +1,21 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D1
+data:
+  task: fact_e1
+  e1_scenario: revision
+  facts_per_episode: 4
+  eval_episodes: 16
+train:
+  steps: 500
+  batch_episodes: 4
+  lr: 0.0003
+  eval_every: 100
+evaluation:
+  query_styles: [canonical, named_question]
+  openbook_episodes: 4
+run:
+  output_dir: ../../delta-ngram-runs/e1-revision4-trained-seed17
+  max_wall_seconds: 3600

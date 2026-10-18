@@ -10,10 +10,12 @@ from typing import Any, Mapping
 from .affix import (AFFIX_FAMILIES, AffixEpisode, AffixRule, affix_family_pools,
                     affix_stem_pools, sample_affix_episode)
 from .facts import COLORS, Episode, entity_pools, sample_episode, sample_fact_episode
+from .e1 import E1_SCENARIOS, E1Episode, FactEvent, sample_e1_episode, validate_e1_scenario
 
 
 MANIFEST_VERSION = 1
-GeneratedEpisode = Episode | AffixEpisode
+E1_MANIFEST_VERSION = 2
+GeneratedEpisode = Episode | AffixEpisode | E1Episode
 
 
 def _manifest_integer(value: Any, label: str, *, minimum: int | None = None) -> int:
@@ -43,7 +45,8 @@ def _manifest_split(manifest: Mapping[str, Any], suffix: str) -> tuple[set[str],
 def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None = None,
                       expected_eval_episodes: int | None = None,
                       expected_facts_per_episode: int | None = None,
-                      expected_support_examples: int | None = None) -> None:
+                      expected_support_examples: int | None = None,
+                      expected_e1_scenario: str | None = None) -> None:
     """Validate replayed data, split membership, and optional caller expectations.
 
     This is a load-time check; it does not mutate the manifest or consume RNG.
@@ -55,17 +58,21 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
     """
     if not isinstance(manifest, Mapping):
         raise ValueError("manifest must be a mapping")
+    scenario = None
     if "manifest_version" not in manifest:
         if "task" in manifest or "generator_config" in manifest:
             raise ValueError("manifest task/generator_config require manifest_version")
         task, facts, supports, declared_evaluation_count = "fact", 2, None, None
     else:
         version = _manifest_integer(manifest["manifest_version"], "manifest_version", minimum=1)
-        if version != MANIFEST_VERSION:
+        if version not in (MANIFEST_VERSION, E1_MANIFEST_VERSION):
             raise ValueError(f"unsupported manifest version: {version}")
         task = manifest.get("task")
-        if task not in ("fact", "affix", "mixed"):
-            raise ValueError("manifest task must be 'fact', 'affix', or 'mixed'")
+        if version == E1_MANIFEST_VERSION:
+            if task != "fact_e1":
+                raise ValueError("manifest version 2 requires task 'fact_e1'")
+        elif task not in ("fact", "affix", "mixed"):
+            raise ValueError("manifest version 1 task must be 'fact', 'affix', or 'mixed'")
         config = manifest.get("generator_config")
         if not isinstance(config, Mapping):
             raise ValueError("manifest generator_config must be a mapping")
@@ -75,6 +82,12 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
         declared_evaluation_count = _manifest_integer(config.get("eval_episodes"), "generator_config.eval_episodes", minimum=0)
         if manifest.get("training_rng_seed") != seed + 39019:
             raise ValueError("manifest training_rng_seed disagrees with generator_config.seed")
+        if task == "fact_e1":
+            scenario = config.get("e1_scenario")
+            if scenario not in E1_SCENARIOS:
+                raise ValueError("manifest generator_config.e1_scenario must be independent or revision")
+            if scenario == "revision" and facts < 3:
+                raise ValueError("manifest revision E1 scenario requires at least three writes")
         if task == "mixed":
             probability = config.get("fact_probability")
             if (type(probability) not in (int, float) or not 0.0 <= probability <= 1.0):
@@ -84,7 +97,8 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
         if manifest.get(field) is not True:
             raise ValueError(f"manifest {field} must be true for this generator schema")
     train_names, validation_names = _manifest_split(manifest, "entity_pool")
-    if min(len(train_names), len(validation_names)) < facts:
+    name_count = facts - 2 if task == "fact_e1" and scenario == "revision" else facts
+    if min(len(train_names), len(validation_names)) < name_count:
         raise ValueError("manifest entity pools cannot supply facts_per_episode unique names")
     train_families = validation_families = train_stems = validation_stems = set()
     affix_pool_fields = {f"{split}_{suffix}" for split in ("train", "validation")
@@ -108,6 +122,8 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
                        ("facts_per_episode", facts, expected_facts_per_episode))
     if task in ("affix", "mixed"):
         expected_values += (("support_examples", supports, expected_support_examples),)
+    if task == "fact_e1":
+        expected_values += (("e1_scenario", scenario, expected_e1_scenario),)
     for field, actual, expected in expected_values:
         if expected is not None and (actual != expected or isinstance(actual, bool) != isinstance(expected, bool)):
             raise ValueError(f"manifest {field} differs from the configured data.{field}")
@@ -121,10 +137,11 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
             raise ValueError(f"manifest {label}.episode_id must be a unique nonempty string")
         seen_ids.add(episode_id)
         record_task = record.get("task", "fact")
-        if record_task not in ("fact", "affix") or (task != "mixed" and record_task != task):
+        valid_record_tasks = ("fact", "affix") if task == "mixed" else (task,)
+        if record_task not in valid_record_tasks:
             raise ValueError(f"manifest {label} task/type disagrees with manifest task")
         if record_task == "fact":
-            if {"languages", "rules", "support_stems", "query_stems"} & record.keys():
+            if {"languages", "rules", "support_stems", "query_stems", "events"} & record.keys():
                 raise ValueError(f"manifest {label} fact record contains affix fields")
             names = _manifest_strings(record.get("names"), f"{label}.names")
             colors = _manifest_strings(record.get("colors"), f"{label}.colors", unique=facts == 2)
@@ -134,8 +151,8 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
                 raise ValueError(f"manifest {label} names are outside the validation entity split")
             if not set(colors) <= set(COLORS):
                 raise ValueError(f"manifest {label} contains unknown colors")
-        else:
-            if {"names", "colors"} & record.keys():
+        elif record_task == "affix":
+            if {"names", "colors", "events"} & record.keys():
                 raise ValueError(f"manifest {label} affix record contains fact fields")
             names = _manifest_strings(record.get("languages"), f"{label}.languages")
             queries = _manifest_strings(record.get("query_stems"), f"{label}.query_stems")
@@ -160,10 +177,27 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_task: str | None 
                 if (not isinstance(rule, Mapping) or not isinstance(rule.get("family"), str)
                         or rule["family"] not in validation_families):
                     raise ValueError(f"manifest {label} rule family is outside the validation family split")
+        else:
+            if {"names", "colors", "languages", "rules", "support_stems", "query_stems"} & record.keys():
+                raise ValueError(f"manifest {label} E1 record contains fields of another task")
+            events = record.get("events")
+            if not isinstance(events, (list, tuple)) or len(events) != facts:
+                raise ValueError(f"manifest {label} event count disagrees with facts_per_episode")
+            for event in events:
+                if not isinstance(event, Mapping):
+                    raise ValueError(f"manifest {label} events must be mappings")
+                key = event.get("key")
+                if (not isinstance(key, (list, tuple)) or len(key) != 2
+                        or any(not isinstance(part, str) or not part for part in key)):
+                    raise ValueError(f"manifest {label} event key must be an (entity, attribute) pair")
+                if key[0] not in validation_names:
+                    raise ValueError(f"manifest {label} event entity is outside the validation entity split")
         # Reuse the episode's own semantic invariants, including globally
         # disjoint support/query stems and valid prefix/suffix parameters.
         try:
-            from_manifest(record)
+            episode = from_manifest(record)
+            if record_task == "fact_e1":
+                validate_e1_scenario(episode, scenario)
         except (KeyError, TypeError, ValueError) as error:
             raise ValueError(f"manifest {label} is malformed: {error}") from error
 
@@ -174,6 +208,8 @@ def to_manifest(episode: GeneratedEpisode) -> dict[str, Any]:
         return asdict(episode)
     if isinstance(episode, AffixEpisode):
         return {"task": "affix", **asdict(episode)}
+    if isinstance(episode, E1Episode):
+        return {"task": "fact_e1", **asdict(episode)}
     raise TypeError(f"unsupported episode type: {type(episode).__name__}")
 
 
@@ -189,6 +225,12 @@ def from_manifest(record: Mapping[str, Any]) -> GeneratedEpisode:
                             tuple(AffixRule(**rule) for rule in record["rules"]),
                             tuple(tuple(stems) for stems in record["support_stems"]),
                             tuple(record["query_stems"]))
+    if task == "fact_e1":
+        events = record["events"]
+        if not isinstance(events, (list, tuple)):
+            raise ValueError("E1 records need an event sequence")
+        return E1Episode(record["episode_id"], tuple(
+            FactEvent(tuple(event["key"]), event["value"], event["kind"]) for event in events))
     raise ValueError(f"unknown episode task: {task}")
 
 
@@ -213,10 +255,12 @@ def legacy_fact_manifest(seed: int, eval_episodes: int) -> dict[str, Any]:
 def _sample(manifest: Mapping[str, Any], rng: random.Random, episode_id: str,
             *, validation: bool) -> GeneratedEpisode:
     version = manifest.get("manifest_version", MANIFEST_VERSION)
-    if version != MANIFEST_VERSION:
+    if version not in (MANIFEST_VERSION, E1_MANIFEST_VERSION):
         raise ValueError(f"unsupported manifest version: {version}")
     config = manifest.get("generator_config", {})
     task = manifest.get("task", "fact")
+    if (version == E1_MANIFEST_VERSION) != (task == "fact_e1"):
+        raise ValueError("manifest version 2 is reserved for task fact_e1")
     if task == "mixed":
         # Make one choice for the whole episode; never splice unrelated writes.
         task = "fact" if rng.random() < config.get("fact_probability", 0.5) else "affix"
@@ -225,6 +269,9 @@ def _sample(manifest: Mapping[str, Any], rng: random.Random, episode_id: str,
     count = config.get("facts_per_episode", 2)
     if task == "fact":
         return sample_fact_episode(rng, names, episode_id, facts=count)
+    if task == "fact_e1":
+        return sample_e1_episode(rng, names, episode_id, writes=count,
+                                 scenario=config["e1_scenario"])
     if task == "affix":
         return sample_affix_episode(rng, names, episode_id,
                                     families=manifest[f"{split}_rule_families"],
@@ -235,21 +282,22 @@ def _sample(manifest: Mapping[str, Any], rng: random.Random, episode_id: str,
 
 def build_manifest(*, task: str = "fact", seed: int = 17, eval_episodes: int = 32,
                    facts_per_episode: int = 2, support_examples: int = 3,
-                   fact_probability: float = 0.5) -> dict[str, Any]:
+                   fact_probability: float = 0.5,
+                   e1_scenario: str = "independent") -> dict[str, Any]:
     """Fix all split pools before drawing held-out worlds or online training data.
 
     Use legacy_fact_manifest for a byte-equivalent legacy JSON representation;
     this wrapper deliberately records the generator version and configuration.
     """
-    if task not in ("fact", "affix", "mixed"):
-        raise ValueError("task must be 'fact', 'affix', or 'mixed'")
+    if task not in ("fact", "affix", "mixed", "fact_e1"):
+        raise ValueError("task must be 'fact', 'affix', 'mixed', or 'fact_e1'")
     if eval_episodes < 0 or facts_per_episode < 1 or support_examples < 1:
         raise ValueError("counts must be positive (eval_episodes may be zero)")
     if not 0.0 <= fact_probability <= 1.0:
         raise ValueError("fact_probability must be between zero and one")
     train_names, validation_names = entity_pools(seed)
     manifest: dict[str, Any] = {
-        "manifest_version": MANIFEST_VERSION,
+        "manifest_version": E1_MANIFEST_VERSION if task == "fact_e1" else MANIFEST_VERSION,
         "task": task,
         "generator_config": {"seed": seed, "eval_episodes": eval_episodes,
                              "facts_per_episode": facts_per_episode,
@@ -262,6 +310,8 @@ def build_manifest(*, task: str = "fact", seed: int = 17, eval_episodes: int = 3
     }
     if task == "mixed":
         manifest["generator_config"]["fact_probability"] = fact_probability
+    if task == "fact_e1":
+        manifest["generator_config"]["e1_scenario"] = e1_scenario
     if task in ("affix", "mixed"):
         train_families, validation_families = affix_family_pools(seed)
         train_stems, validation_stems = affix_stem_pools(seed)

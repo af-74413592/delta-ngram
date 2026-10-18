@@ -10,7 +10,7 @@ import time
 import torch
 
 from .checkpoints import save_checkpoint
-from .data import (COLORS, build_manifest, episode_count, episode_queries, legacy_fact_manifest,
+from .data import (COLORS, E1Episode, build_manifest, episode_count, episode_queries, legacy_fact_manifest,
                    manifest_sha256, sample_training_episode, validate_manifest, validation_episodes)
 from .evaluate import evaluate
 from .methods import make_method
@@ -19,6 +19,52 @@ from .runtime import (answer_batch, answer_loss, load_model_and_tokenizer, log_e
                       mean, save_json, synchronize, timed)
 
 PROTOCOL = "delta_ngram_pilot_v1"
+E1_ABILITIES = ("acquisition", "retention", "revision")
+
+
+def e1_query_loss_weights(abilities):
+    """Each present ability gets equal total weight within one E1 episode."""
+    abilities = tuple(abilities)
+    if not abilities or any(ability not in E1_ABILITIES for ability in abilities):
+        raise ValueError("E1 query abilities must be a nonempty acquisition/retention/revision sequence")
+    counts = {ability: abilities.count(ability) for ability in E1_ABILITIES if ability in abilities}
+    return tuple(1 / (len(counts) * counts[ability]) for ability in abilities)
+
+
+def e1_balanced_query_loss(losses, abilities):
+    """Average queries within abilities, then average only the present abilities."""
+    losses, abilities = tuple(losses), tuple(abilities)
+    if len(losses) != len(abilities):
+        raise ValueError("E1 losses and abilities must align")
+    e1_query_loss_weights(abilities)  # Validate all labels before building the objective.
+    means = []
+    for ability in E1_ABILITIES:
+        group = [loss for loss, label in zip(losses, abilities) if label == ability]
+        if group:
+            total = group[0]
+            for loss in group[1:]:
+                total = total + loss
+            means.append(total / len(group))
+    result = means[0]
+    for value in means[1:]:
+        result = result + value
+    return result / len(means)
+
+
+def _query_loss_metadata(config, manifest):
+    if config.values["data"]["task"] != "fact_e1":
+        return ({"write1_q1": 1/3, "write2_q2": 1/3, "write2_q1": 1/3}
+                if config.values["data"]["facts_per_episode"] == 2 else "equal weight per scheduled query")
+    episode = validation_episodes(manifest)[0]
+    queries = [(f"write{stage}_q{query.index+1}", query.ability)
+               for stage in range(1, episode_count(episode) + 1) for query in episode_queries(episode, stage)]
+    abilities = [ability for _, ability in queries]
+    counts = {ability: abilities.count(ability) for ability in E1_ABILITIES if ability in abilities}
+    return {"rule": "mean within each ability, then equal mean across present abilities per episode",
+            "ability_order": list(E1_ABILITIES), "missing_abilities": "excluded from normalization",
+            "training_query_style": "canonical", "query_counts": counts,
+            "ability_weights": {ability: 1 / len(counts) for ability in counts},
+            "per_query_weights": {key: weight for (key, _), weight in zip(queries, e1_query_loss_weights(abilities))}}
 
 
 def create_runtime(config):
@@ -48,13 +94,14 @@ def make_manifest(config):
         manifest = json.loads(Path(data["manifest"]).read_text(encoding="utf-8"))
         validate_manifest(manifest, expected_task=data["task"], expected_eval_episodes=data["eval_episodes"],
                           expected_facts_per_episode=data["facts_per_episode"],
-                          expected_support_examples=data["support_examples"])
+                          expected_support_examples=data["support_examples"],
+                          expected_e1_scenario=data["e1_scenario"])
         return manifest
     if data["task"] == "fact" and data["facts_per_episode"] == 2:
         return legacy_fact_manifest(config.values["seed"], data["eval_episodes"])
     return build_manifest(task=data["task"], seed=config.values["seed"],
                           eval_episodes=data["eval_episodes"], facts_per_episode=data["facts_per_episode"],
-                          support_examples=data["support_examples"])
+                          support_examples=data["support_examples"], e1_scenario=data["e1_scenario"])
 
 
 def initialize_output(args):
@@ -76,8 +123,7 @@ def run_metadata(config, method, args, manifest):
                 "model_name_or_path": getattr(method.reader.model.config, "_name_or_path", None),
                 "torch_version": str(torch.__version__), "method": method.name,
                 "resolved_operator": method.writer.operator.config() if method.supports_outer_training else None,
-                "query_loss_weights": {"write1_q1": 1/3, "write2_q2": 1/3, "write2_q1": 1/3}
-                if config.values["data"]["facts_per_episode"] == 2 else "equal weight per scheduled query"}
+                "query_loss_weights": _query_loss_metadata(config, manifest)}
     package_root = Path(__file__).parent
     metadata["source_sha256"] = {str(path.relative_to(package_root)): hashlib.sha256(path.read_bytes()).hexdigest()
                                  for path in sorted(package_root.rglob("*.py")) if ".ipynb_checkpoints" not in path.parts}
@@ -109,7 +155,9 @@ def train(config):
     def validate(step):
         return evaluate(method, validation, args, step=step, deadline=deadline,
                         counterfactuals=config.values["evaluation"]["counterfactuals"],
-                        row_diagnostics=config.values["evaluation"]["row_diagnostics"])
+                        row_diagnostics=config.values["evaluation"]["row_diagnostics"],
+                        query_styles=tuple(config.values["evaluation"]["query_styles"]),
+                        detailed_rows=config.values["evaluation"]["detailed_rows"])
 
     last_evaluation = validate(0)
     training_rng = random.Random(manifest["training_rng_seed"])
@@ -122,11 +170,12 @@ def train(config):
         step_started = time.perf_counter()
         optimizer.zero_grad(set_to_none=True)
         losses, write_times, query_times = [], [], []
+        e1_episode_objectives = []
         component_losses = {}
         for index in range(args.batch_episodes):
             episode = sample_training_episode(manifest, training_rng, f"train-{step:06d}-{index}")
             state = method.empty_state()
-            query_losses = []
+            query_losses, query_abilities = [], []
             for write_index in range(episode_count(episode)):
                 result, duration = timed(lambda: method.write(state, episode.evidence(write_index)), method.device)
                 state = result.state
@@ -135,12 +184,17 @@ def train(config):
                     loss, duration = timed(lambda: answer_loss(method, state, query.question, query.answer), method.device)
                     query_times.append(duration)
                     query_losses.append(loss)
+                    query_abilities.append(query.ability)
                     component_losses.setdefault(f"write{write_index+1}_q{query.index+1}_nll", []).append(float(loss.detach()))
-            # Left-associated addition matches the historical (first + new + old)/3.
-            loss = query_losses[0]
-            for value in query_losses[1:]:
-                loss = loss + value
-            loss = loss / len(query_losses)
+            if isinstance(episode, E1Episode):
+                loss = e1_balanced_query_loss(query_losses, query_abilities)
+                e1_episode_objectives.append(float(loss.detach()))
+            else:
+                # Left-associated addition matches the historical (first + new + old)/3.
+                loss = query_losses[0]
+                for value in query_losses[1:]:
+                    loss = loss + value
+                loss = loss / len(query_losses)
             if not loss.requires_grad or not torch.isfinite(loss):
                 raise RuntimeError("Answer loss is disconnected from writer or non-finite")
             (loss / args.batch_episodes).backward()
@@ -155,8 +209,9 @@ def train(config):
         synchronize(method.device)
         completed_steps = step
         log_event(args.out / "metrics.jsonl", {"event": "train", "step": step, "episodes": args.batch_episodes,
-                  "answer_nll": (sum(sum(row) for row in losses) / (len(losses[0]) * len(losses))
-                                 if len({len(row) for row in losses}) == 1 else mean([sum(row)/len(row) for row in losses])),
+                  "answer_nll": (mean(e1_episode_objectives) if e1_episode_objectives else
+                                 (sum(sum(row) for row in losses) / (len(losses[0]) * len(losses))
+                                  if len({len(row) for row in losses}) == 1 else mean([sum(row)/len(row) for row in losses]))),
                   **{key: mean(values) for key, values in component_losses.items()},
                   "grad_norm_before_clip": float(grad_norm), "step_seconds": time.perf_counter()-step_started,
                   "write_seconds_mean": mean(write_times), "query_forward_seconds_mean": mean(query_times),

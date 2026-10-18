@@ -315,6 +315,59 @@ accounting. Context/retrieval report retained UTF-8 text bytes; a zero table-byt
 count does not mean a text baseline uses no storage. Offline outer training,
 online evidence updates, and query costs must also remain separate.
 
+## E1 fact versions and question transfer
+
+`data.task: fact_e1` uses manifest schema 2. Each event has an audit-only
+`(entity, attribute)` key, value, and acquisition/revision kind. Only rendered
+evidence text enters the writer. `data.e1_scenario: independent` introduces
+distinct entities; `revision` starts with A.color, A.fruit, then an explicit
+update of A.color, followed by other entities. `facts_per_episode` counts writes.
+Legacy fact/affix manifests and their RNG order remain unchanged.
+
+Use `evaluation.query_styles: [canonical, named_question]` to probe the same
+state with the original completion and a question retaining the entity name.
+Evidence is written once per stage regardless of the number of query styles.
+Generation, coverage, and first-word/strict scores are recorded separately for
+each style. Query changes never consume generator RNG or enter writer training.
+
+E1 queries include the newest event and all currently active older fact versions.
+An explicitly superseded version has `CT: null` and is excluded from retention;
+its old answer is not a valid target after revision. `query_style_metrics` reports:
+
+- First-fact endpoints, with the number of superseded first facts excluded.
+- All final active versions, plus a separate subset with later intervening writes.
+- Revision immediate/final success and persistence of the previous value.
+- Same-entity other-attribute accuracy immediately before/after revision, including
+  the loss rate among previously correct attributes and its denominator.
+
+Outer training uses the existing loop. For E1 only, it averages query losses
+within acquisition, retention, and revision, then equally averages the nonempty
+ability groups. Legacy training retains its original arithmetic order. No
+truncated backpropagation is implemented yet; the 64/256-write generator tests
+do not establish feasible training or scientific performance at those lengths.
+
+The `e1_transfer_*.yaml` presets freeze the two-write D1 checkpoint and test
+paraphrases, 4/16 writes, and revision. The 16-write pilot uses four worlds to
+bound this exploratory run; other transfer presets use sixteen. They are
+distribution-transfer probes, not writers trained on E1 or independent final
+tests. `e1_train_revision4.yaml` is a separate example for E1 outer training.
+An evaluation checkpoint must match its original model/reader/writer/method
+identity; configure the exact model path used during training.
+
+Set both `evaluation.row_diagnostics: true` and `detailed_rows: true` for token
+provenance and grouped interventions on the original fact template. Selection is
+the first written rows intersecting the old query prefix and later evidence;
+correctness and update magnitude never select rows. Groups distinguish template,
+entity-internal, entity-boundary, answer, literal shared n-grams, and hash
+collisions between distinct n-grams. Groups can overlap; effects are not additive.
+For a superseded first fact, a retention intervention is explicitly unsupported.
+The detailed token classifier currently supports the original fact template;
+E1 still records actual read/write coverage and supported shared-row diagnostics.
+
+Full E1 overlap strata, entity-token-length balancing, indirect references,
+long-trajectory truncated training, and native Qwen replication remain future
+experiments. The transfer pilot cannot establish those claims.
+
 ## Build distributions
 
 Build a wheel and source distribution into a sibling artifact directory:

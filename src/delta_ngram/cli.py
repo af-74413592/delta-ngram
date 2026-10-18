@@ -38,7 +38,9 @@ def run_evaluation(config, *, diagnose=False):
     result = evaluate(method, validation_episodes(manifest), args, step=step,
                       deadline=started+args.max_wall_seconds,
                       counterfactuals=config.values["evaluation"]["counterfactuals"],
-                      row_diagnostics=diagnose or config.values["evaluation"]["row_diagnostics"])
+                      row_diagnostics=diagnose or config.values["evaluation"]["row_diagnostics"],
+                      query_styles=tuple(config.values["evaluation"]["query_styles"]),
+                      detailed_rows=config.values["evaluation"]["detailed_rows"])
     summary = {"protocol": "delta_ngram_evaluation_v1", "method": method.name,
                "checkpoint_step": step, "elapsed_seconds": time.monotonic()-started,
                "cuda_peak_allocated_bytes": torch.cuda.max_memory_allocated(method.device) if method.device.type == "cuda" else 0,

@@ -22,12 +22,13 @@ DEFAULTS = {
                "frozen_rows": [], "frozen_template_texts": [], "lr": 0.01, "online_steps": 10,
                "top_k": 2, "k1": 1.5, "b": 0.75, "target_steps": 10, "target_lr": 0.05,
                "target_l2": 0.001, "ridge_lambda": 1.0, "reuse_penalty": 1.0},
-    "data": {"task": "fact", "facts_per_episode": 2, "support_examples": 3,
+    "data": {"task": "fact", "facts_per_episode": 2, "support_examples": 3, "e1_scenario": "independent",
              "eval_episodes": 16, "manifest": None},
     "train": {"steps": 500, "batch_episodes": 4, "lr": 0.0003, "eval_every": 100,
               "gradient_clip": 1.0},
     "evaluation": {"max_new_tokens": 3, "openbook_episodes": 4,
-                   "counterfactuals": True, "row_diagnostics": False},
+                   "counterfactuals": True, "row_diagnostics": False,
+                   "query_styles": ["canonical"], "detailed_rows": False},
     "run": {"output_dir": "../../delta-ngram-runs/pilot_seed17", "checkpoint": None,
             "max_wall_seconds": 1500.0, "max_evidence_tokens": 128},
 }
@@ -70,15 +71,30 @@ class ExperimentConfig:
         for name, (value, minimum) in integers.items():
             if type(value) is not int or value < minimum:
                 raise ValueError(f"{name} must be an integer >= {minimum}")
-        for group, key in (("model", "smoke"), ("evaluation", "counterfactuals"), ("evaluation", "row_diagnostics")):
+        for group, key in (("model", "smoke"), ("evaluation", "counterfactuals"),
+                           ("evaluation", "row_diagnostics"), ("evaluation", "detailed_rows")):
             if type(values[group][key]) is not bool:
                 raise ValueError(f"{group}.{key} must be a boolean")
         if values["reader"]["backend"] not in ("external_hash", "native"):
             raise ValueError("reader.backend must be external_hash or native")
         if values["model"]["device"] not in ("auto", "cpu", "cuda"):
             raise ValueError("model.device must be auto, cpu, or cuda")
-        if values["data"]["task"] not in ("fact", "affix", "mixed"):
-            raise ValueError("data.task must be fact, affix, or mixed")
+        if values["data"]["task"] not in ("fact", "fact_e1", "affix", "mixed"):
+            raise ValueError("data.task must be fact, fact_e1, affix, or mixed")
+        if values["data"]["e1_scenario"] not in ("independent", "revision"):
+            raise ValueError("data.e1_scenario must be independent or revision")
+        if (values["data"]["task"] == "fact_e1" and values["data"]["e1_scenario"] == "revision"
+                and values["data"]["facts_per_episode"] < 3):
+            raise ValueError("data.e1_scenario revision requires at least three writes in data.facts_per_episode")
+        styles = values["evaluation"]["query_styles"]
+        if (not isinstance(styles, list) or not styles
+                or any(not isinstance(style, str) or style not in ("canonical", "named_question") for style in styles)
+                or len(set(styles)) != len(styles) or "canonical" not in styles):
+            raise ValueError("evaluation.query_styles must be a unique list of canonical/named_question and include canonical")
+        if values["data"]["task"] in ("affix", "mixed") and "named_question" in styles:
+            raise ValueError("evaluation.query_styles named_question is unsupported for affix or mixed tasks")
+        if values["evaluation"]["detailed_rows"] and not values["evaluation"]["row_diagnostics"]:
+            raise ValueError("evaluation.detailed_rows requires evaluation.row_diagnostics")
         if values["method"]["name"] not in (
                 "forward", "adam", "sgd", "read_normalized_sgd", "context", "retrieval", "engram_edit_style", "empty"):
             raise ValueError("unknown method.name")
