@@ -1,0 +1,12 @@
+version: 1
+seed: 17
+method:
+  name: engram_edit_style
+  target_steps: 10
+  target_lr: 0.05
+  target_l2: 0.001
+  ridge_lambda: 1.0
+  reuse_penalty: 1.0
+run:
+  output_dir: ../../delta-ngram-runs/ridge_seed17
+

@@ -1,0 +1,21 @@
+version: 1
+seed: 17
+model:
+  smoke: true
+  device: cpu
+writer:
+  hidden_dim: 128
+data:
+  eval_episodes: 2
+train:
+  steps: 2
+  batch_episodes: 2
+  lr: 0.001
+  eval_every: 1
+evaluation:
+  max_new_tokens: 3
+  openbook_episodes: 2
+run:
+  output_dir: ../../delta-ngram-runs/smoke
+  max_wall_seconds: 120
+

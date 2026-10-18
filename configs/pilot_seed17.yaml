@@ -1,0 +1,37 @@
+version: 1
+seed: 17
+model:
+  name_or_path: Qwen/Qwen3-0.6B-Base
+  revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+  device: auto
+reader:
+  backend: external_hash
+  buckets: 16384
+  orders: [2, 3]
+  layer_index: 1
+writer:
+  hidden_dim: 128
+  right_window: 4
+method:
+  name: forward
+  operator: D1
+data:
+  task: fact
+  facts_per_episode: 2
+  eval_episodes: 16
+train:
+  steps: 500
+  batch_episodes: 4
+  lr: 0.0003
+  eval_every: 100
+  gradient_clip: 1.0
+evaluation:
+  max_new_tokens: 3
+  openbook_episodes: 4
+  counterfactuals: true
+  row_diagnostics: false
+run:
+  output_dir: ../../delta-ngram-runs/pilot_seed17
+  max_wall_seconds: 1500
+  max_evidence_tokens: 128
+

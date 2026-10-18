@@ -1,0 +1,13 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D1
+data:
+  task: affix
+  facts_per_episode: 2
+  support_examples: 3
+  eval_episodes: 16
+run:
+  output_dir: ../../delta-ngram-runs/affix_seed17
+  max_evidence_tokens: 512

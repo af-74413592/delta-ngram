@@ -1,0 +1,10 @@
+version: 1
+seed: 17
+method:
+  name: retrieval
+  top_k: 2
+  k1: 1.5
+  b: 0.75
+run:
+  output_dir: ../../delta-ngram-runs/retrieval_seed17
+

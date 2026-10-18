@@ -1,0 +1,9 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D1
+run:
+  checkpoint: ../../delta-ngram-runs/pilot_seed17/writer.pt
+  output_dir: ../../delta-ngram-runs/pilot_seed17_eval
+

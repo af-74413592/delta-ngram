@@ -1,0 +1,9 @@
+version: 1
+seed: 17
+method:
+  name: adam
+  lr: 0.01
+  online_steps: 10
+run:
+  output_dir: ../../delta-ngram-runs/adam_seed17
+

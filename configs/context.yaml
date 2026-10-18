@@ -1,0 +1,7 @@
+version: 1
+seed: 17
+method:
+  name: context
+run:
+  output_dir: ../../delta-ngram-runs/context_seed17
+
