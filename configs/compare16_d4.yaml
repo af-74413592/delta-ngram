@@ -1,0 +1,16 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D4
+  frozen_template_texts: ["Profile\nName:", "\nFavorite color:"]
+data:
+  manifest: ../../delta-ngram-runs/acceptance-20261018/refactor-seed17-250957b/data_manifest.json
+train:
+  steps: 500
+  batch_episodes: 4
+  lr: 0.0003
+  eval_every: 100
+run:
+  output_dir: ../../delta-ngram-runs/comparison16-20261018/d4_seed17_steps500
+  max_wall_seconds: 1500

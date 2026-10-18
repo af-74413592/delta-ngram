@@ -75,6 +75,7 @@ def run_metadata(config, method, args, manifest):
                 "resolved_model_commit": getattr(method.reader.model.config, "_commit_hash", None),
                 "model_name_or_path": getattr(method.reader.model.config, "_name_or_path", None),
                 "torch_version": str(torch.__version__), "method": method.name,
+                "resolved_operator": method.writer.operator.config() if method.supports_outer_training else None,
                 "query_loss_weights": {"write1_q1": 1/3, "write2_q2": 1/3, "write2_q1": 1/3}
                 if config.values["data"]["facts_per_episode"] == 2 else "equal weight per scheduled query"}
     package_root = Path(__file__).parent

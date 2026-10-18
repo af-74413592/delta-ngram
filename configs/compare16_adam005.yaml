@@ -1,0 +1,13 @@
+version: 1
+seed: 17
+method:
+  name: adam
+  lr: 0.05
+  online_steps: 10
+data:
+  manifest: ../../delta-ngram-runs/acceptance-20261018/refactor-seed17-250957b/data_manifest.json
+evaluation:
+  row_diagnostics: true
+run:
+  output_dir: ../../delta-ngram-runs/comparison16-20261018/adam_lr005_k10
+  max_wall_seconds: 600
