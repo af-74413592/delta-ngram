@@ -11,6 +11,7 @@ reports/
 artifacts/
 models/
 *.pt
+!tests/fixtures/*.pt
 *.pth
 *.safetensors
 *.tar

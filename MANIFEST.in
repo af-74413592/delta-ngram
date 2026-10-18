@@ -15,3 +15,5 @@ prune runs
 prune reports
 prune artifacts
 prune models
+include tests/fixtures/executed_d1_seed17.pt
+recursive-include tests/fixtures *.json

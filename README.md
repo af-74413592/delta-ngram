@@ -306,7 +306,8 @@ Training writes `config.json`, `data_manifest.json`, `metrics.jsonl`,
 `writer_init.pt`, `writer.pt`, endpoint `eval_step_*.json`, and `summary.json`.
 Evaluation/diagnosis writes metadata, manifest, evaluation records, metrics, and
 a summary. Weights, downloaded models, historical results, and generated reports
-are not source-package contents.
+are not source-package contents. The source distribution includes small golden
+tensor and data fixtures with recorded provenance, not trained-model checkpoints.
 
 Table and optimizer tensor bytes are reported separately. Gradient-method
 endpoint copies are disclosed separately from the historical table-plus-optimizer

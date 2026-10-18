@@ -1,8 +1,7 @@
 """Offline checks of legacy parity, trajectory order, splits, and label isolation."""
 from __future__ import annotations
 
-import ast
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, fields
 import hashlib
 import json
 from pathlib import Path
@@ -23,20 +22,28 @@ from delta_ngram.data import (
 )
 
 
-def _legacy_reference():
-    """Read only the data definitions; do not import a runner or load a model."""
-    archived = ROOT.parent / "cl/reports/forward_memory_4090_20261018/artifacts/scripts/run_forward_memory_pilot.py"
-    if not archived.exists():
-        pytest.skip("archived sibling repository unavailable; portable golden hash still checked")
-    tree = ast.parse(archived.read_text(encoding="utf-8"))
-    wanted = {"Episode", "entity_pools", "sample_episode"}
-    nodes = [node for node in tree.body if
-             isinstance(node, (ast.ClassDef, ast.FunctionDef)) and node.name in wanted
-             or isinstance(node, ast.Assign) and any(isinstance(target, ast.Name)
-                                                     and target.id == "COLORS" for target in node.targets)]
-    namespace = {"dataclass": dataclass, "random": random, "__name__": __name__}
-    exec(compile(ast.Module(body=nodes, type_ignores=[]), str(archived), "exec", dont_inherit=True), namespace)
-    return namespace
+def _legacy_fixtures():
+    """Checked-in outputs extracted once from the archived executed pilot."""
+    fixture = json.loads((Path(__file__).parent / "fixtures/legacy_fact_seed_fixtures.json").read_text(encoding="utf-8"))
+    assert fixture["fixture_schema_version"] == 1
+    assert fixture["source_sha256"] == "6220ab4cf610c51a1e1923b0db221b8284889a8a6e0b3ba19fa7613b6fbc7d04"
+    assert fixture["validation_episodes_per_seed"] == 16
+    assert fixture["training_steps"] == fixture["training_batch_episodes"] == 3
+    assert [case["seed"] for case in fixture["cases"]] == [0, 17, 29]
+    return fixture["cases"]
+
+
+def _assert_legacy_text(episode, expected):
+    assert episode.episode_id == expected["episode_id"]
+    assert [item["index"] for item in expected["items"]] == [0, 1]
+    for item in expected["items"]:
+        index = item["index"]
+        assert episode.question(index) == item["question"]
+        assert episode.answer(index) == item["answer"]
+        assert episode.evidence(index) == item["evidence"]
+        assert episode.evidence(index, wrong=True) == item["wrong_evidence"]
+        assert episode.evidence_color(index) == item["evidence_color"]
+        assert episode.evidence_color(index, wrong=True) == item["wrong_evidence_color"]
 
 
 def test_legacy_manifest_golden_hash_and_exact_record_shape():
@@ -51,36 +58,31 @@ def test_legacy_manifest_golden_hash_and_exact_record_shape():
 
 
 def test_archived_pilot_rng_text_and_semantic_json_parity():
-    old = _legacy_reference()
-    for seed in (0, 17, 29):
-        old_train, old_validation = old["entity_pools"](seed)
+    for case in _legacy_fixtures():
+        seed, expected = case["seed"], case["manifest"]
+        old_train, old_validation = expected["train_entity_pool"], expected["validation_entity_pool"]
         assert entity_pools(seed) == (old_train, old_validation)
-        old_rng, new_rng = random.Random(seed + 29009), random.Random(seed + 29009)
-        old_episodes = []
+        new_rng = random.Random(seed + 29009)
+        assert len(case["validation_text"]) == len(expected["validation_episodes"]) == 16
         for index in range(16):
             episode_id = f"validation-{index:06d}"
-            old_episode = old["sample_episode"](old_rng, old_validation, episode_id)
             new_episode = sample_episode(new_rng, old_validation, episode_id)
-            assert asdict(new_episode) == asdict(old_episode)
-            for item in (0, 1):
-                assert new_episode.question(item) == old_episode.question(item)
-                assert new_episode.answer(item) == old_episode.answer(item)
-                for wrong in (False, True):
-                    assert new_episode.evidence(item, wrong=wrong) == old_episode.evidence(item, wrong=wrong)
-                    assert new_episode.evidence_color(item, wrong=wrong) == old_episode.evidence_color(item, wrong=wrong)
-            old_episodes.append(asdict(old_episode))
-        expected = {"train_entity_pool": old_train, "validation_entity_pool": old_validation,
-                    "validation_episodes": old_episodes, "training_rng_seed": seed + 39019,
-                    "worlds_generated_online": True, "metadata_is_not_model_input": True}
+            assert json.loads(json.dumps(asdict(new_episode))) == expected["validation_episodes"][index]
+            _assert_legacy_text(new_episode, case["validation_text"][index])
+        assert json.loads(json.dumps(new_rng.getstate())) == case["validation_rng_state_after"]
         actual = legacy_fact_manifest(seed, 16)
         assert json.dumps(actual, sort_keys=True) == json.dumps(expected, sort_keys=True)
-        assert manifest_sha256(actual) == hashlib.sha256(json.dumps(expected, sort_keys=True).encode()).hexdigest()
-        old_rng, new_rng = random.Random(seed + 39019), random.Random(seed + 39019)
-        for step in range(1, 4):
-            for item in range(3):
-                episode_id = f"train-{step:06d}-{item}"
-                expected_episode = old["sample_episode"](old_rng, old_train, episode_id)
-                assert asdict(sample_training_episode(actual, new_rng, episode_id)) == asdict(expected_episode)
+        assert manifest_sha256(actual) == case["manifest_sha256"]
+        assert case["manifest_sha256"] == hashlib.sha256(json.dumps(expected, sort_keys=True).encode()).hexdigest()
+        new_rng = random.Random(seed + 39019)
+        assert [(item["step"], item["item"]) for item in case["training"]] == [
+            (step, item) for step in range(1, 4) for item in range(3)]
+        for item in case["training"]:
+            episode_id = f"train-{item['step']:06d}-{item['item']}"
+            episode = sample_training_episode(actual, new_rng, episode_id)
+            assert json.loads(json.dumps(asdict(episode))) == item["record"]
+            _assert_legacy_text(episode, item["text"])
+        assert json.loads(json.dumps(new_rng.getstate())) == case["training_rng_state_after"]
 
 
 def test_scalable_fact_event_order_and_no_future_queries():
