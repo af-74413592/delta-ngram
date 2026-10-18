@@ -436,3 +436,77 @@ installs and executes the CLI from a separate environment. This validation cover
 the refactor; native-table replication and broader multi-seed scientific claims
 remain outside its scope.
 
+### Development comparison and E1 transfer (2026-10-18)
+
+The same sixteen two-write development worlds were evaluated with the same
+Qwen3-0.6B-Base reader. Counts below use the primary first-word score. `First`
+is Q1 after E1, `Retained` is Q1 after E2, and `New` is Q2 after E2.
+
+| Method | First / 16 | Retained / 16 | New / 16 |
+| --- | ---: | ---: | ---: |
+| D1, step 500 | 16 | 16 | 15 |
+| Online SparseAdam, 0.01 x 10 | 16 | 2 | 16 |
+| Online SparseAdam, 0.05 x 10 | 16 | 4 | 16 |
+| Full evidence context | 16 | 16 | 14 |
+| BM25 retrieval, top 2 | 16 | 16 | 14 |
+| D4, step 500 | 6 | 6 | 9 |
+
+D4 was independently trained from the identical initialization for the same
+500-step budget, with ten template rows frozen before training. Its strict
+first-line counts at step 500 are only 2/2/2; both color errors and generation
+format drift occur. Its primary counts were 16/16/16 at step 400, so the full
+curve is required to show its instability. The final checkpoint was fixed at
+500 rather than selected from these development results. With only two evidence
+blocks, top-2 retrieval retains both, and all 136 recorded predictions exactly
+match full context.
+
+The earlier D1 `1.0 -> 0.875` retention result is at **step 400**: 16 first
+answers correct, then 14 retained. A recovered run matches the original first
+400 training records and five evaluations exactly. Restoring the ten literal
+template rows at its second write rescues both lost old answers (14 -> 16),
+while harming new answers (12 -> 2). Restoring only the name-boundary rows
+rescues neither loss. No name-internal rows or distinct-ngram hash collisions
+were selected in these sixteen worlds. These are interventions on row groups;
+they do not establish the necessity of every individual row.
+
+The E1 implementation is covered by **245 passing CPU tests**, also run from
+an independently extracted source distribution. Its canonical diagnostic
+replays match **9,873 historical non-timing fields** across D1 step 400/500,
+D4 step 500, and both Adam settings, with zero differences. The newer tests
+extend the historical 148-test refactor validation above.
+
+The frozen step-500 writers were then transferred to E1 without retraining.
+Final active-fact counts below are `canonical / named_question`; each cell has
+64 facts. Four-write probes use sixteen worlds; sixteen-write probes use four.
+
+| Method | 4 writes, final / 64 | 16 writes, final / 64 |
+| --- | ---: | ---: |
+| D1 | 60 / 3 | 19 / 5 |
+| D4 | 26 / 5 | 25 / 6 |
+| Full evidence context | 61 / 61 | 62 / 47 |
+| BM25 retrieval, top 2 | 64 / 64 | 60 / 64 |
+
+On the original two-write worlds, D1's first-fact accuracy under the named
+question stays at its empty-state 2/16 before and after writing, versus 16/16
+under the training template. In the sixteen-write probe, canonical D1 acquires
+46/64 facts immediately but answers only 19/64 at the end. Actual post-write
+named-question prefixes have about 6% written-row coverage, with no zero-coverage
+queries; reduced overlap alone is not a causal explanation of the failure.
+
+In sixteen revision worlds, canonical D1 follows the revised value immediately
+in 5/16 cases. All superseded versions are excluded from retention (48 active
+facts remain). Full-context named questions follow 15/16 revisions immediately
+but only 5/16 after the last unrelated write. Retrieval named questions retain
+15/16, while canonical retrieval selects the old color and fruit evidence,
+excluding the update in all sixteen worlds. Its query-style comparison changes
+the retrieved evidence as well as the wording. Full prompt/selection audits are
+preserved with the results.
+
+All 22 campaign jobs completed, including a separate two-step E1 training
+integration check with nonzero writer gradients. That check is not an E1-trained
+performance result. These one-seed development probes demonstrate template and
+trajectory-length limits; they do not establish broad or native-table memory
+performance. Executed source snapshots, manifests, checkpoints, raw predictions,
+learning curves, and validation reports are kept in the external experiment
+archive rather than tracked as repository weights.
+
