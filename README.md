@@ -356,10 +356,30 @@ The online Adam refactor has also been compared against the archived executed
 implementation on CPU: two blocks of ten updates, at learning rates 0.01 and
 0.05, with bitwise agreement in tables, counts, losses, and Adam state.
 
-**Pending acceptance:** the standalone package's full seed-17, 500-step GPU run
-and its exact artifact comparison with the historical run. The historical pilot
-does not by itself certify this refactor. Do not treat a short CPU smoke run,
-successful package build, or earlier pilot metrics as completion of that check.
-Native-table replication and broader multi-seed scientific comparisons are also
-outside the current implementation validation.
+**Passed on 2026-10-18:** the full seed-17 pilot was rerun from scratch on the
+same RTX 4090, Qwen3-0.6B-Base weights, BF16 reader, and PyTorch 2.14.1+cu132.
+The refactor at commit `250957b` matched the archived execution exactly:
+
+- 500 training records (2,000 sampled training episodes).
+- All six evaluations at steps 0/100/200/300/400/500, including raw predictions.
+- All 20 initial/final writer tensors and 9,037 compared scalar/string fields.
+- Identical manifest; **zero mismatches and zero numeric tolerance**.
+
+The machine-readable report is `parity-250957b.json` in the external acceptance
+bundle. Later changes at `b937be9` tighten checkpoint and manifest input checks;
+the outer loop, runtime construction, checkpoint writer, and data sampling
+functions retain identical syntax trees. Package and fixture changes are separate
+from that numerical implementation.
+
+The later code also loaded the step-500 checkpoint through the strict loader and
+replayed the same manifest with `diagnose`: all original evaluation fields still
+matched exactly, and row diagnostics completed for all 16 worlds. The associated
+report is `release-verification-b937be9.json`; tracked runtime sources were checked
+byte-for-byte against their committed archives.
+
+All **148 CPU tests** also pass after extracting the source distribution into an
+independent directory, without the old repository or skipped tests. The wheel
+installs and executes the CLI from a separate environment. This validation covers
+the refactor; native-table replication and broader multi-seed scientific claims
+remain outside its scope.
 
