@@ -58,8 +58,15 @@ def main(argv=None):
                             ("diagnose", "Evaluate with counterfactuals and physical-row interventions")):
         sub = commands.add_parser(name, help=help_text)
         sub.add_argument("--config", required=True, help="YAML configuration file")
+    chat = commands.add_parser("chat", help="Query a writer interactively with optional evidence writes")
+    chat.add_argument("--config", required=True, help="YAML configuration file")
+    chat.add_argument("--checkpoint", required=True, help="Saved writer checkpoint")
     args = parser.parse_args(argv)
     config = ExperimentConfig.load(args.config)
+    if args.command == "chat":
+        from .chat import run_chat
+        run_chat(config, args.checkpoint)
+        return 0
     result = train(config) if args.command == "train" else run_evaluation(config, diagnose=args.command == "diagnose")
     print(json.dumps({"command": args.command, "output_dir": config.values["run"]["output_dir"],
                       "complete": result.get("complete", result.get("completed_steps") == result.get("requested_steps")),

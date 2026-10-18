@@ -46,6 +46,24 @@ online baselines use `eval` and perform their evidence-only updates during that
 same evaluation loop. `train` starts a fresh outer training run; automatic
 training resume is not implemented.
 
+### Interactive memory debugging
+
+```sh
+delta-ngram chat --config configs/pilot_seed17.yaml --checkpoint ../delta-ngram-runs/pilot_seed17/writer.pt
+```
+
+Each input line is a fresh query with no conversation history. The writer is
+frozen, and the answer is generated from the current memory before any write.
+`/write off` is the default. `/write on` writes the user input after answering;
+`/write all` then also writes the raw answer as a separate block prefixed with
+`Assistant said: `. Each write reports the number of touched physical rows and
+new rows. `/reset` clears memory; `/quit` exits.
+
+The existing `evaluation.max_new_tokens` controls greedy answer length (3 in the
+pilot preset), and `run.max_evidence_tokens` still limits each write. The chat
+does not create an experiment output directory. Checkpoint compatibility uses
+the same strict checks as evaluation.
+
 ## Repository structure
 
 ```text
