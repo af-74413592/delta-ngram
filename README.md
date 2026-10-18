@@ -64,11 +64,27 @@ pilot preset), and `run.max_evidence_tokens` still limits each write. The chat
 does not create an experiment output directory. Checkpoint compatibility uses
 the same strict checks as evaluation.
 
+### Step through one forward trajectory
+
+```sh
+python scripts/debug_forward.py --checkpoint ../delta-ngram-runs/pilot_seed17/writer.pt
+```
+
+This D1-only script loads the model and writer configuration from the checkpoint
+with the same compatibility checks as evaluation. Its `write` and `ask` functions
+expand the existing operations into sequential statements for debugger inspection:
+evidence encoding, write targets/gates, row updates, query residuals, and next-token
+probabilities. The fixed example writes two facts, revisits the first, and changes
+the question wording. It prints intermediate tensors' summaries and performs no
+training. Top-token probabilities are diagnostic outputs, not answer accuracy.
+Use `--device cpu` or `--device cuda` to override automatic device selection.
+
 ## Repository structure
 
 ```text
 configs/                         YAML examples, with no model weights or results
 scripts/run.py                   thin CLI launcher
+scripts/debug_forward.py         readable D1 forward-pass walkthrough
 src/delta_ngram/
   state.py                       sparse state and versioned snapshot persistence
   operators.py                   pure C and D0-D4 row-update operators
@@ -79,7 +95,7 @@ src/delta_ngram/
   runtime.py                     tokenization, generation, scoring, and timing
   train.py                       one outer training loop
   evaluate.py                    one evaluator and shared row interventions
-  cli.py                         train / eval / diagnose
+  cli.py                         train / eval / diagnose / chat
   checkpoints.py                 writer checkpoint schema and legacy migration
   parity.py                      exact historical-artifact comparison
   data/                          fact/affix episodes, splits, and manifests
