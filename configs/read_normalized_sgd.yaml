@@ -1,0 +1,9 @@
+# Divide the mean evidence-loss gradient by current-block row occurrence counts.
+version: 1
+seed: 17
+method:
+  name: read_normalized_sgd
+  lr: 0.01
+  online_steps: 10
+run:
+  output_dir: ../../delta-ngram-runs/read_normalized_sgd_seed17

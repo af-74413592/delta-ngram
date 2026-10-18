@@ -1,0 +1,8 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D3
+  precision_init: 1.0
+run:
+  output_dir: ../../delta-ngram-runs/d3_seed17

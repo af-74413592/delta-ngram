@@ -1,0 +1,19 @@
+# Run after pilot_seed17.yaml; use the exact saved validation worlds.
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D1
+data:
+  task: fact
+  facts_per_episode: 2
+  eval_episodes: 16
+  manifest: ../../delta-ngram-runs/pilot_seed17/data_manifest.json
+evaluation:
+  max_new_tokens: 3
+  openbook_episodes: 4
+  counterfactuals: true
+  row_diagnostics: true
+run:
+  checkpoint: ../../delta-ngram-runs/pilot_seed17/writer.pt
+  output_dir: ../../delta-ngram-runs/pilot_seed17_diagnose

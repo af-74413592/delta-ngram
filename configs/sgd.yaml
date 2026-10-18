@@ -1,0 +1,8 @@
+version: 1
+seed: 17
+method:
+  name: sgd
+  lr: 0.01
+  online_steps: 10
+run:
+  output_dir: ../../delta-ngram-runs/sgd_seed17

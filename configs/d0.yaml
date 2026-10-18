@@ -1,0 +1,8 @@
+# Evidence-only gates; the row equation matches D1.
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D0
+run:
+  output_dir: ../../delta-ngram-runs/d0_seed17

@@ -1,0 +1,8 @@
+# Train this overwrite variant independently; C, DIRECT, and OVERWRITE are aliases.
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: C
+run:
+  output_dir: ../../delta-ngram-runs/direct_seed17

@@ -1,0 +1,11 @@
+# Fixed template fragments; rows are hashed before training, without query labels.
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D4
+  frozen_template_texts:
+    - "Profile\nName:"
+    - "\nFavorite color:"
+run:
+  output_dir: ../../delta-ngram-runs/d4_seed17

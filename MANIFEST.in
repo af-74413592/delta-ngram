@@ -1,0 +1,17 @@
+include README.md
+include pyproject.toml
+include MANIFEST.in
+recursive-include src *.py
+recursive-include configs *.yaml
+recursive-include scripts *.py
+recursive-include tests *.py
+global-exclude __pycache__ *.py[cod]
+global-exclude *.pt *.pth *.safetensors *.jsonl
+prune .git
+prune .venv
+prune build
+prune dist
+prune runs
+prune reports
+prune artifacts
+prune models

@@ -1,0 +1,14 @@
+# Sample fact or affix for a whole episode; current generator defaults to 50/50.
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D1
+data:
+  task: mixed
+  facts_per_episode: 2
+  support_examples: 3
+  eval_episodes: 16
+run:
+  output_dir: ../../delta-ngram-runs/mixed_seed17
+  max_evidence_tokens: 512

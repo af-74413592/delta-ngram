@@ -1,0 +1,8 @@
+version: 1
+seed: 17
+method:
+  name: forward
+  operator: D2
+  kappa: 1.0
+run:
+  output_dir: ../../delta-ngram-runs/d2_seed17
