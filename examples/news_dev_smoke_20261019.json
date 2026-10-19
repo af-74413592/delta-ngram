@@ -1,0 +1,74 @@
+{
+  "protocol": "news_forward_v1",
+  "evaluation_only": true,
+  "scope": "Two-event source-verified development execution fixture; not a generalization benchmark or final holdout.",
+  "model": {
+    "name_or_path": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "revision_date": "2025-07-26T03:46:27Z",
+    "revision_date_source": "https://huggingface.co/api/models/Qwen/Qwen3-0.6B/commits/main",
+    "training_cutoff": "unknown"
+  },
+  "training_event_families": [],
+  "episodes": [
+    {
+      "id": "imap_launch_report",
+      "event_family": "imap_carruthers_swfo_launch_2025",
+      "split": "dev",
+      "kind": "real",
+      "synthetic": false,
+      "donor_episode_id": "sentinel_1d_report",
+      "sources": [{
+        "id": "nasa_25_064",
+        "url": "https://www.nasa.gov/news-release/nasa-noaa-launch-three-spacecraft-to-map-suns-influence-across-space/",
+        "title": "NASA, NOAA Launch Three Spacecraft to Map Sun's Influence Across Space",
+        "published_at": "2025-09-24",
+        "updated_at": "2025-12-12",
+        "retrieved_at": "2026-10-19"
+      }],
+      "history": [{
+        "id": "imap_report",
+        "source_ids": ["nasa_25_064"],
+        "available_at": "2025-12-12",
+        "text": "NASA reported the successful IMAP launch on September 24, 2025. Liftoff occurred at 7:30 a.m. EDT. A Falcon 9 carried IMAP, the Carruthers Geocorona Observatory and SWFO-L1 from Kennedy Space Center. All three spacecraft were later deployed and communicated with Earth.",
+        "facts": [
+          {"id": "imap_date", "subject": "IMAP launch", "relation": "actual launch date", "value": "September 24, 2025"},
+          {"id": "imap_time", "subject": "IMAP launch", "relation": "reported liftoff time", "value": "7:30 a.m. EDT"}
+        ]
+      }],
+      "questions": [
+        {"id": "imap_date_q", "question": "On what date did the reported IMAP launch actually take place?", "after_history": 1, "asked_at": "2026-10-19", "fact_id": "imap_date", "candidates": ["September 23, 2025", "September 24, 2025"], "answer_index": 1},
+        {"id": "imap_time_q", "question": "What liftoff time did the IMAP launch report give?", "after_history": 1, "asked_at": "2026-10-19", "fact_id": "imap_time", "candidates": ["7:30 a.m. EDT", "8:30 a.m. EDT"], "answer_index": 0}
+      ]
+    },
+    {
+      "id": "sentinel_1d_report",
+      "event_family": "sentinel_1d_launch_2025",
+      "split": "dev",
+      "kind": "real",
+      "synthetic": false,
+      "donor_episode_id": "imap_launch_report",
+      "sources": [{
+        "id": "esa_69_2025",
+        "url": "https://www.esa.int/Newsroom/Press_Releases/Copernicus_Sentinel-1D_reaches_orbit_on_Ariane_6",
+        "title": "Copernicus Sentinel-1D reaches orbit on Ariane 6",
+        "published_at": "2025-11-04",
+        "retrieved_at": "2026-10-19"
+      }],
+      "history": [{
+        "id": "sentinel_report",
+        "source_ids": ["esa_69_2025"],
+        "available_at": "2025-11-04",
+        "text": "ESA reported that Sentinel-1D launched on November 4, 2025 aboard Ariane 6 from French Guiana. Orbit insertion occurred 34 minutes after launch. The satellite's signal reached the ground team at 23:22 CET, confirming communication with the newly orbiting spacecraft.",
+        "facts": [
+          {"id": "sentinel_date", "subject": "Sentinel-1D launch", "relation": "actual launch date", "value": "November 4, 2025"},
+          {"id": "sentinel_signal", "subject": "Sentinel-1D launch", "relation": "reported signal acquisition time", "value": "23:22 CET"}
+        ]
+      }],
+      "questions": [
+        {"id": "sentinel_date_q", "question": "On what date did Sentinel-1D actually launch, according to the report?", "after_history": 1, "asked_at": "2026-10-19", "fact_id": "sentinel_date", "candidates": ["November 4, 2025", "November 5, 2025"], "answer_index": 0},
+        {"id": "sentinel_signal_q", "question": "At what time did the ground team receive Sentinel-1D's signal, according to the report?", "after_history": 1, "asked_at": "2026-10-19", "fact_id": "sentinel_signal", "candidates": ["22:22 CET", "23:22 CET"], "answer_index": 1}
+      ]
+    }
+  ]
+}

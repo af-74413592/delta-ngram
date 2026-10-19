@@ -146,7 +146,9 @@ def load_model_and_tokenizer(args, device):
             attention_dropout=0.0, use_cache=False))
         model = model.to(device)
     else:
-        tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.revision)
+        tokenizer_source = getattr(args, "tokenizer_name_or_path", None) or args.model
+        tokenizer_revision = getattr(args, "tokenizer_revision", None) or args.revision
+        tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, revision=tokenizer_revision)
         dtype = torch.float32 if device.type == "cpu" else (
             torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float32)
         model = AutoModelForCausalLM.from_pretrained(

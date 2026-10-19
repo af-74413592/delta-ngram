@@ -386,7 +386,7 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
             "scope": "held-out writer-training document groups; no pretraining-novelty claim"}
 
 
-def train_raw(config, *, monitor_blocks=True):
+def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
     """Train raw trajectories, logging detached per-block metrics by default."""
     if type(monitor_blocks) is not bool:
         raise ValueError("monitor_blocks must be boolean")
@@ -397,6 +397,8 @@ def train_raw(config, *, monitor_blocks=True):
         raise ValueError("train-raw requires method.name: forward")
     if raw["resume"] and config.values["run"]["checkpoint"]:
         raise ValueError("choose raw.resume or run.checkpoint initialization, not both")
+    if p2_initialization is not None and (raw["resume"] or config.values["run"]["checkpoint"]):
+        raise ValueError("P2 initialization cannot be combined with resume or normal checkpoint loading")
     if config.values["reader"]["backend"] != "external_hash":
         raise NotImplementedError("train-raw native table integration is not implemented")
     started = time.monotonic()
@@ -440,10 +442,16 @@ def train_raw(config, *, monitor_blocks=True):
         step, counters = _restore_resume(raw["resume"], method, optimizer, sampler, identity)
     elif config.values["run"]["checkpoint"]:
         restore_writer(method, load_checkpoint(config.values["run"]["checkpoint"]), config)
+    p2_provenance = None
+    if p2_initialization is not None:
+        from .p2_initialization import initialize_p2_writer
+        p2_provenance = initialize_p2_writer(method, config, p2_initialization, identity)
     if counters["loss_tokens"] > raw["loss_tokens"]:
         raise ValueError("raw.loss_tokens is below the already-consumed resume budget")
     initialize_output(args)
     metadata = _writer_metadata(config, method, args, identity)
+    if p2_provenance is not None:
+        metadata["p2_initialization"] = p2_provenance
     # Observability is recorded separately so existing writer/resume identities
     # remain evaluable and monitor toggles do not alter the experiment contract.
     metadata["block_monitor"] = {"enabled": monitor_blocks,

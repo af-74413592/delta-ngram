@@ -10,6 +10,7 @@ global-exclude __pycache__ *.py[cod]
 global-exclude */.ipynb_checkpoints/*
 global-exclude *.pt *.pth *.safetensors *.jsonl
 include examples/raw_smoke.jsonl
+include examples/news_dev_smoke_20261019.json
 prune .git
 prune .venv
 prune build

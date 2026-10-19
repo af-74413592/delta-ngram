@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", required=True)
     parser.add_argument("--threads", type=int, default=8)
+    parser.add_argument("--p2-initialization", help="Explicit research-only P1 step-zero writer initialization")
     args = parser.parse_args()
     if args.threads < 1:
         parser.error("--threads must be positive")
@@ -53,6 +54,9 @@ def main():
         "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
         "cublas_workspace_config": os.environ["CUBLAS_WORKSPACE_CONFIG"],
         "threads": torch.get_num_threads(),
+        "p2_initialization": None if args.p2_initialization is None else {
+            "path": str(Path(args.p2_initialization).resolve()),
+            "sha256": hashlib.sha256(Path(args.p2_initialization).read_bytes()).hexdigest()},
         "source_sha256": {
             str(path.relative_to(repository / "src")): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted((repository / "src/delta_ngram").rglob("*.py"))
@@ -63,7 +67,7 @@ def main():
         json.dump(launch, stream, indent=2, allow_nan=False)
         stream.write("\n")
     print(json.dumps({"event": "launch", **launch}, allow_nan=False), flush=True)
-    result = train_raw(config)
+    result = train_raw(config, p2_initialization=args.p2_initialization)
     print(json.dumps({"event": "finished", "output_dir": str(output),
                       "stop_reason": result["stop_reason"], "complete": result["complete"],
                       "loss_tokens": result["counters"]["loss_tokens"],

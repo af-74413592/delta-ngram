@@ -52,6 +52,16 @@ described below.
 See the [training plan](docs/training_plan_20261019.md) for stage budgets,
 acceptance gates, and implementation status.
 
+The [P2 execution protocol](docs/p2_execution_protocol_20261019.md) fixes the
+matched Base/I comparison, explicit common tokenizer, exact step-zero writer
+initialization and paired transfer evaluation. The
+[frozen news protocol](docs/news_evaluation_protocol.md) describes evaluation-only
+event splits and answer-only scoring. Validate its two-event execution fixture:
+
+```sh
+python scripts/news_eval.py --manifest examples/news_dev_smoke_20261019.json --validate-only
+```
+
 Run the public, offline CPU example from the source checkout:
 
 ```sh

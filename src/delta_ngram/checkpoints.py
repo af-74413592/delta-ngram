@@ -71,6 +71,12 @@ def restore_writer(method, payload, config):
         for key in ("name_or_path", "revision", "smoke"):
             if old_package["model"][key] != values["model"][key]:
                 raise ValueError(f"checkpoint model.{key} differs")
+        for override, fallback in (("tokenizer_name_or_path", "name_or_path"),
+                                   ("tokenizer_revision", "revision")):
+            old_tokenizer = old_package["model"].get(override) or old_package["model"][fallback]
+            new_tokenizer = values["model"].get(override) or values["model"][fallback]
+            if old_tokenizer != new_tokenizer:
+                raise ValueError(f"checkpoint model.{override} differs")
         for section in ("reader", "writer", "method"):
             if old_package[section] != values[section]:
                 raise ValueError(f"checkpoint {section} configuration differs")
@@ -85,6 +91,10 @@ def restore_writer(method, payload, config):
             raise ValueError("historical checkpoint smoke seed differs")
         if old["revision"] != values["model"]["revision"]:
             raise ValueError("historical checkpoint requested revision differs")
+        tokenizer_name = values["model"].get("tokenizer_name_or_path") or values["model"]["name_or_path"]
+        tokenizer_revision = values["model"].get("tokenizer_revision") or values["model"]["revision"]
+        if tokenizer_name != old["model"] or tokenizer_revision != old["revision"]:
+            raise ValueError("historical checkpoint tokenizer binding differs")
     expected_revision = old.get("resolved_model_commit") or old.get("revision")
     actual_revision = getattr(method.reader.model.config, "_commit_hash", None) or values["model"]["revision"]
     if expected_revision and actual_revision and expected_revision != actual_revision:

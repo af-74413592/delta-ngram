@@ -15,7 +15,8 @@ DEFAULTS = {
     "version": 1,
     "seed": 17,
     "model": {"name_or_path": "Qwen/Qwen3-0.6B-Base",
-              "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd", "device": "auto", "smoke": False},
+              "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd", "device": "auto", "smoke": False,
+              "tokenizer_name_or_path": None, "tokenizer_revision": None},
     "reader": {"backend": "external_hash", "buckets": 16384, "orders": [2, 3], "layer_index": 1},
     "writer": {"hidden_dim": 128, "right_window": 4},
     "method": {"name": "forward", "operator": "D1", "kappa": 1.0, "precision_init": 1.0,
@@ -86,6 +87,17 @@ class ExperimentConfig:
             raise ValueError("reader.backend must be external_hash or native")
         if values["model"]["device"] not in ("auto", "cpu", "cuda"):
             raise ValueError("model.device must be auto, cpu, or cuda")
+        tokenizer_source = values["model"]["tokenizer_name_or_path"]
+        tokenizer_revision = values["model"]["tokenizer_revision"]
+        if (tokenizer_source is None) != (tokenizer_revision is None):
+            raise ValueError("model tokenizer source and revision must be specified together")
+        if tokenizer_source is not None:
+            if (not isinstance(tokenizer_source, str) or not tokenizer_source.strip()
+                    or not isinstance(tokenizer_revision, str) or len(tokenizer_revision) != 40
+                    or any(c not in "0123456789abcdef" for c in tokenizer_revision)):
+                raise ValueError("model tokenizer override requires a source and pinned 40-hex revision")
+            if values["model"]["smoke"]:
+                raise ValueError("model tokenizer override is not supported in smoke mode")
         if values["data"]["task"] not in ("fact", "fact_e1", "affix", "mixed"):
             raise ValueError("data.task must be fact, fact_e1, affix, or mixed")
         if values["data"]["e1_scenario"] not in ("independent", "revision"):
@@ -185,6 +197,8 @@ class ExperimentConfig:
         v = self.values
         return SimpleNamespace(
             model=v["model"]["name_or_path"], revision=v["model"]["revision"],
+            tokenizer_name_or_path=v["model"].get("tokenizer_name_or_path"),
+            tokenizer_revision=v["model"].get("tokenizer_revision"),
             device=v["model"]["device"], smoke=v["model"]["smoke"], seed=v["seed"],
             out=Path(v["run"]["output_dir"]), steps=v["train"]["steps"],
             batch_episodes=v["train"]["batch_episodes"], lr=v["train"]["lr"],
