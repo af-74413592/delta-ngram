@@ -163,13 +163,56 @@ matches. It is also accepted as `run.checkpoint` initialization for a fresh raw
 training run. It is not an exact-resume substitute for `training.pt`; choose
 either `raw.resume` or `run.checkpoint`, not both.
 
-Current raw validation reports only self-memory and empty-memory held-out
-next-token NLL and their difference. It sets `p6_gate_evaluated: false`: it does
-not implement the complete P6 acceptance evaluation, establish pretraining
-novelty, or measure scientific task quality in the CPU smoke run. The native
-pretrained-table adapter, DDP, and parallel scans across time are not implemented.
-This in-memory JSONL path is the minimal training implementation, not a
-production corpus-preparation pipeline.
+Raw validation reports self-memory and empty-memory held-out next-token NLL,
+their difference, and a paired document-group bootstrap 95% confidence interval.
+`raw.eval_seed` fixes the validation sample independently of the training seed;
+`raw.eval_bootstrap_samples` controls the number of bootstrap replicates.
+Selection covers distinct groups before adding more windows from the same group.
+The protocol and exact sample hashes are recorded and checked on resume.
+Changing the validation protocol is rejected, including for older raw resume
+checkpoints that do not contain those validation hashes.
+
+A checkpoint's P1 point check requires at least 64 groups, `delta_empty >= 0.001`,
+and a positive CI lower bound. `p1_gate_passed` remains false because the full P1
+decision also needs both prescribed milestones and the second seed. The output
+sets `p6_gate_evaluated: false`; donor and random-binding evaluations remain
+separate work. These writer-training splits do not establish pretraining novelty.
+The native pretrained-table adapter, DDP, and parallel scans across time are not
+implemented. The in-memory JSONL path remains a bounded pilot implementation.
+
+#### Recorded P1 code pilot
+
+`scripts/prepare_code_pilot.py` builds a bounded code pool from pinned local
+Stack v2 Edu gzip shards and their SHA256 download manifest. It keeps complete
+files, records original provenance and licenses, removes detected duplicates,
+groups repositories and detected near duplicates before splitting, and exports
+the holdout separately. Its manifest reports the sampled population, filtering
+limits, tokenizer identity, split counts, and source/length window availability.
+This bounded approximate deduplication is not a complete fork-lineage audit.
+
+After preparing the corpus at the paths in `configs/p1_code_seed17.yaml`, run
+from a clean, committed checkout:
+
+```sh
+python scripts/train_raw_deterministic.py --config configs/p1_code_seed17.yaml
+```
+
+The launcher records the Git commit, source hashes and deterministic CUDA
+settings in a sibling `.launch.json`. The preset budgets 5M supervised target
+tokens with 512-token blocks, a 128-token prefix, equal target shares for 8/16
+blocks and six code languages, and four independent streams per batch. It uses
+128 fixed development windows with group-level bootstrap, evaluates at the first
+completed optimizer step reaching 2.5M targets and at the endpoint, and saves the
+latest atomic resume checkpoint every 250k targets. Evaluation milestones also
+retain writer and training snapshots named by step and actual target count.
+Intervals are checked at complete optimizer boundaries.
+
+A remainder too small for a complete trajectory stays unspent. Its actual token
+count, nominal endpoint, and `budget_endpoint` are explicit in `summary.json`;
+the existing CLI exit code 2 and `complete: false` are retained for this case.
+Inspect `stop_reason` to distinguish that bounded tail from a wall or step limit.
+Supervise long runs on the host and keep checkpoints and corpus manifests outside
+the source repository.
 
 ### Interactive memory debugging
 

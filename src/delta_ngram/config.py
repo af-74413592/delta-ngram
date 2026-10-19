@@ -35,6 +35,8 @@ DEFAULTS = {
             "block_counts": [8, 16], "length_weights": None, "source_weights": None,
             "loss_tokens": 5_000_000, "batch_size": 1, "gradient_accumulation_steps": 1, "eval_windows": 8,
             "eval_every_tokens": 1_000_000, "max_steps": None,
+            "eval_seed": 104729, "eval_bootstrap_samples": 2000,
+            "checkpoint_every_tokens": 250_000,
             "checkpoint_reader": False, "resume": None},
 }
 
@@ -134,9 +136,14 @@ class ExperimentConfig:
             raise ValueError("run.output_dir must be a nonempty path string")
         raw = values["raw"]
         for key in ("block_size", "prefix_tokens", "loss_tokens", "batch_size", "gradient_accumulation_steps",
-                    "eval_windows", "eval_every_tokens"):
+                    "eval_windows", "eval_every_tokens", "eval_bootstrap_samples"):
             if type(raw[key]) is not int or raw[key] < 1:
                 raise ValueError(f"raw.{key} must be a positive integer")
+        if type(raw["eval_seed"]) is not int or raw["eval_seed"] < 0:
+            raise ValueError("raw.eval_seed must be a nonnegative integer")
+        if (raw["checkpoint_every_tokens"] is not None
+                and (type(raw["checkpoint_every_tokens"]) is not int or raw["checkpoint_every_tokens"] < 1)):
+            raise ValueError("raw.checkpoint_every_tokens must be null or a positive integer")
         if raw["prefix_tokens"] > raw["block_size"]:
             raise ValueError("raw.prefix_tokens must not exceed raw.block_size")
         if (not isinstance(raw["block_counts"], list) or not raw["block_counts"]

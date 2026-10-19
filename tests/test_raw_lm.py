@@ -1,6 +1,7 @@
 """Causality, full gradients, and exact CPU resume through the raw LM path."""
 import json
 from pathlib import Path
+import random
 import sys
 
 import pytest
@@ -13,7 +14,8 @@ from delta_ngram.checkpoints import load_checkpoint, restore_writer
 from delta_ngram.cli import main
 from delta_ngram.config import ExperimentConfig
 from delta_ngram.data.raw_text import TrajectoryWindow
-from delta_ngram.raw_lm import train_raw, trajectory_loss
+from delta_ngram.raw_lm import (evaluate_raw, select_validation_windows,
+                                summarize_group_losses, train_raw, trajectory_loss)
 from delta_ngram.train import create_runtime
 
 
@@ -257,17 +259,132 @@ def test_resume_rejects_changed_identity(tmp_path, change):
     assert not (tmp_path / "rejected").exists()
 
 
+@pytest.mark.parametrize("change", [{"eval_seed": 104730}, {"eval_windows": 3},
+                                   {"eval_bootstrap_samples": 2001}])
+def test_resume_rejects_changed_fixed_dev_protocol(tmp_path, change):
+    train_raw(config_for(tmp_path, "initial", raw={"max_steps": 1}))
+    config = config_for(tmp_path, "rejected", raw={"resume": "initial/training.pt", **change})
+    with pytest.raises(ValueError, match="identity differs"):
+        train_raw(config)
+    assert not (tmp_path / "rejected").exists()
+
+
 def test_budget_never_overshoots_or_truncates_trajectory(tmp_path):
     summary = train_raw(config_for(tmp_path, raw={"loss_tokens": 19}))
     assert summary["counters"]["loss_tokens"] == 16
     assert summary["unspent_loss_tokens"] == 3
     assert summary["stop_reason"] == "remaining_budget_below_complete_trajectory"
     assert not summary["complete"]
+    assert summary["budget_endpoint"] and summary["nominal_loss_tokens"] == 19
+    assert summary["last_evaluation"]["training_loss_tokens"] == 16
+    assert summary["last_evaluation"]["final_nominal_loss_tokens"] == 19
+    assert summary["last_evaluation"]["unspent_loss_tokens"] == 3
+
+
+def test_fixed_dev_selection_covers_groups_before_extra_windows():
+    items = [TrajectoryWindow(f"doc-{group}", f"group-{group}", "code", offset,
+                              tuple(range(16)), 2)
+             for group in range(80) for offset in range(160 if group == 0 else 2)]
+    before_python, before_torch = random.getstate(), torch.get_rng_state().clone()
+    chosen = select_validation_windows(items, limit=128, seed=104729)
+    assert len(chosen) == 128
+    assert len({item.group_id for item in chosen[:80]}) == 80
+    assert chosen == select_validation_windows(list(reversed(items)), limit=128, seed=104729)
+    assert chosen != select_validation_windows(items, limit=128, seed=104730)
+    assert random.getstate() == before_python
+    assert torch.equal(torch.get_rng_state(), before_torch)
+
+
+def test_group_bootstrap_uses_paired_ratio_of_sums_and_private_rng():
+    groups = [{"group_id": "short", "self_loss_sum": 1., "empty_loss_sum": 3., "loss_tokens": 1},
+              {"group_id": "long", "self_loss_sum": 18., "empty_loss_sum": 9., "loss_tokens": 9}]
+    before = random.getstate()
+    result = summarize_group_losses(groups, bootstrap_seed=4, bootstrap_samples=2000)
+    assert result["delta_empty"] == pytest.approx(-.7)  # Not the unweighted group mean (+.5).
+    assert result["paired_group_bootstrap"]["ci_lower"] == -1.
+    assert result["paired_group_bootstrap"]["ci_upper"] == 2.
+    assert result == summarize_group_losses(list(reversed(groups)), bootstrap_seed=4, bootstrap_samples=2000)
+    assert random.getstate() == before
+    assert result["group_count"] == 2
+    assert result["p1_point_check"]["status"] == "insufficient_groups"
+    assert result["p1_point_check"]["passed"] is None
+    assert result["p1_gate_passed"] is False and result["p6_gate_evaluated"] is False
+
+
+def test_positive_group_ci_only_passes_one_checkpoint_not_overall_gate():
+    groups = [{"group_id": str(index), "self_loss_sum": 100., "empty_loss_sum": 100.2,
+               "loss_tokens": 100} for index in range(64)]
+    result = summarize_group_losses(groups)
+    assert result["delta_empty"] == pytest.approx(.002)
+    assert result["paired_group_bootstrap"]["ci_lower"] > 0
+    assert result["p1_point_check"]["passed"] is True
+    assert result["p1_gate_passed"] is False
+    assert summarize_group_losses(groups[:-1])["p1_point_check"]["passed"] is None
+
+
+def test_evaluation_retains_paired_group_sums(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import delta_ngram.raw_lm as module
+    method, _ = create_runtime(config_for(tmp_path))
+    items = [TrajectoryWindow("a", "group-a", "code", 0, tuple(range(16)), 2),
+             TrajectoryWindow("b", "group-a", "code", 0, tuple(range(32)), 4),
+             TrajectoryWindow("c", "group-c", "code", 0, tuple(range(16)), 2)]
+
+    def fake_trajectory(method, batch, *, prefix_tokens, memory_mode="self"):
+        assert len({item.group_id for item in batch}) == 1
+        count = sum(item.loss_tokens for item in batch)
+        return SimpleNamespace(loss_tokens=count, loss_sum=torch.tensor(float(count * (2 if memory_mode == "empty" else 1))))
+
+    monkeypatch.setattr(module, "trajectory_loss", fake_trajectory)
+    result = evaluate_raw(method, items, prefix_tokens=4, batch_size=2)
+    assert result["loss_tokens"] == 40 and result["delta_empty"] == 1
+    assert result["groups"] == [
+        {"group_id": "group-a", "document_ids": ["a", "b"], "windows": 2,
+         "self_loss_sum": 32., "empty_loss_sum": 64., "loss_tokens": 32},
+        {"group_id": "group-c", "document_ids": ["c"], "windows": 1,
+         "self_loss_sum": 8., "empty_loss_sum": 16., "loss_tokens": 8}]
+
+
+def test_short_checkpoints_preserve_training_and_milestone_resume(tmp_path, monkeypatch):
+    import delta_ngram.raw_lm as module
+    original_save = module._save_resume
+    saves = []
+
+    def capture(path, method, optimizer, sampler, identity, step, counters):
+        saves.append((Path(path).name, step, counters["loss_tokens"]))
+        return original_save(path, method, optimizer, sampler, identity, step, counters)
+
+    monkeypatch.setattr(module, "_save_resume", capture)
+    settings = {"eval_every_tokens": 48, "checkpoint_every_tokens": 16}
+    frequent = train_raw(config_for(tmp_path, "frequent", raw=settings))
+    assert any(name == "training.pt" and 0 < count < 48 for name, _, count in saves)
+    snapshots = sorted((tmp_path / "frequent").glob("training_step_*_tokens_*.pt"))
+    assert len(snapshots) >= 2
+    first = torch.load(snapshots[0], weights_only=True)
+    count = first["counters"]["loss_tokens"]
+    assert 48 <= count < 128
+    assert f"tokens_{count:012d}" in snapshots[0].name
+    assert snapshots[0].with_name(snapshots[0].name.replace("training_", "writer_", 1)).exists()
+    reference = torch.load(tmp_path / "frequent/training.pt", weights_only=True)
+    train_raw(config_for(tmp_path, "follow_eval", raw={**settings, "checkpoint_every_tokens": None}))
+    assert_tree_equal(reference, torch.load(tmp_path / "follow_eval/training.pt", weights_only=True))
+    train_raw(config_for(tmp_path, "resume_snapshot", raw={**settings, "checkpoint_every_tokens": 17,
+                                                          "resume": str(snapshots[0])}))
+    assert_tree_equal(reference, torch.load(tmp_path / "resume_snapshot/training.pt", weights_only=True))
+    manifest = json.loads((tmp_path / "frequent/data_manifest.json").read_text())
+    assert manifest["validation_protocol"]["seed"] == 104729
+    assert len(manifest["validation_sample_sha256"]) == 64
+    assert reference["identity"]["validation"] == {
+        key: manifest[key] for key in ("validation_protocol_sha256", "validation_sample_sha256")}
+    assert manifest["selected_validation_groups"] == frequent["last_evaluation"]["group_count"]
+    assert frequent["last_evaluation"]["validation_sample_sha256"] == manifest["validation_sample_sha256"]
 
 
 @pytest.mark.parametrize("raw", [{"prefix_tokens": 9}, {"block_counts": [1]},
                                  {"batch_size": True}, {"checkpoint_reader": 1},
-                                 {"length_weights": {2: 1}}, {"max_steps": 0}])
+                                 {"length_weights": {2: 1}}, {"max_steps": 0},
+                                 {"eval_seed": True}, {"eval_bootstrap_samples": 0},
+                                 {"checkpoint_every_tokens": 0}])
 def test_raw_config_rejects_invalid_schedule(tmp_path, raw):
     with pytest.raises(ValueError, match="raw\\."):
         config_for(tmp_path, raw=raw)

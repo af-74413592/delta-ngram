@@ -10,7 +10,7 @@
 
 先准备约 **20M 合格代码原文 token**，做 0.6B 的 **5M 目标 token** 小试；信号成立后，数据池扩到约 **200M**，四源混合主 run 最多 **100M 目标 token**。原生接口提前检查，原生最大 run 单列预算。只有最贵的 **P6 原生扩大训练**增加“文档相关收益”和“随机绑定正收益”两项门槛；P1 仍按可训练性与 `Δ_empty` 推进。
 
-本文的配比、阈值、检查点与预算是执行前预设，**不是实验结论或效果承诺**。实施状态截至本版：本地 CPU 全套 318 项测试通过；新 GPU 环境已完成 512-token 块、128-token prefix 的重算、恢复和短时吞吐工程验收。新环境的全套测试为 317 项通过、1 项历史 bitwise fixture 失败，未放宽断言。所有 GPU 验收使用高多样性合成输入，正式语料训练、原生接口和统计门槛尚未完成。数据入口仍是内存 JSONL pilot，评测仅 self/empty，尚无 bootstrap CI，不能据此宣称 P1/P6 已通过。
+本文的配比、阈值、检查点与预算是执行前预设，**不是实验结论或效果承诺**。实施状态截至本版：本地 CPU 全套 343 项测试通过；新 GPU 环境已完成 512-token 块、128-token prefix 的重算、恢复和短时吞吐工程验收。迁移验收时的 318 项基线中，新环境为 317 项通过、1 项历史 bitwise fixture 失败，未放宽断言。此前 GPU 验收使用高多样性合成输入，不能据此宣称正式语料训练有效。启动准备已补齐有界代码数据构建、固定开发集的组级配对 bootstrap CI 和中途保存；原生接口及完整 P1/P6 阶段结论仍待相应实验。
 
 本文件为仓库内的后续执行依据。原稿与讨论保留为本地归档文件名（未随仓库分发）：`delta_ngram_training_plan_final_20261019.md`、`delta_ngram_raw_text_data_plan_20261019.md`、`delta_ngram_raw_text_data_plan_v2_20261019.md`、`delta_ngram_raw_text_data_plan_review_20261019.md`、`delta_ngram_raw_text_data_plan_review_reply_20261019.md`。
 
@@ -286,11 +286,11 @@ P4 使用已验证配方，从固定初始化重新开始四源主 run，使 100
 
 | 交付 | 本轮目标 | 当前状态 |
 |---|---|---|
-| [原始文本数据接口](../src/delta_ngram/data/raw_text.py) | 文档元数据、一次 tokenize、连续窗口、按目标 token 采样和恢复 | CPU 验证通过；内存 JSONL pilot，支持 train/validation；正式保留集另存，不含采集/去重生产管线 |
+| [原始文本数据接口](../src/delta_ngram/data/raw_text.py) | 文档元数据、一次 tokenize、连续窗口、按目标 token 采样和恢复 | CPU 验证通过；内存 JSONL pilot，支持 train/validation；[有界代码构建脚本](../scripts/prepare_code_pilot.py) 先分组再切分，保留集另存，非全库去重生产管线 |
 | [Batch memory state](../src/delta_ngram/batching.py) | 独立流隔离，按 batch 行读取和更新，保留快照计算图 | CPU 串行/批量及梯度验证通过 |
 | [Raw LM trainer](../src/delta_ngram/raw_lm.py) 与 [smoke 配置](../configs/raw_smoke.yaml) | 先预测后写入、完整 BPTT、单设备批处理、梯度累积、恢复 | CPU 公开 CLI smoke 通过；GPU 独立进程恢复和 512-token 块验收通过；均为工程验收 |
-| 回归与最小调通 | 串行/批量 parity、因果标签、首块早期梯度、跨边界事件、预算账本 | 本地 CPU 318 项通过；新 GPU 环境 317 项通过、1 项历史 bitwise fixture 失败，断言未放宽 |
-| 评测与数据生产 | 四条件配对、固定 donor、随机绑定、bootstrap CI、阶段 gate；四源采集清洗 | 仅 self/empty 已实现，产物标记 `p6_gate_evaluated=false`；P1 统计门槛也尚未接通 |
+| 回归与最小调通 | 串行/批量 parity、因果标签、首块早期梯度、跨边界事件、预算账本 | 本地 CPU 343 项通过；迁移基线在新 GPU 环境为 317 项通过、1 项历史 bitwise fixture 失败，断言未放宽 |
+| 评测与数据生产 | 四条件配对、固定 donor、随机绑定、bootstrap CI、阶段 gate；四源采集清洗 | self/empty 的组级配对 CI 与单点 P1 检查已接通；固定样本/协议 hash 纳入恢复身份。整体 P1 仍要求两里程碑与第二 seed；donor、随机绑定和四源完整构建待实现，`p6_gate_evaluated=false` |
 | 原生接口 | 原生 n-gram 基表、在线增量状态与梯度路径 | 尚未实现，P3 单列 |
 | 整段评分重算 | non-reentrant 包装、显式快照 tensor、每次调用独立 hook 生命周期 | CPU 与 GPU 确定性设置下 loss/梯度逐位一致；HF layer checkpointing 关闭；合成输入短时性能已测 |
 | DDP | 全局 token 归一化、分布式状态归属 | 尚未实现，按实测需要推进 |
@@ -299,6 +299,8 @@ P4 使用已验证配方，从固定初始化重新开始四源主 run，使 100
 验收要求为：同一 batch 中 A 的写入不改变 B 的预测；未来块不影响此前评分；reader prefix 不重复写；跨边界寻址保留 token 身份；后续 loss 能传到首块 writer；8/16 混合和梯度累积的目标等价于按 token 汇总；旧合成路径及 D1 状态更新无回归。
 
 本地 CPU 证据为 [raw LM 19 项测试](../tests/test_raw_lm.py)、[batch 30 项测试](../tests/test_batching.py)、[data 23 项测试](../tests/test_raw_text_data.py)与 246 项原有测试，共 318 项通过。混合 8/16 块的 CPU 测试使用小块长（8 token）；重算 loss/梯度逐位一致，混合 batch 对逐条计算在数值容差内一致。累积步数 1 和 2 的同配置运行，各自在 optimizer step 2 中断后恢复至相同的 128 目标 token 终点（累积 1 为 6 steps，累积 2 为 3 steps），与各自连续运行的 writer、Adam、sampler、计数和 RNG 逐位一致；按 token 加权的 microbatch 与不足整批的尾部也有覆盖。
+
+启动准备在上述基线上增加 11 项 raw LM 评测/保存/恢复测试及 14 项代码数据构建测试，当前全套 **343 项通过**。代码数据脚本只在有界候选池内检测精确和近重复，不宣称识别全库所有 fork。P1 配置为 [p1_code_seed17.yaml](../configs/p1_code_seed17.yaml)：5M 名义目标 token，2.5M 与终点评测，128 个固定开发窗口、至少 64 个独立组；每 250k 目标 token 保存最近恢复点，评测里程碑另存不可覆盖的 writer 和训练快照。所有间隔在完整 optimizer 边界检查，不足一条完整轨迹的尾部显式留空。固定开发协议变更会拒绝恢复，包括缺少该身份字段的旧调通检查点。
 
 ### 新 GPU 环境的工程验收
 

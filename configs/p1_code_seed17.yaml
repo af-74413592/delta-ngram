@@ -1,0 +1,46 @@
+version: 1
+seed: 17
+model:
+  name_or_path: Qwen/Qwen3-0.6B
+  revision: c1899de289a04d12100db370d81485cdf75e47ca
+  device: cuda
+  smoke: false
+reader:
+  backend: external_hash
+  buckets: 16384
+  orders: [2, 3]
+  layer_index: 1
+writer:
+  hidden_dim: 128
+  right_window: 4
+method:
+  name: forward
+  operator: D1
+train:
+  lr: 0.0003
+  gradient_clip: 1.0
+raw:
+  dataset: ../../delta-ngram-data/p1_code_20261019/train_validation.jsonl
+  block_size: 512
+  prefix_tokens: 128
+  block_counts: [8, 16]
+  length_weights: {8: 0.5, 16: 0.5}
+  source_weights:
+    code/cpp: 1.0
+    code/go: 1.0
+    code/java: 1.0
+    code/javascript: 1.0
+    code/python: 1.0
+    code/typescript: 1.0
+  batch_size: 4
+  gradient_accumulation_steps: 1
+  loss_tokens: 5000000
+  checkpoint_reader: true
+  checkpoint_every_tokens: 250000
+  eval_windows: 128
+  eval_every_tokens: 2500000
+  eval_seed: 104729
+  eval_bootstrap_samples: 2000
+run:
+  output_dir: ../../delta-ngram-runs/p1_code_seed17_20261019
+  max_wall_seconds: 7200

@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
+import math
 from pathlib import Path
 import random
 import time
@@ -25,6 +26,8 @@ from .train import create_runtime, initialize_output
 
 PROTOCOL = "delta_ngram_raw_lm_v1"
 RESUME_FORMAT = "delta_ngram_raw_resume_v1"
+VALIDATION_PROTOCOL = "group_first_fixed_dev_paired_bootstrap_v1"
+MINIMUM_EVALUATION_GROUPS = 64
 
 
 @dataclass
@@ -239,24 +242,124 @@ def _restore_resume(path, method, optimizer, sampler, identity):
     return step, counters
 
 
-@torch.no_grad()
-def evaluate_raw(method, windows, *, prefix_tokens, batch_size):
-    method.eval()
-    self_sum = empty_sum = 0.0
-    count = 0
-    for start in range(0, len(windows), batch_size):
-        batch = windows[start:start + batch_size]
-        own = trajectory_loss(method, batch, prefix_tokens=prefix_tokens)
-        empty = trajectory_loss(method, batch, prefix_tokens=prefix_tokens, memory_mode="empty")
-        self_sum += float(own.loss_sum)
-        empty_sum += float(empty.loss_sum)
-        count += own.loss_tokens
-    if not count:
-        raise ValueError("raw validation needs nonempty complete windows")
-    return {"loss_tokens": count, "windows": len(windows), "self_nll": self_sum / count,
-            "empty_nll": empty_sum / count, "delta_empty": (empty_sum - self_sum) / count,
-            "scope": "held-out writer-training documents; no pretraining-novelty claim",
+def select_validation_windows(windows, *, limit, seed):
+    """Cover distinct groups first, then take additional windows round-robin.
+
+    Sorting before shuffling makes the selection independent of input order.
+    This private RNG never consumes the training sampler or global RNG state.
+    """
+    if type(limit) is not int or limit < 1:
+        raise ValueError("validation window limit must be a positive integer")
+    groups = {}
+    for window in windows:
+        groups.setdefault(window.group_id, []).append(window)
+    rng = random.Random(seed)
+    group_ids = sorted(groups)
+    rng.shuffle(group_ids)
+    for group_id in group_ids:
+        groups[group_id].sort(key=lambda item: (item.document_id, item.start, item.blocks))
+        rng.shuffle(groups[group_id])
+    selected = []
+    for index in range(max((len(items) for items in groups.values()), default=0)):
+        for group_id in group_ids:
+            if index < len(groups[group_id]):
+                selected.append(groups[group_id][index])
+                if len(selected) == limit:
+                    return selected
+    return selected
+
+
+def _validation_sample(windows):
+    return [{"group_id": item.group_id, "document_id": item.document_id, "source": item.source,
+             "start": item.start, "blocks": item.blocks, "loss_tokens": item.loss_tokens,
+             "token_sha256": _json_hash(item.token_ids)} for item in windows]
+
+
+def summarize_group_losses(groups, *, bootstrap_seed=104729, bootstrap_samples=2000):
+    """Paired cluster bootstrap of the ratio of loss sums to target counts.
+
+    Groups, not overlapping windows or tokens, are the independent resampling
+    units. Each draw includes both memory conditions and the same token count.
+    This reports one checkpoint's check, never the multi-seed P1 or P6 gate.
+    """
+    groups = sorted(groups, key=lambda item: item["group_id"])
+    if not groups or len({item["group_id"] for item in groups}) != len(groups):
+        raise ValueError("evaluation requires nonempty, unique group records")
+    if type(bootstrap_samples) is not int or bootstrap_samples < 1:
+        raise ValueError("bootstrap_samples must be a positive integer")
+    for item in groups:
+        if type(item["loss_tokens"]) is not int or item["loss_tokens"] < 1:
+            raise ValueError("evaluation group needs positive target tokens")
+        if not all(math.isfinite(item[key]) for key in ("self_loss_sum", "empty_loss_sum")):
+            raise ValueError("evaluation group losses must be finite")
+    count = sum(item["loss_tokens"] for item in groups)
+    own = math.fsum(item["self_loss_sum"] for item in groups)
+    empty = math.fsum(item["empty_loss_sum"] for item in groups)
+    delta = (empty - own) / count
+    paired = [(item["empty_loss_sum"] - item["self_loss_sum"], item["loss_tokens"])
+              for item in groups]
+    rng = random.Random(bootstrap_seed)
+    draws = []
+    for _ in range(bootstrap_samples):
+        sample = [paired[rng.randrange(len(paired))] for _ in paired]
+        draws.append(math.fsum(value for value, _ in sample) / sum(tokens for _, tokens in sample))
+    draws.sort()
+
+    def percentile(probability):
+        position = (len(draws) - 1) * probability
+        lower = int(position)
+        fraction = position - lower
+        return draws[lower] * (1 - fraction) + draws[min(lower + 1, len(draws) - 1)] * fraction
+
+    lower, upper = percentile(.025), percentile(.975)
+    enough_groups = len(groups) >= MINIMUM_EVALUATION_GROUPS
+    point_passed = delta >= .001 and lower > 0 if enough_groups else None
+    return {"loss_tokens": count, "self_nll": own / count, "empty_nll": empty / count,
+            "delta_empty": delta, "group_count": len(groups), "groups": groups,
+            "paired_group_bootstrap": {
+                "method": "paired_group_percentile_ratio_of_sums", "confidence": .95,
+                "seed": bootstrap_seed, "replicates": bootstrap_samples,
+                "ci_lower": lower, "ci_upper": upper},
+            "p1_point_check": {
+                "status": ("insufficient_groups" if not enough_groups else
+                           "passed" if point_passed else "not_met"),
+                "passed": point_passed, "minimum_groups": MINIMUM_EVALUATION_GROUPS,
+                "delta_threshold": .001, "requires_positive_ci_lower": True},
+            "p1_gate_passed": False,
+            "p1_gate_status": "not_evaluated_requires_two_milestones_and_second_seed",
             "p6_gate_evaluated": False}
+
+
+@torch.no_grad()
+def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
+                 bootstrap_seed=104729, bootstrap_samples=2000):
+    method.eval()
+    grouped = {}
+    for window in windows:
+        grouped.setdefault(window.group_id, []).append(window)
+    records = []
+    for group_id in sorted(grouped):
+        items = grouped[group_id]
+        own_sum = empty_sum = 0.0
+        count = 0
+        # Homogeneous group batches give exact group attribution without
+        # changing the tested training loss/scoring implementation.
+        for start in range(0, len(items), batch_size):
+            batch = items[start:start + batch_size]
+            own = trajectory_loss(method, batch, prefix_tokens=prefix_tokens)
+            empty = trajectory_loss(method, batch, prefix_tokens=prefix_tokens, memory_mode="empty")
+            if own.loss_tokens != empty.loss_tokens:
+                raise RuntimeError("paired evaluation target counts differ")
+            own_sum += float(own.loss_sum)
+            empty_sum += float(empty.loss_sum)
+            count += own.loss_tokens
+        records.append({"group_id": group_id, "document_ids": sorted({item.document_id for item in items}),
+                        "windows": len(items), "self_loss_sum": own_sum,
+                        "empty_loss_sum": empty_sum, "loss_tokens": count})
+    summary = summarize_group_losses(records, bootstrap_seed=bootstrap_seed,
+                                     bootstrap_samples=bootstrap_samples)
+    return {**summary, "windows": len(windows),
+            "scope": "held-out writer-training document groups; no pretraining-novelty claim"}
 
 
 def train_raw(config):
@@ -284,14 +387,24 @@ def train_raw(config):
     validation = [window for block_count in raw["block_counts"] for window in validation_pool[block_count]]
     if not validation:
         raise ValueError("raw.dataset needs a disjoint validation split with complete windows")
-    # Fixed, deterministic validation sample; independent of the training RNG.
-    validation_rng = random.Random(config.values["seed"] + 104729)
-    validation_rng.shuffle(validation)
-    validation = validation[:raw["eval_windows"]]
+    available_validation_groups = len({window.group_id for window in validation})
+    validation = select_validation_windows(validation, limit=raw["eval_windows"], seed=raw["eval_seed"])
+    validation_sample = _validation_sample(validation)
+    validation_protocol = {
+        "name": VALIDATION_PROTOCOL, "selection": "group_first_round_robin",
+        "group_key": "group_id", "seed": raw["eval_seed"], "window_limit": raw["eval_windows"],
+        "bootstrap_samples": raw["eval_bootstrap_samples"], "minimum_groups": MINIMUM_EVALUATION_GROUPS,
+        "evaluation_batching": "within_group", "batch_size": raw["batch_size"],
+        "prefix_tokens": raw["prefix_tokens"]}
+    validation_metadata = {"validation_protocol": validation_protocol,
+                           "validation_protocol_sha256": _json_hash(validation_protocol),
+                           "validation_sample_sha256": _json_hash(validation_sample)}
     sampler = RawWindowSampler(windows, seed=config.values["seed"],
                                length_weights=raw["length_weights"], source_weights=raw["source_weights"])
     dataset_sha = hashlib.sha256(Path(raw["dataset"]).read_bytes()).hexdigest()
     identity = _identity(config, method, dataset_sha, token_identity)
+    identity["validation"] = {key: validation_metadata[key] for key in
+                              ("validation_protocol_sha256", "validation_sample_sha256")}
     optimizer = torch.optim.AdamW(method.parameters(), lr=args.lr, weight_decay=0.0)
     step, counters = 0, {"loss_tokens": 0, "raw_tokens_consumed": 0, "writer_new_tokens": 0,
                          "encoder_input_tokens": 0, "reader_input_tokens": 0,
@@ -305,6 +418,7 @@ def train_raw(config):
     initialize_output(args)
     metadata = _writer_metadata(config, method, args, identity)
     metadata["data_scope"] = "in-memory document JSONL pilot; not the production 200M-token corpus builder"
+    metadata.update(validation_metadata)
     save_json(args.out / "config.json", metadata)
     save_json(args.out / "data_manifest.json", {
         "dataset_sha256": dataset_sha, "tokenizer": token_identity, "tokenizer_fingerprint": token_fingerprint,
@@ -313,16 +427,48 @@ def train_raw(config):
                        "text_sha256": d.text_sha256, "metadata": d.metadata} for d in documents],
         "unique_raw_tokens": sum(len(d.token_ids) for d in documents),
         "windows_by_blocks": {str(n): len(pool) for n, pool in windows.items()},
+        **validation_metadata, "validation_sample": validation_sample,
+        "available_validation_groups": available_validation_groups,
+        "selected_validation_groups": len({window.group_id for window in validation}),
         "overlap_policy": "nonoverlapping within a length bucket; lengths/epochs can reuse source positions"})
     save_checkpoint(args.out / "writer_init.pt", method.writer, metadata, step, protocol=PROTOCOL)
     log_event(args.out / "metrics.jsonl", {"event": "start", "protocol": PROTOCOL,
                                           "step": step, "counters": counters.copy()})
-    last_evaluation = evaluate_raw(method, validation, prefix_tokens=raw["prefix_tokens"],
-                                   batch_size=raw["batch_size"])
-    last_evaluation.update(step=step, training_loss_tokens=counters["loss_tokens"])
-    save_json(args.out / f"eval_step_{step:06d}.json", last_evaluation)
-    log_event(args.out / "metrics.jsonl", {"event": "evaluation", **last_evaluation})
+    def save_progress(*, snapshot=False):
+        # Latest resume is atomic, including when a later evaluation fails.
+        _save_resume(args.out / "training.pt", method, optimizer, sampler, identity, step, counters)
+        if snapshot:
+            current_metadata = {**metadata, "training_loss_tokens": counters["loss_tokens"]}
+            save_checkpoint(args.out / "writer.pt", method.writer, current_metadata, step, protocol=PROTOCOL)
+            suffix = f"step_{step:06d}_tokens_{counters['loss_tokens']:012d}.pt"
+            writer_path, training_path = args.out / f"writer_{suffix}", args.out / f"training_{suffix}"
+            # A final evaluation may share a step with a periodic evaluation.
+            # Preserve that step's existing immutable snapshot rather than overwrite it.
+            if not writer_path.exists():
+                save_checkpoint(writer_path, method.writer, current_metadata, step, protocol=PROTOCOL)
+            if not training_path.exists():
+                _save_resume(training_path, method, optimizer, sampler, identity, step, counters)
+        log_event(args.out / "metrics.jsonl", {"event": "checkpoint", "step": step,
+                                               "training_loss_tokens": counters["loss_tokens"],
+                                               "milestone_snapshot": snapshot})
+
+    def run_evaluation(kind, nominal_loss_tokens):
+        result = evaluate_raw(method, validation, prefix_tokens=raw["prefix_tokens"],
+                              batch_size=raw["batch_size"], bootstrap_seed=raw["eval_seed"],
+                              bootstrap_samples=raw["eval_bootstrap_samples"])
+        result.update(validation_metadata)
+        result.update(step=step, training_loss_tokens=counters["loss_tokens"],
+                      evaluation_kind=kind, nominal_loss_tokens=nominal_loss_tokens,
+                      requested_loss_tokens=raw["loss_tokens"])
+        save_json(args.out / f"eval_step_{step:06d}.json", result)
+        log_event(args.out / "metrics.jsonl", {"event": "evaluation", **result})
+        return result
+
+    save_progress()
+    last_evaluation = run_evaluation("initial", counters["loss_tokens"])
     next_evaluation = ((counters["loss_tokens"] // raw["eval_every_tokens"]) + 1) * raw["eval_every_tokens"]
+    checkpoint_interval = raw["checkpoint_every_tokens"] or raw["eval_every_tokens"]
+    next_checkpoint = ((counters["loss_tokens"] // checkpoint_interval) + 1) * checkpoint_interval
     stop_reason = "loss_token_budget"
 
     while counters["loss_tokens"] < raw["loss_tokens"]:
@@ -376,26 +522,29 @@ def train_raw(config):
             "step_seconds": elapsed, "loss_tokens_per_second": group_tokens / max(elapsed, 1e-9),
             "windows": [{"document_id": w.document_id, "start": w.start, "blocks": w.blocks} for w in batch]})
         if counters["loss_tokens"] >= next_evaluation:
-            last_evaluation = evaluate_raw(method, validation, prefix_tokens=raw["prefix_tokens"],
-                                           batch_size=raw["batch_size"])
-            last_evaluation.update(step=step, training_loss_tokens=counters["loss_tokens"])
-            save_json(args.out / f"eval_step_{step:06d}.json", last_evaluation)
-            log_event(args.out / "metrics.jsonl", {"event": "evaluation", **last_evaluation})
-            save_checkpoint(args.out / "writer.pt", method.writer, metadata, step, protocol=PROTOCOL)
-            _save_resume(args.out / "training.pt", method, optimizer, sampler, identity, step, counters)
+            save_progress(snapshot=True)
+            last_evaluation = run_evaluation("milestone", next_evaluation)
             next_evaluation = ((counters["loss_tokens"] // raw["eval_every_tokens"]) + 1) * raw["eval_every_tokens"]
+            next_checkpoint = ((counters["loss_tokens"] // checkpoint_interval) + 1) * checkpoint_interval
+        elif counters["loss_tokens"] >= next_checkpoint:
+            save_progress()
+            next_checkpoint = ((counters["loss_tokens"] // checkpoint_interval) + 1) * checkpoint_interval
 
+    budget_endpoint = stop_reason in ("loss_token_budget", "remaining_budget_below_complete_trajectory")
+    final_nominal_tokens = raw["loss_tokens"] if budget_endpoint else counters["loss_tokens"]
+    save_progress(snapshot=True)
     if last_evaluation["step"] != step:
-        last_evaluation = evaluate_raw(method, validation, prefix_tokens=raw["prefix_tokens"],
-                                       batch_size=raw["batch_size"])
-        last_evaluation.update(step=step, training_loss_tokens=counters["loss_tokens"])
-        save_json(args.out / f"eval_step_{step:06d}.json", last_evaluation)
-        log_event(args.out / "metrics.jsonl", {"event": "evaluation", **last_evaluation})
-    save_checkpoint(args.out / "writer.pt", method.writer, metadata, step, protocol=PROTOCOL)
+        last_evaluation = run_evaluation("final", final_nominal_tokens)
+    last_evaluation.update(is_final=True, budget_endpoint=budget_endpoint,
+                           final_nominal_loss_tokens=final_nominal_tokens,
+                           unspent_loss_tokens=raw["loss_tokens"] - counters["loss_tokens"])
+    save_json(args.out / f"eval_step_{step:06d}.json", last_evaluation)
+    log_event(args.out / "metrics.jsonl", {"event": "final_evaluation", **last_evaluation})
     _save_resume(args.out / "training.pt", method, optimizer, sampler, identity, step, counters)
     summary = {"protocol": PROTOCOL, "complete": stop_reason == "loss_token_budget",
                "stop_reason": stop_reason, "completed_steps": step, "counters": counters,
                "requested_loss_tokens": raw["loss_tokens"], "unspent_loss_tokens": raw["loss_tokens"] - counters["loss_tokens"],
+               "budget_endpoint": budget_endpoint, "nominal_loss_tokens": final_nominal_tokens,
                "last_evaluation": last_evaluation, "elapsed_seconds": time.monotonic() - started,
                "scope": "CPU plumbing only" if args.smoke else "single-device raw LM writer training",
                "native_adapter": False, "ddp": False, "time_parallel_scan": False,
