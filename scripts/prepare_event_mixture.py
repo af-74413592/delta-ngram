@@ -305,9 +305,16 @@ def audit_selected(items, streams, audit_items):
                 raise ValueError("selected article/work/text identity crosses splits")
 
 
-def capacity_report(ordinary, events, planned_loss_tokens, maximum_passes=3):
+def training_weights(event_weight=.05):
+    if not 0 < event_weight < .20:
+        raise ValueError("event weight must lie in (0, .20), preserving positive single-news share")
+    return {**WEIGHTS, "news": round(.20 - event_weight, 12), "news_event": event_weight}
+
+
+def capacity_report(ordinary, events, planned_loss_tokens, maximum_passes=3, *, event_weight=.05):
     """Event bucket shares use unique later-article targets, never padded size."""
-    ordinary_weights = {source: WEIGHTS[source] for source in mixed.DEFAULT_LENGTHS}
+    weights = training_weights(event_weight)
+    ordinary_weights = {source: weights[source] for source in mixed.DEFAULT_LENGTHS}
     conditional = {source: ({"2": .9, "4": .1} if source == "news" else {str(n): 1 / len(counts) for n in counts})
                    for source, counts in mixed.DEFAULT_LENGTHS.items()}
     try:
@@ -321,7 +328,7 @@ def capacity_report(ordinary, events, planned_loss_tokens, maximum_passes=3):
     cells = {}
     for key, fraction in conditional["news_event"].items():
         available = active[key]["loss_tokens"]
-        target = planned_loss_tokens * WEIGHTS["news_event"] * fraction
+        target = planned_loss_tokens * weights["news_event"] * fraction
         passes = target / available
         cells[key] = {"planned_loss_tokens": target, "available_loss_tokens_per_pass": available,
                       "expected_cell_passes": passes, "independent_train_groups": active[key]["groups"]}
@@ -334,12 +341,12 @@ def capacity_report(ordinary, events, planned_loss_tokens, maximum_passes=3):
         if missing:
             report["violations"].append(f"news_event/{split}: canonical buckets absent from training: {sorted(missing)}")
     report["sources"]["news_event"] = {"raw_tokens": events["train"]["raw_tokens"],
-        "planned_loss_tokens": planned_loss_tokens * WEIGHTS["news_event"], "cells": cells,
+        "planned_loss_tokens": planned_loss_tokens * weights["news_event"], "cells": cells,
         "unique_later_article_targets": total, "warmup_tokens_per_pass": events["train"]["warmup_tokens"],
         "padding_tokens_per_pass": events["train"]["padding_tokens"],
         "overlap_note": "Each stream belongs to one bucket; later real tokens are targets once per pass. Warmup and padding are not targets."}
     report["conditional_length_weights"] = conditional
-    report["training_source_weights"] = WEIGHTS
+    report["training_source_weights"] = weights
     report["event_weight_basis"] = "final train bucket later-article targets / all final train later-article targets; equal expected reuse"
     report["passed"] = not report["violations"]
     return report
@@ -406,6 +413,7 @@ def export_events(output, streams, store):
 
 
 def run(args):
+    weights = training_weights(getattr(args, "event_weight", .05))
     if args.minimum_groups < 64 or args.planned_loss_tokens < 1 or not 1 <= args.maximum_cell_passes <= 3:
         raise ValueError("requires >=64 groups per stratum/split, positive budget and at most three passes")
     if not 0 < args.near_threshold <= 1:
@@ -455,7 +463,8 @@ def run(args):
             "all_event_articles_audited": len(event_items)})
         statistics = mixed.validate_and_summarize(kept, mixed.DEFAULT_LENGTHS, args.minimum_groups)
         event_stats = event_statistics(selected_events, args.minimum_groups)
-        capacity = capacity_report(statistics, event_stats, args.planned_loss_tokens, args.maximum_cell_passes)
+        capacity = capacity_report(statistics, event_stats, args.planned_loss_tokens, args.maximum_cell_passes,
+                                   event_weight=weights["news_event"])
         mixed.save_json(output / "training_capacity_report.json", capacity)
         if not capacity["passed"]:
             raise mixed.CapacityError(capacity)
@@ -473,7 +482,7 @@ def run(args):
         mixed.save_json(output / "event_stream_manifest.json", event_manifest)
         proposal = {"dataset": str(output / "train_validation.jsonl"),
             "event_dataset": str(output / EVENT_FILES[0]), "block_size": 512, "block_counts": [2, 4, 8, 16, 32],
-            "source_weights": WEIGHTS, "source_length_weights": capacity["conditional_length_weights"],
+            "source_weights": weights, "source_length_weights": capacity["conditional_length_weights"],
             "eval_min_groups_per_source": args.minimum_groups, "eval_donor": True,
             "macro_source_groups": {source: "news" if source == "news_event" else source for source in WEIGHTS},
             "loss_tokens": args.planned_loss_tokens}
@@ -481,7 +490,7 @@ def run(args):
         manifest = {"format": "delta_ngram_event_mixture_v1", "ready": True, "tokenizer": tokenizer,
             "imports": imports, "event_import": event_import, "statistics": statistics,
             "event_statistics": event_stats, "files": {**ordinary_files, **event_files},
-            "training_source_weights": WEIGHTS, "source_block_counts": {**mixed.DEFAULT_LENGTHS, "news_event": list(map(int, capacity["conditional_length_weights"]["news_event"]))},
+            "training_source_weights": weights, "source_block_counts": {**mixed.DEFAULT_LENGTHS, "news_event": list(map(int, capacity["conditional_length_weights"]["news_event"]))},
             "training_budget_capacity": capacity, "donor_coverage": donors, "resolved_raw_config_proposal": proposal,
             "selected_date_bounds": mixed.selected_date_bounds(kept), "deduplication": {**families,
                 "threshold": args.near_threshold, "quarantined_components": len(audit["quarantined_components"]),
@@ -513,6 +522,8 @@ def parser():
     result.add_argument("--minimum-groups", type=int, default=64)
     result.add_argument("--planned-loss-tokens", type=int, default=100_000_000)
     result.add_argument("--maximum-cell-passes", type=float, default=3.0)
+    result.add_argument("--event-weight", type=float, default=.05,
+                        help="Fraction of target tokens for events; single news receives .20 minus this share")
     result.add_argument("--near-threshold", type=float, default=.85)
     result.add_argument("--seed", type=int, default=17)
     return result

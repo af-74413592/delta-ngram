@@ -140,6 +140,18 @@ def test_event_capacity_uses_real_later_targets_and_equal_bucket_reuse():
     assert report["passed"]
     too_much = prepare.capacity_report(ordinary_stats, event_stats, 100000000)
     assert not too_much["passed"] and any("news_event/4" in value for value in too_much["violations"])
+    reduced = prepare.capacity_report(ordinary_stats, event_stats, 100000000, event_weight=.025)
+    assert reduced["passed"]
+    assert reduced["training_source_weights"]["news"] == .175
+    assert reduced["training_source_weights"]["news_event"] == .025
+    assert {cell["expected_cell_passes"] for cell in reduced["sources"]["news_event"]["cells"].values()} == {2.5}
+    assert reduced["sources"]["news"]["planned_loss_tokens"] == 17500000
+
+
+@pytest.mark.parametrize("weight", [0, -.01, .2, float("nan"), float("inf")])
+def test_event_mix_rejects_invalid_or_missing_news_shares(weight):
+    with pytest.raises(ValueError, match="event weight"):
+        prepare.training_weights(weight)
 
 
 def test_event_donor_coverage_rejects_rare_bucket_and_insufficient_history():
