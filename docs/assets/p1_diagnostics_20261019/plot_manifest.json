@@ -1,0 +1,89 @@
+{
+  "protocol": "p1_diagnostics_static_figures_v1",
+  "created_utc": "2026-10-19T03:39:11.546459+00:00",
+  "script_sha256": "d5a97465540d92da867b9bb387cde803588cf22adb78450542c1a5ec6c561ea0",
+  "matplotlib": "3.9.2",
+  "backend": "Agg",
+  "inputs": [
+    {
+      "seed": 17,
+      "results": {
+        "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\p1_diagnostics_20261019\\seed17\\results.json",
+        "sha256": "812b312ee3dcba6b406c61162f2506b4c1065f98c239eb2a9f8958bc3cde6117"
+      },
+      "block_metrics_summary": {
+        "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\p1_diagnostics_20261019\\seed17\\block_metrics_summary.json",
+        "sha256": "be410d4cc3426d0a0b60610fccf5804cffa0ebfdf27ada05063cd5dcdabb9e91"
+      },
+      "training_loss_tokens": 4997632,
+      "checkpoint_step": 256,
+      "block_log_sha256": "c79bab3fd9443be64dbdc7143bd9024a19470fd66355ec82b06e07ee840eb67b",
+      "adjacent_block_log_verified": true
+    },
+    {
+      "seed": 29,
+      "results": {
+        "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\p1_diagnostics_20261019\\seed29\\results.json",
+        "sha256": "23749e672fd19222f09cbebb3260e863931809ddbf1620be595caae830536809"
+      },
+      "block_metrics_summary": {
+        "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\p1_diagnostics_20261019\\seed29\\block_metrics_summary.json",
+        "sha256": "8adf32dd622e101202ae332bf6d426284b15715b69fe330b47630575ff1df33e"
+      },
+      "training_loss_tokens": 4997632,
+      "checkpoint_step": 256,
+      "block_log_sha256": "3856f65150779fa836114f4c73bf7d8ad7248635d06dcfabb21a99a6a67cf296",
+      "adjacent_block_log_verified": true
+    }
+  ],
+  "figures": [
+    {
+      "figure": "01_primary_effects",
+      "files": [
+        {
+          "name": "01_primary_effects.png",
+          "sha256": "110c95f46449472fd601cc4334eb1b459ecd365d4ebe4451bd0b109c4268a026"
+        },
+        {
+          "name": "01_primary_effects.pdf",
+          "sha256": "6fa91b53a13fe65b5a5fcaa7c1d3a6520762e8951e67f88cce0be93692042b00"
+        }
+      ]
+    },
+    {
+      "figure": "02_subgroup_effects",
+      "files": [
+        {
+          "name": "02_subgroup_effects.png",
+          "sha256": "0ba91ea556a9a7f5f5719877106874edccbea227cfbcf1c4e568b059cfb5d01d"
+        },
+        {
+          "name": "02_subgroup_effects.pdf",
+          "sha256": "78a0acda302cee0fe8cb8c7841bd8d82504fa071bb962d0d2ac6103d77e3f869"
+        }
+      ]
+    },
+    {
+      "figure": "03_write_monitoring",
+      "files": [
+        {
+          "name": "03_write_monitoring.png",
+          "sha256": "7d8ec9420b0e27cb099df5e4d592835608190ef2e9319730aff4e54153d0de78"
+        },
+        {
+          "name": "03_write_monitoring.pdf",
+          "sha256": "35cfc364701820487f5e21042d47d23ad58963acd48f25a8424f648ec9b33e59"
+        }
+      ]
+    }
+  ],
+  "definitions": {
+    "ci": "95% paired document-group intervals copied unchanged from results.json",
+    "effects": "empty/donor/context loss minus self, in nats per target token",
+    "beta": "merged finite-event mean and population SD from block_metrics_summary.json; SD is not a CI",
+    "rows_and_norms": "arithmetic means of per-write-block scalar snapshots",
+    "query": "merged hit counts divided by merged valid denominators",
+    "missing_values": "unavailable/nonfinite point estimates are not plotted",
+    "after_16": "limited eligible-long-file coverage; displayed group counts come from saved comparisons"
+  }
+}
