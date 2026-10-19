@@ -201,11 +201,30 @@ The launcher records the Git commit, source hashes and deterministic CUDA
 settings in a sibling `.launch.json`. The preset budgets 5M supervised target
 tokens with 512-token blocks, a 128-token prefix, equal target shares for 8/16
 blocks and six code languages, and four independent streams per batch. It uses
-128 fixed development windows with group-level bootstrap, evaluates at the first
+up to 128 fixed development windows with group-level bootstrap, evaluates at the first
 completed optimizer step reaching 2.5M targets and at the endpoint, and saves the
 latest atomic resume checkpoint every 250k targets. Evaluation milestones also
 retain writer and training snapshots named by step and actual target count.
 Intervals are checked at complete optimizer boundaries.
+
+The prespecified replication uses `configs/p1_code_seed29.yaml`, starting from a
+fresh writer and optimizer after the first seed passes both main-run checks.
+Only the training seed and output directory differ; the development sample and
+bootstrap seed remain fixed. It has its own 5M target-token cap.
+
+After collecting run artifacts, audit the statistical P1 requirements with:
+
+```sh
+python scripts/summarize_p1.py --main-run /path/to/seed17 --replication-run /path/to/seed29 --output /path/to/p1_audit.json
+```
+
+Keep each run's sibling `.launch.json` beside its directory. The audit checks
+fresh starts, matching identities, fixed development samples, paired group
+statistics and actual token accounting. The two main-run points require the
+threshold above; replication checks the final gain's positive direction. A
+normal remainder below one complete trajectory is accepted as the nominal 5M
+endpoint while preserving its actual count. Missing replication remains pending.
+Causal and engineering acceptance stays separate from this statistical audit.
 
 A remainder too small for a complete trajectory stays unspent. Its actual token
 count, nominal endpoint, and `budget_endpoint` are explicit in `summary.json`;
