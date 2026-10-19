@@ -295,6 +295,47 @@ def test_fixed_dev_selection_covers_groups_before_extra_windows():
     assert torch.equal(torch.get_rng_state(), before_torch)
 
 
+def test_fixed_dev_selection_reserves_independent_groups_for_every_source():
+    items = [TrajectoryWindow(f"{source}-doc-{group}", f"{source}-group-{group}", source, offset,
+                              tuple(range(16)), 2)
+             for source in ("code", "papers", "books", "web", "news")
+             for group in range(100 if source == "code" else 64)
+             for offset in range(4 if source == "code" else 1)]
+    before_python, before_torch = random.getstate(), torch.get_rng_state().clone()
+    chosen = select_validation_windows(items, limit=340, seed=104729, min_groups_per_source=64)
+    assert len(chosen) == 340
+    assert len({(item.group_id, item.start) for item in chosen}) == 340
+    for source in {item.source for item in items}:
+        assert len({item.group_id for item in chosen[:320] if item.source == source}) == 64
+    assert len({item.group_id for item in chosen}) == 340
+    assert chosen == select_validation_windows(list(reversed(items)), limit=340, seed=104729,
+                                               min_groups_per_source=64)
+    assert random.getstate() == before_python
+    assert torch.equal(torch.get_rng_state(), before_torch)
+
+
+@pytest.mark.parametrize("limit,minimum,required,match", [
+    (127, 64, ["code", "news"], "window limit"),
+    (200, 65, ["code", "news"], "requires 65"),
+    (200, 64, ["code", "missing"], "missing.*has 0 groups"),
+    (200, True, ["code", "news"], "nonnegative integer"),
+])
+def test_fixed_dev_rejects_insufficient_source_coverage(limit, minimum, required, match):
+    items = [TrajectoryWindow(f"{source}-{group}", f"{source}-{group}", source, 0,
+                              tuple(range(16)), 2)
+             for source in ("code", "news") for group in range(64)]
+    with pytest.raises(ValueError, match=match):
+        select_validation_windows(items, limit=limit, seed=17,
+                                  min_groups_per_source=minimum, required_sources=required)
+
+
+def test_per_source_dev_rejects_cross_source_groups():
+    items = [TrajectoryWindow(source, "shared-group", source, 0, tuple(range(16)), 2)
+             for source in ("code", "news")]
+    with pytest.raises(ValueError, match="one source per group_id"):
+        select_validation_windows(items, limit=2, seed=17, min_groups_per_source=1)
+
+
 def test_group_bootstrap_uses_paired_ratio_of_sums_and_private_rng():
     groups = [{"group_id": "short", "self_loss_sum": 1., "empty_loss_sum": 3., "loss_tokens": 1},
               {"group_id": "long", "self_loss_sum": 18., "empty_loss_sum": 9., "loss_tokens": 9}]
@@ -343,6 +384,80 @@ def test_evaluation_retains_paired_group_sums(tmp_path, monkeypatch):
          "self_loss_sum": 32., "empty_loss_sum": 64., "loss_tokens": 32},
         {"group_id": "group-c", "document_ids": ["c"], "windows": 1,
          "self_loss_sum": 8., "empty_loss_sum": 16., "loss_tokens": 8}]
+
+
+def test_evaluation_reports_each_source_and_keeps_paired_token_weighting(monkeypatch):
+    from types import SimpleNamespace
+    import delta_ngram.raw_lm as module
+    method = SimpleNamespace(eval=lambda: None)
+    items = [TrajectoryWindow("a", "code-a", "code", 0, tuple(range(16)), 2),
+             TrajectoryWindow("b", "code-a", "code", 16, tuple(range(32)), 4),
+             TrajectoryWindow("c", "news-c", "news", 0, tuple(range(16)), 2)]
+
+    def fake_trajectory(method, batch, *, prefix_tokens, memory_mode="self"):
+        assert len({item.source for item in batch}) == 1
+        count = sum(item.loss_tokens for item in batch)
+        own = 1 if batch[0].source == "code" else 3
+        return SimpleNamespace(loss_tokens=count,
+                               loss_sum=torch.tensor(float(count * (2 if memory_mode == "empty" else own))))
+
+    monkeypatch.setattr(module, "trajectory_loss", fake_trajectory)
+    result = evaluate_raw(method, items, prefix_tokens=4, batch_size=2)
+    assert result["loss_tokens"] == 40
+    assert result["delta_empty"] == pytest.approx(.6)
+    assert result["groups"][0]["source"] == "code"
+    assert result["per_source"]["code"]["delta_empty"] == 1
+    assert result["per_source"]["news"]["delta_empty"] == -1
+    assert result["source_macro_delta_empty"] == 0
+    for source, tokens, delta in (("code", 32, 1), ("news", 8, -1)):
+        summary = result["per_source"][source]
+        assert summary["group_count"] == 1 and summary["loss_tokens"] == tokens
+        assert summary["paired_group_bootstrap"]["ci_lower"] == delta
+        assert summary["paired_group_bootstrap"]["ci_upper"] == delta
+    single = evaluate_raw(method, items[:2], prefix_tokens=4, batch_size=2, report_per_source=True)
+    assert single["per_source"]["code"]["delta_empty"] == single["delta_empty"]
+    crossed = [items[0], TrajectoryWindow("crossed", "code-a", "news", 0, tuple(range(16)), 2)]
+    with pytest.raises(ValueError, match="one source per group_id"):
+        evaluate_raw(method, crossed, prefix_tokens=4, batch_size=2)
+
+
+def test_multisource_training_wires_quotas_dev_and_exact_resume(tmp_path):
+    documents = [{"id": f"{source}-{split}-{index}", "group_id": f"{source}-{split}-{index}",
+                  "source": source, "split": split, "text": "abc xyz\n" * 8}
+                 for source in ("code", "news") for split in ("train", "validation") for index in range(2)]
+    (tmp_path / "documents.jsonl").write_text(
+        "\n".join(json.dumps(record) for record in documents), encoding="utf-8")
+    settings = {"source_weights": {"code": 1., "news": 1.},
+                "source_length_weights": {"code": {4: 1.}, "news": {2: 1.}},
+                "eval_min_groups_per_source": 2, "eval_windows": 4}
+    full = train_raw(config_for(tmp_path, "full", raw=settings))
+    train_raw(config_for(tmp_path, "partial", raw={**settings, "max_steps": 2}))
+    train_raw(config_for(tmp_path, "resumed", raw={**settings, "resume": "partial/training.pt"}))
+    expected = torch.load(tmp_path / "full/training.pt", weights_only=True)
+    restored = torch.load(tmp_path / "resumed/training.pt", weights_only=True)
+    assert_tree_equal(expected, restored)
+    assert expected["identity"]["raw"]["source_length_weights"] == settings["source_length_weights"]
+    assert expected["identity"]["raw"]["eval_min_groups_per_source"] == 2
+    manifest = json.loads((tmp_path / "full/data_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["selected_validation_groups_per_source"] == {"code": 2, "news": 2}
+    assert {(item["source"], item["blocks"]) for item in manifest["validation_sample"]} == {
+        ("code", 4), ("news", 2)}
+    assert set(full["last_evaluation"]["per_source"]) == {"code", "news"}
+    changed = config_for(tmp_path, "rejected", raw={**settings, "eval_min_groups_per_source": 1,
+                                                   "resume": "partial/training.pt"})
+    with pytest.raises(ValueError, match="identity differs"):
+        train_raw(changed)
+    assert not (tmp_path / "rejected").exists()
+
+
+def test_default_raw_identity_keeps_new_options_absent(tmp_path):
+    train_raw(config_for(tmp_path, "legacy", raw={"max_steps": 1}))
+    checkpoint = torch.load(tmp_path / "legacy/training.pt", weights_only=True)
+    assert "source_length_weights" not in checkpoint["identity"]["raw"]
+    assert "eval_min_groups_per_source" not in checkpoint["identity"]["raw"]
+    manifest = json.loads((tmp_path / "legacy/data_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["validation_protocol"]["selection"] == "group_first_round_robin"
+    assert "minimum_groups_per_source" not in manifest["validation_protocol"]
 
 
 def test_short_checkpoints_preserve_training_and_milestone_resume(tmp_path, monkeypatch):

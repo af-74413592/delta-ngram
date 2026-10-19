@@ -34,6 +34,7 @@ DEFAULTS = {
             "max_wall_seconds": 1500.0, "max_evidence_tokens": 128},
     "raw": {"dataset": None, "block_size": 512, "prefix_tokens": 128,
             "block_counts": [8, 16], "length_weights": None, "source_weights": None,
+            "source_length_weights": None, "eval_min_groups_per_source": 0,
             "loss_tokens": 5_000_000, "batch_size": 1, "gradient_accumulation_steps": 1, "eval_windows": 8,
             "eval_every_tokens": 1_000_000, "max_steps": None,
             "eval_seed": 104729, "eval_bootstrap_samples": 2000,
@@ -153,6 +154,8 @@ class ExperimentConfig:
                 raise ValueError(f"raw.{key} must be a positive integer")
         if type(raw["eval_seed"]) is not int or raw["eval_seed"] < 0:
             raise ValueError("raw.eval_seed must be a nonnegative integer")
+        if type(raw["eval_min_groups_per_source"]) is not int or raw["eval_min_groups_per_source"] < 0:
+            raise ValueError("raw.eval_min_groups_per_source must be a nonnegative integer")
         if (raw["checkpoint_every_tokens"] is not None
                 and (type(raw["checkpoint_every_tokens"]) is not int or raw["checkpoint_every_tokens"] < 1)):
             raise ValueError("raw.checkpoint_every_tokens must be null or a positive integer")
@@ -179,6 +182,25 @@ class ExperimentConfig:
                         raise ValueError("raw.length_weights must have integer keys matching raw.block_counts")
                 elif any(not isinstance(k, str) or not k for k in weights):
                     raise ValueError("raw.source_weights keys must be nonempty strings")
+        conditional = raw["source_length_weights"]
+        if conditional is not None:
+            if raw["length_weights"] is not None:
+                raise ValueError("raw.source_length_weights and raw.length_weights are mutually exclusive")
+            if not isinstance(conditional, dict) or not conditional:
+                raise ValueError("raw.source_length_weights must be a nonempty mapping")
+            if raw["source_weights"] is None:
+                raise ValueError("raw.source_length_weights requires explicit raw.source_weights")
+            active_sources = {source for source, weight in raw["source_weights"].items() if weight > 0}
+            if set(conditional) != active_sources:
+                raise ValueError("raw.source_length_weights must cover exactly the active sources")
+            for source, weights in conditional.items():
+                if (not isinstance(weights, dict) or not weights
+                        or any(type(k) is not int or k not in raw["block_counts"] for k in weights)
+                        or any(type(w) not in (int, float) or not math.isfinite(w) or w < 0
+                               for w in weights.values())
+                        or not math.isfinite(sum(weights.values())) or sum(weights.values()) <= 0):
+                    raise ValueError(f"raw.source_length_weights[{source!r}] requires finite positive total "
+                                     "and integer keys from raw.block_counts")
         for key in ("dataset", "resume"):
             if raw[key] is not None and (not isinstance(raw[key], str) or not raw[key]):
                 raise ValueError(f"raw.{key} must be null or a nonempty path string")

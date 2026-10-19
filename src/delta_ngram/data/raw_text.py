@@ -185,7 +185,9 @@ class TrajectoryWindow:
 
 
 def build_windows(documents: Sequence[RawDocument], block_size: int,
-                  block_counts=(8, 16), split: str = "train") -> dict[int, list[TrajectoryWindow]]:
+                  block_counts=(8, 16), split: str = "train",
+                  source_block_counts: Mapping[str, Sequence[int]] | None = None
+                  ) -> dict[int, list[TrajectoryWindow]]:
     if type(block_size) is not int or block_size < 1:
         raise ValueError("block_size must be a positive integer")
     counts = tuple(block_counts)
@@ -195,6 +197,14 @@ def build_windows(documents: Sequence[RawDocument], block_size: int,
         raise ValueError("block_counts must be unique")
     if split not in SPLITS:
         raise ValueError("split must be train or validation")
+    if source_block_counts is not None:
+        if not isinstance(source_block_counts, Mapping) or not source_block_counts:
+            raise ValueError("source_block_counts must be a nonempty mapping")
+        for source, lengths in source_block_counts.items():
+            if (not isinstance(source, str) or not source or not isinstance(lengths, (list, tuple))
+                    or not lengths or any(type(count) is not int or count not in counts for count in lengths)
+                    or len(set(lengths)) != len(lengths)):
+                raise ValueError("source_block_counts must contain unique configured block counts")
     documents = list(documents)
     _validate_documents(documents)
     windows = {count: [] for count in counts}
@@ -202,6 +212,8 @@ def build_windows(documents: Sequence[RawDocument], block_size: int,
         if document.split != split:
             continue
         for count in counts:
+            if source_block_counts is not None and count not in source_block_counts.get(document.source, ()):
+                continue
             size = count * block_size
             for start in range(0, len(document.token_ids) - size + 1, size):
                 windows[count].append(TrajectoryWindow(
@@ -245,13 +257,16 @@ class RawWindowSampler:
     """
     def __init__(self, windows: Mapping[int, Sequence[TrajectoryWindow]], seed: int,
                  length_weights: Mapping[int, float] | None = None,
-                 source_weights: Mapping[str, float] | None = None):
+                 source_weights: Mapping[str, float] | None = None,
+                 source_length_weights: Mapping[str, Mapping[int, float]] | None = None):
         if type(seed) is not int:
             raise ValueError("seed must be an integer")
         self._windows = {count: tuple(items) for count, items in windows.items()}
         for count, items in self._windows.items():
             if type(count) is not int or count < 2 or any(item.blocks != count for item in items):
                 raise ValueError("window bucket keys must match blocks >= 2")
+        if source_length_weights is not None and length_weights is not None:
+            raise ValueError("source_length_weights and length_weights are mutually exclusive")
         self.length_weights = _weights(length_weights, tuple(self._windows), "length_weights")
         active_windows = [item for count in self.length_weights for item in self._windows[count]]
         sizes = {item.block_size for item in active_windows}
@@ -260,13 +275,33 @@ class RawWindowSampler:
         self.block_size = sizes.pop()
         sources = sorted({item.source for item in active_windows})
         self.source_weights = _weights(source_weights, sources, "source_weights")
+        self.source_length_weights = None
+        if source_length_weights is not None:
+            if set(source_length_weights) != set(self.source_weights):
+                raise ValueError("source_length_weights must cover exactly the active sources")
+            self.source_length_weights = {
+                source: _weights(weights, tuple(self._windows), f"source_length_weights[{source}]")
+                for source, weights in sorted(source_length_weights.items())}
+            self.length_weights = {}
+            for source, weights in self.source_length_weights.items():
+                for count, weight in weights.items():
+                    self.length_weights[count] = (self.length_weights.get(count, 0.0)
+                                                  + self.source_weights[source] * weight)
+            self.length_weights = dict(sorted(self.length_weights.items()))
         self._cells = {}
         for count in self.length_weights:
             for source in self.source_weights:
+                if (self.source_length_weights is not None
+                        and count not in self.source_length_weights[source]):
+                    continue
                 items = tuple(item for item in self._windows[count] if item.source == source)
                 if not items:
                     raise ValueError(f"nonzero quota has no windows: blocks={count}, source={source}")
                 self._cells[count, source] = items
+        self.cell_weights = (None if self.source_length_weights is None else {
+            (count, source): self.source_weights[source] * self.source_length_weights[source][count]
+            for count, source in self._cells})
+        self.cell_loss_tokens = dict.fromkeys(self._cells, 0)
         self._rng = random.Random(seed)
         self._orders, self._cursors, self._epochs = {}, {}, {}
         for key, items in self._cells.items():
@@ -277,11 +312,15 @@ class RawWindowSampler:
         self.source_loss_tokens = dict.fromkeys(self.source_weights, 0)
         self.total_loss_tokens = 0
         self.last_status = {"reason": "ready"}
-        self.fingerprint = _digest({
+        fingerprint = {
             "length_weights": self.length_weights, "source_weights": self.source_weights,
             "cells": [[count, source, [[item.document_id, item.group_id, item.start,
                         item.blocks, _digest(item.token_ids)] for item in items]]
-                      for (count, source), items in self._cells.items()]})
+                      for (count, source), items in self._cells.items()]}
+        if self.source_length_weights is not None:
+            fingerprint["source_length_weights"] = self.source_length_weights
+            fingerprint["scheduling"] = "joint_source_length_token_fair_v1"
+        self.fingerprint = _digest(fingerprint)
 
     def next_window(self, remaining_loss_tokens: int | None = None) -> TrajectoryWindow | None:
         if remaining_loss_tokens is not None:
@@ -293,11 +332,16 @@ class RawWindowSampler:
             self.last_status = {"reason": "insufficient_budget", "remaining_loss_tokens": remaining_loss_tokens,
                                 "minimum_loss_tokens": min(costs.values())}
             return None
-        count = min(eligible, key=lambda value: (
-            (self.length_loss_tokens[value] + costs[value]) / self.length_weights[value], value))
-        cost = costs[count]
-        source = min(self.source_weights, key=lambda value: (
-            (self.source_loss_tokens[value] + cost) / self.source_weights[value], value))
+        if self.cell_weights is not None:
+            count, source = min((key for key in self._cells if key[0] in eligible), key=lambda key: (
+                (self.cell_loss_tokens[key] + costs[key[0]]) / self.cell_weights[key], key))
+            cost = costs[count]
+        else:
+            count = min(eligible, key=lambda value: (
+                (self.length_loss_tokens[value] + costs[value]) / self.length_weights[value], value))
+            cost = costs[count]
+            source = min(self.source_weights, key=lambda value: (
+                (self.source_loss_tokens[value] + cost) / self.source_weights[value], value))
         key = count, source
         if self._cursors[key] == len(self._orders[key]):
             self._rng.shuffle(self._orders[key])
@@ -307,6 +351,7 @@ class RawWindowSampler:
         self._cursors[key] += 1
         self.length_loss_tokens[count] += cost
         self.source_loss_tokens[source] += cost
+        self.cell_loss_tokens[key] += cost
         self.total_loss_tokens += cost
         self.last_status = {"reason": "sampled", "loss_tokens": cost}
         return window
@@ -327,17 +372,23 @@ class RawWindowSampler:
 
     def state_dict(self) -> dict:
         """Return a JSON-serializable snapshot, including shuffle RNG and cursors."""
-        return json.loads(json.dumps({
-            "version": 1, "fingerprint": self.fingerprint, "rng_state": self._rng.getstate(),
+        state = {
+            "version": 1 if self.source_length_weights is None else 2,
+            "fingerprint": self.fingerprint, "rng_state": self._rng.getstate(),
             "total_loss_tokens": self.total_loss_tokens,
             "length_loss_tokens": [[key, value] for key, value in self.length_loss_tokens.items()],
             "source_loss_tokens": [[key, value] for key, value in self.source_loss_tokens.items()],
             "cells": [{"blocks": key[0], "source": key[1], "order": self._orders[key],
                        "cursor": self._cursors[key], "epoch": self._epochs[key]} for key in self._cells],
-            "last_status": self.last_status}))
+            "last_status": self.last_status}
+        if self.source_length_weights is not None:
+            state["cell_loss_tokens"] = [[count, source, value]
+                                        for (count, source), value in self.cell_loss_tokens.items()]
+        return json.loads(json.dumps(state))
 
     def load_state_dict(self, state: Mapping) -> None:
-        if state.get("version") != 1 or state.get("fingerprint") != self.fingerprint:
+        expected_version = 1 if self.source_length_weights is None else 2
+        if state.get("version") != expected_version or state.get("fingerprint") != self.fingerprint:
             raise ValueError("sampler state version or corpus/config fingerprint differs")
         try:
             lengths, sources = dict(state["length_loss_tokens"]), dict(state["source_loss_tokens"])
@@ -367,6 +418,20 @@ class RawWindowSampler:
                 epochs[key] = _nonnegative_integer(cell["epoch"], "epoch")
             if orders.keys() != self._cells.keys():
                 raise ValueError("sampler state is missing cells")
+            cell_tokens = {key: (epochs[key] * len(orders[key]) + cursors[key])
+                           * (key[0] - 1) * self.block_size for key in self._cells}
+            if self.source_length_weights is not None:
+                recorded_cells = state["cell_loss_tokens"]
+                recorded = {(count, source): value for count, source, value in recorded_cells}
+                if len(recorded) != len(recorded_cells) or recorded != cell_tokens:
+                    raise ValueError("sampler cell token counters disagree with cursors")
+                for value in recorded.values():
+                    _nonnegative_integer(value, "cell_loss_tokens")
+                if (any(sum(value for (count, _), value in recorded.items() if count == key) != total
+                        for key, total in lengths.items())
+                        or any(sum(value for (_, source), value in recorded.items() if source == key) != total
+                               for key, total in sources.items())):
+                    raise ValueError("sampler cell token counters disagree with quotas")
             rng_state = state["rng_state"]
             restored_rng = random.Random()
             restored_rng.setstate((rng_state[0], tuple(rng_state[1]), rng_state[2]))
@@ -376,4 +441,5 @@ class RawWindowSampler:
         self._rng = restored_rng
         self._orders, self._cursors, self._epochs = orders, cursors, epochs
         self.length_loss_tokens, self.source_loss_tokens = lengths, sources
+        self.cell_loss_tokens = cell_tokens
         self.total_loss_tokens, self.last_status = total, status

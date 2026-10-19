@@ -49,8 +49,21 @@ described below.
 
 ### Raw-text LM training on one device
 
-See the [training plan](docs/training_plan_20261019.md) for stage budgets,
-acceptance gates, and implementation status.
+The current [multidomain execution plan](docs/multidomain_execution_plan_20261019.md)
+adds dated old-news training to code, papers, books, and web text. It fixes the
+100M target-token budget, source-specific trajectory lengths, per-source
+development coverage, and independent recent-event evaluation. Earlier P1/P2
+code pilots are baselines, not completed multidomain training; their original
+[training plan](docs/training_plan_20261019.md) remains as historical context.
+
+Install `pip install -e ".[data]"` for the parquet corpus builders. The current
+five-source configuration is `configs/m1_five_source_seed17.yaml`: source loss-token
+shares are 20/25/20/15/20, news uses 2/4 blocks at 90/10, and the other sources use
+8/16 blocks at 50/50. `raw.source_length_weights` is mutually exclusive with the
+old global `raw.length_weights`. Conditional sampling records resumable joint
+cell quotas; default sampling retains its previous stream. Development sampling
+requires at least 64 independent groups per source and reports each source's
+paired confidence interval as well as the equal-source mean improvement.
 
 The [P2 execution protocol](docs/p2_execution_protocol_20261019.md) fixes the
 matched Base/I comparison, explicit common tokenizer, exact step-zero writer
