@@ -235,10 +235,18 @@ bootstrap intervals and token-recurrence, language, and after-write buckets.
 The 4/8/16-write points score the next block; unavailable natural continuations
 are reported as limited coverage.
 
+The [completed two-seed report](docs/p1_diagnostics_results_20261019.md) uses
+111 fixed windows from 76 groups. Mean-donor minus self NLL is 0.024399
+[0.021084, 0.027733] for seed 17 and 0.025685 [0.022446, 0.028903] for seed 29
+(95% paired group intervals). It includes context, all requested buckets, and
+write-monitoring figures; the after-16 result covers only 13 groups. P2/P3 remain
+paused.
+
 ```sh
 python scripts/p1_diagnostics.py prepare --baseline-run /path/to/seed17 --dataset /path/to/train_validation.jsonl --output /path/to/diagnostic_manifest.json
 python scripts/p1_diagnostics.py evaluate --config configs/p1_code_seed17.yaml --training-run /path/to/seed17 --manifest /path/to/diagnostic_manifest.json --output /path/to/diagnostics/seed17
 python scripts/p1_diagnostics.py evaluate --config configs/p1_code_seed29.yaml --training-run /path/to/seed29 --manifest /path/to/diagnostic_manifest.json --output /path/to/diagnostics/seed29
+python scripts/summarize_block_metrics.py --input /path/to/diagnostics/seed29/block_metrics.jsonl --output /path/to/diagnostics/seed29/block_metrics_summary.json
 ```
 
 The evaluator requires a clean committed checkout and verified final 5M run
