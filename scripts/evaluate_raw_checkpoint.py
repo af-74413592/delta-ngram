@@ -163,6 +163,8 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
     checkpoint_bytes = checkpoint_path.read_bytes()
     checkpoint_hash = hashlib.sha256(checkpoint_bytes).hexdigest()
     payload = load_checkpoint(io.BytesIO(checkpoint_bytes))
+    if payload["config"].get("requires_alpha_payload"):
+        raise ValueError("alpha writer requires its paired alpha.pt; use evaluate_alpha_checkpoint.py")
     del checkpoint_bytes
     config_hash = file_sha256(config.source)
     dataset_path = Path(config.values["raw"]["dataset"]).resolve() if config.values["raw"]["dataset"] else None

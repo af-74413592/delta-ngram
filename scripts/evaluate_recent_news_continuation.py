@@ -72,6 +72,8 @@ def evaluate_checkpoint(config, checkpoint_path, registry_path, *, registry_sha2
     checkpoint_bytes = checkpoint_path.read_bytes()
     checkpoint_hash = hashlib.sha256(checkpoint_bytes).hexdigest()
     payload = load_checkpoint(io.BytesIO(checkpoint_bytes))
+    if payload["config"].get("requires_alpha_payload"):
+        raise ValueError("alpha writer requires its paired alpha.pt; use evaluate_alpha_checkpoint.py")
     del checkpoint_bytes
     started = time.monotonic()
     method, _ = create_runtime(config)

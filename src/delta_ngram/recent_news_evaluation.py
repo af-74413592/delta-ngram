@@ -316,8 +316,10 @@ def write_article(method, state, token_ids, *, source_id, observer=None):
 @torch.no_grad()
 def score_later_article(method, state, token_ids, *, source_id, observer=None):
     """Teacher forcing uses only reader calls and never modifies memory."""
+    guarded = ("rows", "values", "counts", "precision", "block_clock",
+               "cumulative_log_alpha", "row_last_written_block", "row_log_alpha_at_write")
     before = {name: None if value is None else value.clone() for name, value in
-              ((name, getattr(state, name)) for name in ("rows", "values", "counts", "precision"))}
+              ((name, getattr(state, name)) for name in guarded if hasattr(state, name))}
     losses, counts = [], []
     reader_tokens = 0
     for context_start, target_start, target_end in scoring_windows(len(token_ids)):
@@ -425,12 +427,15 @@ def _check_parameters(module, previous, label):
 
 @torch.no_grad()
 def evaluate_continuation(method, prepared, *, bootstrap_seed=20261019, bootstrap_samples=10000,
-                          progress_callback=None, observer=None, prefix_annotations=None):
+                          progress_callback=None, observer=None, prefix_annotations=None,
+                          memory_backend=None):
     """All five distances, three arms, frozen parameters, and no target writes.
 
     For an arm we retain nested distractor prefixes between checkpoints. Query
     calls are read-only, so this equals replaying each prefix from a fresh state.
     Empty scores are computed once because its state/prefix/targets never vary.
+    An explicit backend may supply empty/write_article/permute_read/start/finish
+    and after_query. The default is the original D1 state and write path.
     """
     _require(method.reader.backend == "external_hash" and method.name == "forward"
              and method.supports_outer_training, "continuation requires a learned external-hash forward writer")
@@ -442,24 +447,32 @@ def evaluate_continuation(method, prepared, *, bootstrap_seed=20261019, bootstra
         module.eval()
         module.requires_grad_(False)
         module.zero_grad(set_to_none=True)
+    if memory_backend is not None:
+        memory_backend.start(method)
     writer_tensors = {name: tensor.detach().clone() for name, tensor in method.writer.state_dict().items()}
     writer_parameters, reader_parameters = _parameters(method.writer), _parameters(method.reader.model)
     from .p2_initialization import writer_tensor_sha256
     from .direction_control import DIRECTION_CONTROL_SEEDS, make_direction_permutation, permute_state_for_read
     writer_hash = writer_tensor_sha256(writer_tensors)
     plans = tuple(make_direction_permutation(method.reader.width, seed) for seed in DIRECTION_CONTROL_SEEDS)
+    empty_state = _empty if memory_backend is None else memory_backend.empty
+    write_state = write_article if memory_backend is None else memory_backend.write_article
+    permute_read = permute_state_for_read if memory_backend is None else memory_backend.permute_read
     records = []
     execution = {"write_calls": 0, "writer_tokens": 0, "query_calls": 0}
     for pair in prepared.registry["pairs"]:
         later_id = pair["later_source_id"]
         targets = prepared.tokens[later_id]
-        empty = score_later_article(method, _empty(method), targets, source_id=later_id, observer=observer)
+        empty = score_later_article(method, empty_state(method), targets, source_id=later_id, observer=observer)
         execution["query_calls"] += empty["read_windows"]
         empty.update(actual_written_articles=0, actual_written_tokens=0, actual_written_blocks=0,
                      address_prefix_tokens=0, write_source_ids=[])
         arms = {distance: {"empty": empty.copy()} for distance in DISTANCES}
         for arm, anchor in (("self", pair["earlier_source_id"]), ("donor", pair["donor_source_id"])):
-            state = _empty(method)
+            if memory_backend is not None:
+                memory_backend.set_context(evaluation="continuation", pair_id=pair["id"],
+                    event_family=pair["event_family"], memory_mode=arm)
+            state = empty_state(method)
             totals = dict.fromkeys(("articles", "tokens", "blocks", "address_prefix_tokens"), 0)
             written = []
             for condition in pair["interference_conditions"]:
@@ -468,7 +481,7 @@ def evaluate_continuation(method, prepared, *, bootstrap_seed=20261019, bootstra
                 _require(planned[:len(written)] == written, "non-nested runtime write schedule")
                 for source_id in planned[len(written):]:
                     _require(source_id != later_id, "later target cannot be written")
-                    state, counts = write_article(method, state, prepared.tokens[source_id],
+                    state, counts = write_state(method, state, prepared.tokens[source_id],
                                                   source_id=source_id, observer=observer)
                     for key, value in counts.items():
                         totals[key] += value
@@ -481,11 +494,14 @@ def evaluate_continuation(method, prepared, *, bootstrap_seed=20261019, bootstra
                 execution["query_calls"] += scored["read_windows"]
                 scored.update({"actual_written_" + unit: totals[unit] for unit in ("articles", "tokens", "blocks")})
                 scored.update(address_prefix_tokens=totals["address_prefix_tokens"], write_source_ids=written.copy())
+                if memory_backend is not None:
+                    scored["memory_diagnostics"] = memory_backend.after_query(
+                        method, state, targets, source_id=later_id, original_score=scored)
                 arms[distance][arm] = scored
                 seed_scores = {}
                 for plan in plans:
                     # The read view is discarded; the original D1 state continues writing.
-                    view = permute_state_for_read(state, plan)
+                    view = permute_read(state, plan)
                     seed_score = score_later_article(method, view, targets, source_id=later_id, observer=observer)
                     del view
                     execution["query_calls"] += seed_score["read_windows"]
@@ -523,6 +539,7 @@ def evaluate_continuation(method, prepared, *, bootstrap_seed=20261019, bootstra
         raise RuntimeError("writer state_dict changed during continuation evaluation")
     _check_parameters(method.writer, writer_parameters, "writer")
     _check_parameters(method.reader.model, reader_parameters, "reader")
+    backend_metadata = None if memory_backend is None else memory_backend.finish(method)
     prepared.verify_files()
     if prefix_annotations is not None:
         prefix_annotations.verify_file()
@@ -547,13 +564,15 @@ def evaluate_continuation(method, prepared, *, bootstrap_seed=20261019, bootstra
                   "target_never_written": True, "memory_unchanged_during_queries": True,
                   "actual_write_budgets_verified": True, "reader_weight_content_hash_verified": False},
               "execution_policy": "Incremental nested replay; empty scored once and reused at identical distances.",
-              "limitations": ["Development engineering validation, not the formal 64-pair continuation cohort.",
+              "limitations": [f"Development continuation evaluation with {len(prepared.registry['pairs'])} independent families; not a FINAL evaluation.",
                   "Teacher forcing predicts fixed original targets; no target token enters the writer.",
                   "Source archives retrieved in 2026 are not certified unchanged 2025 historical snapshots.",
                   "Base pretraining novelty is unknown; report both empty and fixed-donor controls.",
                   "Reader parameter version checks do not detect every .data or buffer mutation.",
                   "Auxiliary free generation is not performed by this NLL evaluator."]}
     result.update(summarize_continuation(records, bootstrap_seed=bootstrap_seed, bootstrap_samples=bootstrap_samples))
+    if backend_metadata is not None:
+        result["memory_backend"] = backend_metadata
     result["prefix_restatement_groups"] = {}
     for label in ("restated", "not_restated", "unknown"):
         group = [row for row in records if row["prefix_restatement_label"] == label]
