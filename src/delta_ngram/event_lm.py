@@ -84,6 +84,8 @@ def event_trajectory_loss(method, trajectories, *, prefix_tokens=128, checkpoint
     plans = [_chunks(t) for t in trajectories]
     donor_offsets = [0] * batch_size
     losses = []
+    first_article_block = ({name: {"loss_sum": 0.0, "loss_tokens": 0, "articles": 0}
+                            for name in ("full", "after_prefix")} if not torch.is_grad_enabled() else None)
     counters = {"loss_tokens": 0, "raw_tokens_consumed": sum(t.raw_tokens for t in trajectories),
                 "writer_new_tokens": 0, "encoder_input_tokens": 0,
                 "reader_input_tokens": 0, "address_prefix_tokens": 0,
@@ -134,11 +136,44 @@ def event_trajectory_loss(method, trajectories, *, prefix_tokens=128, checkpoint
             if block_observer is not None:
                 addresses = method.reader.adapter.addresses(ids, mask)
                 emit("query", step, query_hit_summary(state, addresses, labels, mask), reading)
+            first = [reading[owner] and chunk[1] == 0 for owner, chunk in enumerate(current)]
+            token_observer = None
+            if first_article_block is not None and any(first):
+                def token_observer(token_losses, valid):
+                    owners = torch.nonzero(valid, as_tuple=True)[0]
+                    selected = torch.tensor(first, device=device)[owners]
+                    item = first_article_block['full']
+                    item['loss_sum'] += float(token_losses[selected].double().sum())
+                    item['loss_tokens'] += int(selected.sum())
+                    item['articles'] += sum(first)
             loss, count = score_block(method.reader, state, ids, mask, labels,
-                                      checkpoint_reader=checkpoint_reader)
+                                      checkpoint_reader=checkpoint_reader, token_loss_observer=token_observer)
             losses.append(loss)
             counters["loss_tokens"] += count
             counters["reader_input_tokens"] += int(mask.sum().item())
+            if first_article_block is not None and any(first):
+                # Same first block with a real article prefix, matching the new-event
+                # continuation convention. No BOS and no current-article write.
+                diagnostic_ids = torch.full((batch_size, block_size), pad, dtype=torch.long, device=device)
+                diagnostic_mask = torch.zeros_like(diagnostic_ids)
+                diagnostic_labels = torch.full_like(diagnostic_ids, -100)
+                diagnostic_articles = 0
+                for owner, chunk in enumerate(current):
+                    if not first[owner] or len(chunk[2]) <= prefix_tokens:
+                        continue
+                    tokens = chunk[2]
+                    size = len(tokens)
+                    diagnostic_ids[owner, :size] = torch.tensor(tokens, device=device)
+                    diagnostic_mask[owner, :size] = 1
+                    diagnostic_labels[owner, prefix_tokens:size] = diagnostic_ids[owner, prefix_tokens:size]
+                    diagnostic_articles += 1
+                if diagnostic_articles:
+                    value, tokens = score_block(method.reader, state, diagnostic_ids, diagnostic_mask, diagnostic_labels)
+                    item = first_article_block['after_prefix']
+                    item['loss_sum'] += float(value)
+                    item['loss_tokens'] += tokens
+                    item['articles'] += diagnostic_articles
+                    counters['reader_input_tokens'] += int(diagnostic_mask.sum())
 
         # A trajectory's final block is never written. All warmup blocks are.
         writing = [step + 1 < len(plan) for plan in plans]
@@ -204,4 +239,4 @@ def event_trajectory_loss(method, trajectories, *, prefix_tokens=128, checkpoint
         raise RuntimeError("event trajectory actual target accounting mismatch")
     if memory_mode != "empty" and counters["writer_new_tokens"] != sum(t.writer_tokens for t in trajectories):
         raise RuntimeError("event trajectory actual write accounting mismatch")
-    return TrajectoryLoss(torch.stack(losses).sum(), expected, state, counters, tuple(losses))
+    return TrajectoryLoss(torch.stack(losses).sum(), expected, state, counters, tuple(losses), first_article_block)

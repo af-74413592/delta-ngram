@@ -76,6 +76,13 @@ def test_event_training_exact_resume_and_frozen_donor_protocol(tmp_path):
     assert evaluation['donor_sample_sha256'] == last['donor_sample_sha256']
     for key in ('self_nll', 'empty_nll', 'donor_nll', 'source_macro_delta_donor'):
         assert evaluation[key] == last[key]
+    assert evaluation['later_article_first_block'] == last['later_article_first_block']
+    first = evaluation['later_article_first_block']
+    assert first['full']['group_count'] == first['after_prefix']['group_count'] == 2
+    assert first['full']['loss_tokens'] == 256
+    assert first['after_prefix']['loss_tokens'] == 240
+    assert first['full']['conditions'] == first['after_prefix']['conditions'] == ['self', 'empty', 'donor']
+    assert first['protocol']['current_article_memory_writes'] == 0
     assert evaluation['optimizer_steps'] == evaluation['backward_calls'] == 0
     assert evaluation['integrity_checks']['writer_state_dict_exact_equal']
 

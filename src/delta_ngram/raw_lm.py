@@ -38,6 +38,7 @@ class TrajectoryLoss:
     state: BatchMemoryState
     counters: dict[str, int]
     block_loss_sums: tuple[torch.Tensor, ...]
+    first_article_block: dict | None = None
 
     @property
     def mean(self):
@@ -60,7 +61,8 @@ def _pad_windows(windows, device, pad_token_id):
     return tokens, lengths
 
 
-def score_block(reader, state, input_ids, attention_mask, labels, *, checkpoint_reader=False):
+def score_block(reader, state, input_ids, attention_mask, labels, *, checkpoint_reader=False,
+                token_loss_observer=None):
     """Return a token-sum CE, replaying the exact snapshot if recomputed.
 
     The whole score call owns its scoped hook, including backward recomputation.
@@ -72,10 +74,14 @@ def score_block(reader, state, input_ids, attention_mask, labels, *, checkpoint_
     if count == 0:
         raise ValueError("a scoring block needs at least one valid shifted target")
     targets = labels[:, 1:][valid]
+    if token_loss_observer is not None and torch.is_grad_enabled():
+        raise ValueError("token loss diagnostics require no_grad evaluation")
 
     def score(values):
         snapshot = state.with_values(values)
         logits = reader(input_ids, attention_mask, snapshot).logits[:, :-1, :]
+        if token_loss_observer is not None:
+            token_loss_observer(F.cross_entropy(logits[valid].float(), targets, reduction="none"), valid)
         # Do not promote/store ignored prefix and padding logits in FP32.
         return F.cross_entropy(logits[valid].float(), targets, reduction="sum")
 
@@ -123,10 +129,12 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
                 states[owner] = state
             results.append(result)
         combined = BatchMemoryState.from_states(states, method.reader.buckets * len(method.reader.orders))
+        diagnostics = [result.first_article_block for result in results if result.first_article_block is not None]
         return TrajectoryLoss(torch.stack([result.loss_sum for result in results]).sum(),
             sum(result.loss_tokens for result in results), combined,
             {key: sum(result.counters[key] for result in results) for key in results[0].counters},
-            tuple(loss for result in results for loss in result.block_loss_sums))
+            tuple(loss for result in results for loss in result.block_loss_sums),
+            diagnostics[0] if diagnostics else None)
     if method.reader.backend != "external_hash":
         raise NotImplementedError("raw LM currently supports the external hash adapter only")
     if memory_mode not in ("self", "empty", "donor"):
@@ -464,6 +472,7 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
     for window in windows:
         grouped.setdefault(window.group_id, []).append(window)
     records = []
+    first_records = {name: [] for name in ('full', 'after_prefix')}
     for group_id in sorted(grouped):
         items = grouped[group_id]
         sources = {item.source for item in items}
@@ -471,6 +480,9 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
             raise ValueError("per-source evaluation requires one source per group_id")
         own_sum = empty_sum = donor_sum = 0.0
         count = 0
+        first_group = {name: {'group_id': group_id, 'source': next(iter(sources)),
+            'self_loss_sum': 0.0, 'empty_loss_sum': 0.0, 'donor_loss_sum': 0.0,
+            'loss_tokens': 0, 'articles': 0} for name in first_records}
         # Homogeneous group batches give exact group attribution without
         # changing the tested training loss/scoring implementation.
         for start in range(0, len(items), batch_size):
@@ -481,12 +493,24 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
                 raise RuntimeError("paired evaluation target counts differ")
             own_sum += float(own.loss_sum)
             empty_sum += float(empty.loss_sum)
+            conditions = {'self': own, 'empty': empty}
             if report_donor:
                 swapped = trajectory_loss(method, batch, prefix_tokens=prefix_tokens, memory_mode="donor",
                                           donor_windows=[donors[window_key(item)] for item in batch])
                 if swapped.loss_tokens != own.loss_tokens:
                     raise RuntimeError("donor evaluation target counts differ")
                 donor_sum += float(swapped.loss_sum)
+                conditions['donor'] = swapped
+            first = getattr(own, 'first_article_block', None)
+            if first is not None:
+                for name, base in first.items():
+                    first_group[name]['loss_tokens'] += base['loss_tokens']
+                    first_group[name]['articles'] += base['articles']
+                    for condition, result in conditions.items():
+                        diagnostic = result.first_article_block[name]
+                        if (diagnostic['loss_tokens'], diagnostic['articles']) != (base['loss_tokens'], base['articles']):
+                            raise RuntimeError('first-article paired diagnostic targets differ')
+                        first_group[name][condition + '_loss_sum'] += diagnostic['loss_sum']
             count += own.loss_tokens
         record = {"group_id": group_id, "document_ids": sorted({item.document_id for item in items}),
                   "windows": len(items), "self_loss_sum": own_sum,
@@ -496,6 +520,9 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
         if report_donor:
             record["donor_loss_sum"] = donor_sum
         records.append(record)
+        for name, item in first_group.items():
+            if item['loss_tokens']:
+                first_records[name].append(item)
     summary = summarize_group_losses(records, bootstrap_seed=bootstrap_seed,
                                      bootstrap_samples=bootstrap_samples)
     if report_per_source:
@@ -518,6 +545,21 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
     if report_donor or macro_source_groups is not None:
         summary.update(macro_statistics(records, macro_source_groups, bootstrap_seed=bootstrap_seed,
                                          bootstrap_samples=bootstrap_samples, donor=report_donor))
+    if first_records['full']:
+        from .raw_evaluation import first_article_block_protocol
+        first_summary = {'protocol': first_article_block_protocol(prefix_tokens)}
+        for name, items in first_records.items():
+            if not items:
+                first_summary[name] = {'group_count': 0, 'loss_tokens': 0, 'articles': 0,
+                                       'status': 'no_targets_after_fixed_prefix'}
+                continue
+            result = summarize_group_losses(items, bootstrap_seed=bootstrap_seed, bootstrap_samples=bootstrap_samples)
+            if report_donor:
+                result.update(donor_statistics(items, bootstrap_seed=bootstrap_seed, bootstrap_samples=bootstrap_samples))
+            result.update(articles=sum(item['articles'] for item in items),
+                          conditions=['self', 'empty', 'donor'] if report_donor else ['self', 'empty'])
+            first_summary[name] = result
+        summary['later_article_first_block'] = first_summary
     return {**summary, "windows": len(windows),
             "scope": "held-out writer-training document groups; no pretraining-novelty claim"}
 
@@ -596,6 +638,9 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
             donor_unsupported_windows=donor_excluded,
             donor_sample_sha256=_json_hash(donor_sample),
             macro_source_groups=raw.get("macro_source_groups"))
+    if raw.get('event_dataset'):
+        from .raw_evaluation import first_article_block_protocol
+        validation_protocol['later_article_first_block'] = first_article_block_protocol(raw['prefix_tokens'])
     validation_metadata = {"validation_protocol": validation_protocol,
                            "validation_protocol_sha256": _json_hash(validation_protocol),
                            "validation_sample_sha256": _json_hash(validation_sample)}

@@ -113,6 +113,9 @@ def prepare_validation(config, method, *, include_donors=False):
             donor_unsupported_windows=donor_excluded,
             donor_sample_sha256=_json_hash(donor_sample),
             macro_source_groups=raw.get("macro_source_groups"))
+    if raw.get('event_dataset'):
+        from delta_ngram.raw_evaluation import first_article_block_protocol
+        protocol['later_article_first_block'] = first_article_block_protocol(raw['prefix_tokens'])
     metadata = {"validation_protocol": protocol,
                      "validation_protocol_sha256": _json_hash(protocol),
                      "validation_sample": sample, "validation_sample_sha256": _json_hash(sample),

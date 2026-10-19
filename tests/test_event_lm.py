@@ -50,6 +50,48 @@ def test_whole_first_article_warmup_real_tokens_only_and_final_no_write(method):
     assert all(count == 128 for kind, _, count, _ in observations if kind == "write" and count > 3)
 
 
+def test_first_article_diagnostics_use_frozen_pre_article_state_and_real_prefix(method):
+    from delta_ngram.raw_lm import score_block
+    item = event(method)
+    captured = []
+    def observe(kind, step, state, ids, mask, labels):
+        if kind == 'read' and step in (2, 4):
+            captured.append((state, ids.clone(), mask.clone(), labels.clone()))
+    with torch.no_grad():
+        result = event_trajectory_loss(method, [item], prefix_tokens=8, observer=observe)
+        full = aligned = 0.0
+        for index, (state, ids, mask, labels) in enumerate(captured):
+            value, count = score_block(method.reader, state, ids, mask, labels)
+            assert count == 128
+            full += float(value)
+            # Independent scoring reconstructs only this article's real first block;
+            # the state is exactly the snapshot before any of its tokens were written.
+            real_ids = torch.tensor([item.articles[index + 1].token_ids[:128]])
+            real_labels = real_ids.clone()
+            real_labels[:, :8] = -100
+            value, count = score_block(method.reader, state, real_ids, torch.ones_like(real_ids), real_labels)
+            assert count == 120
+            aligned += float(value)
+    assert result.first_article_block['full']['loss_tokens'] == 256
+    assert result.first_article_block['after_prefix']['loss_tokens'] == 240
+    assert result.first_article_block['full']['articles'] == result.first_article_block['after_prefix']['articles'] == 2
+    assert result.first_article_block['full']['loss_sum'] == pytest.approx(full, abs=1e-4)
+    assert result.first_article_block['after_prefix']['loss_sum'] == aligned
+    assert not result.loss_sum.requires_grad
+    # Offline training does not add diagnostic reads or alter its loss objective.
+    trained = event_trajectory_loss(method, [item], prefix_tokens=8)
+    assert trained.first_article_block is None
+    torch.testing.assert_close(result.loss_sum, trained.loss_sum, rtol=0, atol=0)
+    torch.testing.assert_close(result.state.memory.values, trained.state.memory.values, rtol=0, atol=0)
+
+
+def test_first_article_prefix_excludes_zero_target_short_articles(method):
+    with torch.no_grad():
+        result = event_trajectory_loss(method, [event(method, lengths=(128, 128))], prefix_tokens=128)
+    assert result.first_article_block['full']['loss_tokens'] == 128
+    assert result.first_article_block['after_prefix'] == {'loss_sum': 0.0, 'loss_tokens': 0, 'articles': 0}
+
+
 def test_last_article_loss_has_gradient_to_first_article_state(method):
     states = {}
     def observe(kind, step, state, *_):

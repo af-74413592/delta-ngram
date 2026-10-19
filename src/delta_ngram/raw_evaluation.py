@@ -6,6 +6,15 @@ import math
 import random
 
 
+def first_article_block_protocol(prefix_tokens):
+    return {'name': 'later_article_first_block_v1', 'current_article_memory_writes': 0,
+        'full': 'all real tokens in the first block, predicted with local BOS/EOS',
+        'after_prefix': {'prefix_tokens': prefix_tokens,
+            'targets': 'first-block real tokens after the article prefix; no BOS',
+            'short_articles': 'no targets when first block length <= prefix_tokens'},
+        'scoring_only': True, 'checkpoint_selection_uses_this_diagnostic': False}
+
+
 def window_key(window):
     return window.source, window.document_id, window.start, window.blocks
 
