@@ -87,7 +87,8 @@ def score_block(reader, state, input_ids, attention_mask, labels, *, checkpoint_
 
 
 def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=False,
-                    memory_mode="self", observer=None, block_observer=None, block_context=None):
+                    memory_mode="self", observer=None, block_observer=None, block_context=None,
+                    donor_windows=None):
     """Run full BPTT over complete windows, with one namespace per window.
 
     ``observer`` is an optional correctness/debug callback. It receives the
@@ -96,10 +97,42 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
     ``block_observer`` instead receives detached JSON records before each
     scored read and after each write. It runs outside score checkpointing.
     """
+    event_flags = [getattr(window, "variable_cost", False) for window in windows]
+    if any(event_flags):
+        from .event_lm import event_trajectory_loss
+        if all(event_flags):
+            return event_trajectory_loss(method, windows, prefix_tokens=prefix_tokens,
+                checkpoint_reader=checkpoint_reader, memory_mode=memory_mode, observer=observer,
+                block_observer=block_observer, block_context=block_context, donor_trajectories=donor_windows)
+        # The types have different supervision masks. Each subgroup batches
+        # independent streams; summation retains both graphs for backward.
+        if observer is not None:
+            raise ValueError("mixed trajectory debug observer requires homogeneous subgroups")
+        if donor_windows is not None and len(donor_windows) != len(windows):
+            raise ValueError("donor windows must match the target batch size")
+        results, states = [], [None] * len(windows)
+        for is_event in (False, True):
+            owners = [i for i, flag in enumerate(event_flags) if flag == is_event]
+            callback = None if block_observer is None else lambda row, owners=owners: block_observer(
+                {**row, "owner": owners[row["owner"]]})
+            result = trajectory_loss(method, [windows[i] for i in owners], prefix_tokens=prefix_tokens,
+                checkpoint_reader=checkpoint_reader, memory_mode=memory_mode, block_observer=callback,
+                block_context=block_context,
+                donor_windows=None if donor_windows is None else [donor_windows[i] for i in owners])
+            for owner, state in zip(owners, result.state.unpack()):
+                states[owner] = state
+            results.append(result)
+        combined = BatchMemoryState.from_states(states, method.reader.buckets * len(method.reader.orders))
+        return TrajectoryLoss(torch.stack([result.loss_sum for result in results]).sum(),
+            sum(result.loss_tokens for result in results), combined,
+            {key: sum(result.counters[key] for result in results) for key in results[0].counters},
+            tuple(loss for result in results for loss in result.block_loss_sums))
     if method.reader.backend != "external_hash":
         raise NotImplementedError("raw LM currently supports the external hash adapter only")
-    if memory_mode not in ("self", "empty"):
-        raise ValueError("memory_mode must be self or empty")
+    if memory_mode not in ("self", "empty", "donor"):
+        raise ValueError("memory_mode must be self, empty or donor")
+    if (memory_mode == "donor") != (donor_windows is not None):
+        raise ValueError("donor mode requires explicit donor_windows and other modes forbid them")
     if not method.supports_outer_training:
         raise ValueError("raw LM requires a learned forward writer")
     block_size = windows[0].block_size if windows else 0
@@ -111,6 +144,14 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
     if type(pad) is not int or pad < 0:
         raise ValueError("tokenizer needs an integer padding or EOS token ID")
     tokens, lengths = _pad_windows(windows, method.device, pad)
+    evidence_tokens = tokens
+    if donor_windows is not None:
+        if len(donor_windows) != len(windows) or any(
+                target.group_id == donor.group_id or target.source != donor.source
+                or target.blocks != donor.blocks or target.block_size != donor.block_size
+                for target, donor in zip(windows, donor_windows)):
+            raise ValueError("donors must match source and history length and use different groups")
+        evidence_tokens, _ = _pad_windows(donor_windows, method.device, pad)
     capacity = method.reader.buckets * len(method.reader.orders)
     state = BatchMemoryState.empty(len(windows), method.reader.width, capacity, method.device)
     losses = []
@@ -159,18 +200,19 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
         writing = lengths > block + 1
         if memory_mode == "empty" or not bool(writing.any()):
             continue
+        evidence = evidence_tokens[:, block]
         write_mask = writing[:, None].expand_as(current).to(torch.long)
         if observer is not None:
-            observer("write", block, state, current, write_mask, None)
-        hidden, _ = method.reader.encode_evidence(current, write_mask)
+            observer("write", block, state, evidence, write_mask, None)
+        hidden, _ = method.reader.encode_evidence(evidence, write_mask)
         if block and boundary:
-            old_tokens = tokens[:, :block].reshape(len(windows), -1)[:, -boundary:]
-            address_ids = torch.cat((old_tokens, current), dim=1)
+            old_tokens = evidence_tokens[:, :block].reshape(len(windows), -1)[:, -boundary:]
+            address_ids = torch.cat((old_tokens, evidence), dim=1)
             address_mask = writing[:, None].expand_as(address_ids).to(torch.long)
             rows = method.reader.adapter.addresses(address_ids, address_mask)[:, old_tokens.shape[1]:]
             counters["address_prefix_tokens"] += int(writing.sum().item()) * old_tokens.shape[1]
         else:
-            rows = method.reader.adapter.addresses(current, write_mask)
+            rows = method.reader.adapter.addresses(evidence, write_mask)
         # Old tokens above are addressing-only; they are neither pooled nor
         # written again, and do not enter the evidence encoder a second time.
         if block_observer is None:
@@ -223,6 +265,9 @@ def _identity(config, method, dataset_sha256, token_identity):
     # Omit new inactive options so pre-existing resume identities stay valid.
     if raw.get("source_length_weights") is not None:
         identity["raw"]["source_length_weights"] = raw["source_length_weights"]
+    if raw.get("event_dataset"):
+        identity["raw"]["event_dataset_sha256"] = hashlib.sha256(Path(raw["event_dataset"]).read_bytes()).hexdigest()
+        identity["raw"]["event_protocol"] = "whole_first_article_warmup_later_articles_causal_v1"
     if raw.get("eval_min_groups_per_source", 0):
         identity["raw"]["eval_min_groups_per_source"] = raw["eval_min_groups_per_source"]
     return identity
@@ -336,7 +381,10 @@ def select_validation_windows(windows, *, limit, seed, min_groups_per_source=0,
 def _validation_sample(windows):
     return [{"group_id": item.group_id, "document_id": item.document_id, "source": item.source,
              "start": item.start, "blocks": item.blocks, "loss_tokens": item.loss_tokens,
-             "token_sha256": _json_hash(item.token_ids)} for item in windows]
+             "token_sha256": _json_hash(item.token_ids),
+             **({"article_ids": [article.id for article in item.articles],
+                 "article_tokens": [len(article.token_ids) for article in item.articles],
+                 "warmup_articles": 1} if getattr(item, "variable_cost", False) else {})} for item in windows]
 
 
 def summarize_group_losses(groups, *, bootstrap_seed=104729, bootstrap_samples=2000):
@@ -396,12 +444,22 @@ def summarize_group_losses(groups, *, bootstrap_seed=104729, bootstrap_samples=2
 
 @torch.no_grad()
 def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
-                 bootstrap_seed=104729, bootstrap_samples=2000, report_per_source=False):
+                 bootstrap_seed=104729, bootstrap_samples=2000, report_per_source=False,
+                 report_donor=False, macro_source_groups=None, fixed_donors=None):
     """Score paired losses by group, with source summaries for mixed corpora."""
     if type(report_per_source) is not bool:
         raise ValueError("report_per_source must be boolean")
+    if type(report_donor) is not bool:
+        raise ValueError("report_donor must be boolean")
+    from .raw_evaluation import (select_donors, window_key, donor_manifest,
+                                 donor_statistics, macro_statistics)
+    if fixed_donors is not None and not report_donor:
+        raise ValueError("fixed_donors requires report_donor")
+    donors = (select_donors(windows, bootstrap_seed) if fixed_donors is None else fixed_donors) if report_donor else None
+    if report_donor and not all(window_key(window) in donors for window in windows):
+        raise ValueError("fixed donor map is missing a target")
     method.eval()
-    report_per_source = report_per_source or len({item.source for item in windows}) > 1
+    report_per_source = report_per_source or report_donor or len({item.source for item in windows}) > 1
     grouped = {}
     for window in windows:
         grouped.setdefault(window.group_id, []).append(window)
@@ -411,7 +469,7 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
         sources = {item.source for item in items}
         if report_per_source and len(sources) != 1:
             raise ValueError("per-source evaluation requires one source per group_id")
-        own_sum = empty_sum = 0.0
+        own_sum = empty_sum = donor_sum = 0.0
         count = 0
         # Homogeneous group batches give exact group attribution without
         # changing the tested training loss/scoring implementation.
@@ -423,12 +481,20 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
                 raise RuntimeError("paired evaluation target counts differ")
             own_sum += float(own.loss_sum)
             empty_sum += float(empty.loss_sum)
+            if report_donor:
+                swapped = trajectory_loss(method, batch, prefix_tokens=prefix_tokens, memory_mode="donor",
+                                          donor_windows=[donors[window_key(item)] for item in batch])
+                if swapped.loss_tokens != own.loss_tokens:
+                    raise RuntimeError("donor evaluation target counts differ")
+                donor_sum += float(swapped.loss_sum)
             count += own.loss_tokens
         record = {"group_id": group_id, "document_ids": sorted({item.document_id for item in items}),
                   "windows": len(items), "self_loss_sum": own_sum,
                   "empty_loss_sum": empty_sum, "loss_tokens": count}
         if report_per_source:
             record["source"] = next(iter(sources))
+        if report_donor:
+            record["donor_loss_sum"] = donor_sum
         records.append(record)
     summary = summarize_group_losses(records, bootstrap_seed=bootstrap_seed,
                                      bootstrap_samples=bootstrap_samples)
@@ -440,6 +506,18 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
             for source in sorted({record["source"] for record in records})}
         summary["source_macro_delta_empty"] = math.fsum(
             result["delta_empty"] for result in summary["per_source"].values()) / len(summary["per_source"])
+    if report_donor:
+        summary.update(donor_statistics(records, bootstrap_seed=bootstrap_seed, bootstrap_samples=bootstrap_samples))
+        for source, result in summary["per_source"].items():
+            result.update(donor_statistics([record for record in records if record["source"] == source],
+                                          bootstrap_seed=bootstrap_seed, bootstrap_samples=bootstrap_samples))
+        mapping = donor_manifest(windows, donors)
+        summary.update(donor_sample=mapping, donor_sample_sha256=_json_hash(mapping),
+                       evaluation_only=True, optimizer_steps=0, backward_calls=0,
+                       conditions=["self", "empty", "donor"])
+    if report_donor or macro_source_groups is not None:
+        summary.update(macro_statistics(records, macro_source_groups, bootstrap_seed=bootstrap_seed,
+                                         bootstrap_samples=bootstrap_samples, donor=report_donor))
     return {**summary, "windows": len(windows),
             "scope": "held-out writer-training document groups; no pretraining-novelty claim"}
 
@@ -463,12 +541,9 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
     method, args = create_runtime(config)
     token_identity = tokenizer_identity(method)
     token_fingerprint = "sha256:" + _json_hash(token_identity)
-    documents = load_documents(raw["dataset"], method.tokenizer, tokenizer_identity=token_fingerprint,
-                               require_record_identity=True)
+    from .raw_corpora import load_corpora, trajectory_pools, event_document_metadata
     vocabulary_size = method.reader.model.get_input_embeddings().weight.shape[0]
-    for document in documents:
-        if max(document.token_ids) >= vocabulary_size:
-            raise ValueError(f"document {document.id} has token IDs outside the reader vocabulary")
+    documents, events = load_corpora(raw, method.tokenizer, token_fingerprint, vocabulary_size=vocabulary_size)
     sampler_options, window_options = {}, {}
     source_lengths = raw.get("source_length_weights")
     if source_lengths is not None:
@@ -476,13 +551,11 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
         window_options["source_block_counts"] = {
             source: [count for count, weight in weights.items() if weight > 0]
             for source, weights in source_lengths.items()}
-    windows = build_windows(documents, raw["block_size"], tuple(raw["block_counts"]), split="train",
-                            **window_options)
+    windows = trajectory_pools(raw, documents, events)
     sampler = RawWindowSampler(windows, seed=config.values["seed"],
                                length_weights=raw["length_weights"], source_weights=raw["source_weights"],
                                **sampler_options)
-    validation_pool = build_windows(documents, raw["block_size"], tuple(raw["block_counts"]), split="validation",
-                                    **window_options)
+    validation_pool = trajectory_pools(raw, documents, events, split="validation")
     validation = [window for block_count in raw["block_counts"] for window in validation_pool[block_count]]
     minimum_source_groups = raw.get("eval_min_groups_per_source", 0)
     if source_lengths is not None or minimum_source_groups:
@@ -490,6 +563,10 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
                       and (source_lengths is None or source_lengths[window.source].get(window.blocks, 0) > 0)]
     if not validation:
         raise ValueError("raw.dataset needs a disjoint validation split with complete windows")
+    fixed_donors, donor_excluded = None, []
+    if raw.get("eval_donor"):
+        from .raw_evaluation import donor_supported_pool
+        validation, fixed_donors, donor_excluded = donor_supported_pool(validation, raw["eval_seed"])
     available_validation_groups = len({window.group_id for window in validation})
     available_source_groups = {
         source: len({window.group_id for window in validation if window.source == source})
@@ -510,6 +587,15 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
                                    required_sources=sorted(sampler.source_weights))
     if source_lengths is not None:
         validation_protocol["source_length_weights"] = source_lengths
+    if raw.get("eval_donor"):
+        from .raw_evaluation import donor_manifest
+        donor_sample = donor_manifest(validation, fixed_donors)
+        validation_protocol.update(conditions=["self", "empty", "donor"],
+            donor_matching="same_source_same_length_different_family_fixed_development_v1",
+            donor_pool="all_validation_windows; unsupported targets excluded before fixed group selection",
+            donor_unsupported_windows=donor_excluded,
+            donor_sample_sha256=_json_hash(donor_sample),
+            macro_source_groups=raw.get("macro_source_groups"))
     validation_metadata = {"validation_protocol": validation_protocol,
                            "validation_protocol_sha256": _json_hash(validation_protocol),
                            "validation_sample_sha256": _json_hash(validation_sample)}
@@ -549,6 +635,9 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
                        "tokens": len(d.token_ids), "token_sha256": d.token_sha256,
                        "text_sha256": d.text_sha256, "metadata": d.metadata} for d in documents],
         "unique_raw_tokens": sum(len(d.token_ids) for d in documents),
+        **({"event_documents": [event_document_metadata(event) for event in events],
+            "event_unique_raw_tokens": sum(len(a.token_ids) for event in events for a in event.articles),
+            "event_dataset_sha256": identity["raw"]["event_dataset_sha256"]} if events else {}),
         "windows_by_blocks": {str(n): len(pool) for n, pool in windows.items()},
         **validation_metadata, "validation_sample": validation_sample,
         "available_validation_groups": available_validation_groups,
@@ -587,7 +676,9 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
         result = evaluate_raw(method, validation, prefix_tokens=raw["prefix_tokens"],
                               batch_size=raw["batch_size"], bootstrap_seed=raw["eval_seed"],
                               bootstrap_samples=raw["eval_bootstrap_samples"],
-                              report_per_source=bool(minimum_source_groups))
+                              report_per_source=bool(minimum_source_groups),
+                              report_donor=raw.get("eval_donor", False),
+                              macro_source_groups=raw.get("macro_source_groups"), fixed_donors=fixed_donors)
         result.update(validation_metadata)
         result.update(step=step, training_loss_tokens=counters["loss_tokens"],
                       evaluation_kind=kind, nominal_loss_tokens=nominal_loss_tokens,

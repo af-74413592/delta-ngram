@@ -32,7 +32,8 @@ DEFAULTS = {
                    "query_styles": ["canonical"], "detailed_rows": False},
     "run": {"output_dir": "../../delta-ngram-runs/pilot_seed17", "checkpoint": None,
             "max_wall_seconds": 1500.0, "max_evidence_tokens": 128},
-    "raw": {"dataset": None, "block_size": 512, "prefix_tokens": 128,
+    "raw": {"dataset": None, "event_dataset": None, "eval_donor": False, "macro_source_groups": None,
+            "block_size": 512, "prefix_tokens": 128,
             "block_counts": [8, 16], "length_weights": None, "source_weights": None,
             "source_length_weights": None, "eval_min_groups_per_source": 0,
             "loss_tokens": 5_000_000, "batch_size": 1, "gradient_accumulation_steps": 1, "eval_windows": 8,
@@ -148,6 +149,13 @@ class ExperimentConfig:
         if not isinstance(values["run"]["output_dir"], str) or not values["run"]["output_dir"]:
             raise ValueError("run.output_dir must be a nonempty path string")
         raw = values["raw"]
+        if type(raw["eval_donor"]) is not bool:
+            raise ValueError("raw.eval_donor must be boolean")
+        macro = raw["macro_source_groups"]
+        if macro is not None:
+            if (not isinstance(macro, dict) or not macro
+                    or any(not isinstance(k, str) or not k or not isinstance(v, str) or not v for k, v in macro.items())):
+                raise ValueError("raw.macro_source_groups must map nonempty source names to nonempty domains")
         for key in ("block_size", "prefix_tokens", "loss_tokens", "batch_size", "gradient_accumulation_steps",
                     "eval_windows", "eval_every_tokens", "eval_bootstrap_samples"):
             if type(raw[key]) is not int or raw[key] < 1:
@@ -182,6 +190,9 @@ class ExperimentConfig:
                         raise ValueError("raw.length_weights must have integer keys matching raw.block_counts")
                 elif any(not isinstance(k, str) or not k for k in weights):
                     raise ValueError("raw.source_weights keys must be nonempty strings")
+        if macro is not None and raw["source_weights"] is not None:
+            if set(macro) != {s for s, w in raw["source_weights"].items() if w > 0}:
+                raise ValueError("raw.macro_source_groups must cover exactly the active sources")
         conditional = raw["source_length_weights"]
         if conditional is not None:
             if raw["length_weights"] is not None:
@@ -201,11 +212,11 @@ class ExperimentConfig:
                         or not math.isfinite(sum(weights.values())) or sum(weights.values()) <= 0):
                     raise ValueError(f"raw.source_length_weights[{source!r}] requires finite positive total "
                                      "and integer keys from raw.block_counts")
-        for key in ("dataset", "resume"):
+        for key in ("dataset", "event_dataset", "resume"):
             if raw[key] is not None and (not isinstance(raw[key], str) or not raw[key]):
                 raise ValueError(f"raw.{key} must be null or a nonempty path string")
         for section, key in (("run", "output_dir"), ("run", "checkpoint"), ("data", "manifest"),
-                             ("raw", "dataset"), ("raw", "resume")):
+                             ("raw", "dataset"), ("raw", "event_dataset"), ("raw", "resume")):
             value = values[section][key]
             if value is not None:
                 expanded = Path(os.path.expandvars(os.path.expanduser(str(value))))

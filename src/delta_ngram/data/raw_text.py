@@ -259,6 +259,10 @@ class RawWindowSampler:
                  length_weights: Mapping[int, float] | None = None,
                  source_weights: Mapping[str, float] | None = None,
                  source_length_weights: Mapping[str, Mapping[int, float]] | None = None):
+        if any(getattr(item, "variable_cost", False) for items in windows.values() for item in items):
+            from .event_streams import VariableCostSampler
+            VariableCostSampler.__init__(self, windows, seed, length_weights, source_weights, source_length_weights)
+            return
         if type(seed) is not int:
             raise ValueError("seed must be an integer")
         self._windows = {count: tuple(items) for count, items in windows.items()}
@@ -323,6 +327,9 @@ class RawWindowSampler:
         self.fingerprint = _digest(fingerprint)
 
     def next_window(self, remaining_loss_tokens: int | None = None) -> TrajectoryWindow | None:
+        if getattr(self, "_variable_cost", False):
+            from .event_streams import VariableCostSampler
+            return VariableCostSampler.next_window(self, remaining_loss_tokens)
         if remaining_loss_tokens is not None:
             _nonnegative_integer(remaining_loss_tokens, "remaining_loss_tokens")
         costs = {count: (count - 1) * self.block_size for count in self.length_weights}
@@ -372,6 +379,9 @@ class RawWindowSampler:
 
     def state_dict(self) -> dict:
         """Return a JSON-serializable snapshot, including shuffle RNG and cursors."""
+        if getattr(self, "_variable_cost", False):
+            from .event_streams import VariableCostSampler
+            return VariableCostSampler.state_dict(self)
         state = {
             "version": 1 if self.source_length_weights is None else 2,
             "fingerprint": self.fingerprint, "rng_state": self._rng.getstate(),
@@ -387,6 +397,9 @@ class RawWindowSampler:
         return json.loads(json.dumps(state))
 
     def load_state_dict(self, state: Mapping) -> None:
+        if getattr(self, "_variable_cost", False):
+            from .event_streams import VariableCostSampler
+            return VariableCostSampler.load_state_dict(self, state)
         expected_version = 1 if self.source_length_weights is None else 2
         if state.get("version") != expected_version or state.get("fingerprint") != self.fingerprint:
             raise ValueError("sampler state version or corpus/config fingerprint differs")

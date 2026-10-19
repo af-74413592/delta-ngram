@@ -1,0 +1,171 @@
+{
+  "complete": true,
+  "dataset_id": "vblagoje/cc_news",
+  "revision": "81eb2ce0d2a9dad6ad16b68ef750ec290880fa36",
+  "rows": 708241,
+  "date_column_only_no_text_filter": true,
+  "files": [
+    {
+      "path": "plain_text/train-00000-of-00005.parquet",
+      "size": 211044294,
+      "sha256": "5cda9a2b0b40a9c9438ae02168b16beb61e52449a895869515501962c5aeb977"
+    },
+    {
+      "path": "plain_text/train-00001-of-00005.parquet",
+      "size": 233804414,
+      "sha256": "1d33583fdd82fa28a7aa961a633aeb63be90fdac8f47c1893daf630c9a5f074a"
+    },
+    {
+      "path": "plain_text/train-00002-of-00005.parquet",
+      "size": 218914067,
+      "sha256": "78d59696b61fa9789879836a303c7a04beb52107c6678a444b98ce4e8b97b1ae"
+    },
+    {
+      "path": "plain_text/train-00003-of-00005.parquet",
+      "size": 244540595,
+      "sha256": "53b35fa4b5d82a0308ddaba3d55033c49a1f1d4cca45d88d2633495cab4767db"
+    },
+    {
+      "path": "plain_text/train-00004-of-00005.parquet",
+      "size": 214502216,
+      "sha256": "e0869a42852439aa408030de51464d0a8cbe5608ff1a7ba9d165e10964c6fdef"
+    }
+  ],
+  "original_date_parser_sha256": "68fa08fdc401ba23dd0b11e9233a3d2d87cf59736807c19d47dd4eb754224077",
+  "audit_script_sha256": "d1d7dc907b56f4d1c40ae9ec12f46cdd09f9b92f01e29087035dedace2506bfc",
+  "strict_months_all_raw_records": {
+    "2017-01": 30761,
+    "2017-02": 43695,
+    "2017-03": 9075,
+    "2017-04": 58615,
+    "2017-05": 4927,
+    "2017-06": 40276,
+    "2017-07": 1479,
+    "2017-08": 62353,
+    "2017-09": 1824,
+    "2017-10": 49811,
+    "2017-11": 1986,
+    "2017-12": 54845,
+    "2018-01": 2344,
+    "2018-02": 59364,
+    "2018-03": 47367,
+    "2018-04": 51324,
+    "2018-05": 62930,
+    "2018-06": 1429,
+    "2018-07": 46227,
+    "2018-08": 2,
+    "2018-09": 1,
+    "2018-10": 3,
+    "2018-11": 1,
+    "2018-12": 2,
+    "2019-04": 1,
+    "2019-08": 1
+  },
+  "secondary_months_all_raw_records": {
+    "2017-01": 30761,
+    "2017-02": 43695,
+    "2017-03": 9075,
+    "2017-04": 58615,
+    "2017-05": 4927,
+    "2017-06": 40276,
+    "2017-07": 1479,
+    "2017-08": 62353,
+    "2017-09": 1824,
+    "2017-10": 49811,
+    "2017-11": 1986,
+    "2017-12": 54845,
+    "2018-01": 2344,
+    "2018-02": 59364,
+    "2018-03": 47367,
+    "2018-04": 51324,
+    "2018-05": 62930,
+    "2018-06": 1429,
+    "2018-07": 46227,
+    "2018-08": 2,
+    "2018-09": 1,
+    "2018-10": 3,
+    "2018-11": 1,
+    "2018-12": 2,
+    "2019-04": 1,
+    "2019-08": 1
+  },
+  "raw_four_digit_year_mentions_nonblank": {
+    "2017": 359647,
+    "2018": 270994,
+    "2019": 2
+  },
+  "statuses": {
+    "original_parser_success": 630643,
+    "secondary_parser_success": 630643,
+    "missing_or_blank": 77598
+  },
+  "shards": [
+    {
+      "path": "plain_text/train-00000-of-00005.parquet",
+      "rows": 141649,
+      "original_parser_success": 128947,
+      "missing_or_blank": 12702
+    },
+    {
+      "path": "plain_text/train-00001-of-00005.parquet",
+      "rows": 141648,
+      "original_parser_success": 129383,
+      "missing_or_blank": 12265
+    },
+    {
+      "path": "plain_text/train-00002-of-00005.parquet",
+      "rows": 141648,
+      "original_parser_success": 127955,
+      "missing_or_blank": 13693
+    },
+    {
+      "path": "plain_text/train-00003-of-00005.parquet",
+      "rows": 141648,
+      "original_parser_success": 130551,
+      "missing_or_blank": 11097
+    },
+    {
+      "path": "plain_text/train-00004-of-00005.parquet",
+      "rows": 141648,
+      "original_parser_success": 113807,
+      "missing_or_blank": 27841
+    }
+  ],
+  "strict_failure_examples_top_30": [],
+  "secondary_recovery_examples_top_30": [],
+  "secondary_recovered_nonblank_records": 0,
+  "after_original_quality_filter_months": {
+    "2017-01": 28517,
+    "2017-02": 40039,
+    "2017-03": 7217,
+    "2017-04": 52001,
+    "2017-05": 4006,
+    "2017-06": 36922,
+    "2017-07": 1309,
+    "2017-08": 58331,
+    "2017-09": 1644,
+    "2017-10": 46244,
+    "2017-11": 1817,
+    "2017-12": 51162,
+    "2018-01": 2103,
+    "2018-02": 54895,
+    "2018-03": 43005,
+    "2018-04": 48158,
+    "2018-05": 58583,
+    "2018-06": 1360,
+    "2018-07": 43786,
+    "2018-08": 2,
+    "2018-10": 3,
+    "2018-11": 1,
+    "2018-12": 2,
+    "2019-04": 1,
+    "2019-08": 1
+  },
+  "after_original_quality_filter_rejections": {
+    "character_length": 68081,
+    "missing or malformed publication date": 58842,
+    "binary_or_replacement_character": 154,
+    "mechanical_line_repetition": 55
+  },
+  "secondary_parser_scope": "Diagnostic only; no recovered or inferred timestamp was admitted to any corpus."
+}

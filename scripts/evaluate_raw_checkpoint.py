@@ -1,6 +1,6 @@
 """Evaluate a frozen writer on the raw trainer's exact fixed development sample.
 
-Only self-memory and empty-memory are scored. This command never constructs an
+Self/empty and configured fixed donor controls are scored. This command never constructs an
 optimizer, resumes training, or saves changed model parameters. The checkpoint
 argument overrides run.checkpoint in the supplied training configuration.
 """
@@ -36,13 +36,14 @@ def git_identity():
                 ["git", "-C", str(REPOSITORY), "status", "--porcelain"], text=True).strip())}
 
 
-def prepare_validation(config, method):
+def prepare_validation(config, method, *, include_donors=False):
     """Reproduce train_raw selection without materializing training windows.
 
     Training cells are checked by complete-document length only. Their windows
     and shuffled orders are unnecessary for this optimizer-free command.
     """
     from delta_ngram.data.raw_text import _weights, build_windows, load_documents
+    from delta_ngram.raw_corpora import load_corpora, trajectory_pools, event_pool
     from delta_ngram.raw_lm import (MINIMUM_EVALUATION_GROUPS, VALIDATION_PROTOCOL,
                                     _json_hash, _validation_sample,
                                     select_validation_windows, tokenizer_identity)
@@ -52,17 +53,15 @@ def prepare_validation(config, method):
         raise ValueError("frozen raw evaluation requires raw.dataset")
     identity = tokenizer_identity(method)
     fingerprint = "sha256:" + _json_hash(identity)
-    documents = load_documents(raw["dataset"], method.tokenizer, tokenizer_identity=fingerprint,
-                               require_record_identity=True)
     vocabulary_size = method.reader.model.get_input_embeddings().weight.shape[0]
-    for document in documents:
-        if max(document.token_ids) >= vocabulary_size:
-            raise ValueError(f"document {document.id} has token IDs outside the reader vocabulary")
+    documents, events = load_corpora(raw, method.tokenizer, fingerprint, vocabulary_size=vocabulary_size)
     counts = tuple(raw["block_counts"])
     lengths = _weights(raw["length_weights"], counts, "length_weights")
     train = [document for document in documents if document.split == "train"]
+    event_training = event_pool(raw, events, "train")
     available = sorted({document.source for document in train
-                        if any(len(document.token_ids) >= count * raw["block_size"] for count in lengths)})
+                        if any(len(document.token_ids) >= count * raw["block_size"] for count in lengths)}
+                       | {window.source for items in event_training.values() for window in items})
     sources = _weights(raw["source_weights"], available, "source_weights")
     conditional = raw.get("source_length_weights")
     active_lengths = {source: lengths if conditional is None else
@@ -70,12 +69,14 @@ def prepare_validation(config, method):
                       for source in sources}
     for source, source_counts in active_lengths.items():
         for count in source_counts:
+            if source == "news_event" and event_training.get(count):
+                continue
             if not any(document.source == source and len(document.token_ids) >= count * raw["block_size"]
                        for document in train):
                 raise ValueError(f"nonzero quota has no windows: blocks={count}, source={source}")
     window_options = {} if conditional is None else {
         "source_block_counts": {source: list(source_counts) for source, source_counts in active_lengths.items()}}
-    pool = build_windows(documents, raw["block_size"], counts, split="validation", **window_options)
+    pool = trajectory_pools(raw, documents, events, split="validation")
     windows = [window for count in counts for window in pool[count]]
     minimum = raw.get("eval_min_groups_per_source", 0)
     if conditional is not None or minimum:
@@ -83,6 +84,10 @@ def prepare_validation(config, method):
                    and (conditional is None or window.blocks in active_lengths[window.source])]
     if not windows:
         raise ValueError("raw.dataset needs a disjoint validation split with complete windows")
+    fixed_donors, donor_excluded = None, []
+    if raw.get("eval_donor"):
+        from delta_ngram.raw_evaluation import donor_supported_pool
+        windows, fixed_donors, donor_excluded = donor_supported_pool(windows, raw["eval_seed"])
     available_groups = len({window.group_id for window in windows})
     available_per_source = {source: len({window.group_id for window in windows if window.source == source})
                             for source in sources}
@@ -99,7 +104,16 @@ def prepare_validation(config, method):
                         minimum_groups_per_source=minimum, required_sources=sorted(sources))
     if conditional is not None:
         protocol["source_length_weights"] = conditional
-    return windows, {"validation_protocol": protocol,
+    if raw.get("eval_donor"):
+        from delta_ngram.raw_evaluation import donor_manifest
+        donor_sample = donor_manifest(windows, fixed_donors)
+        protocol.update(conditions=["self", "empty", "donor"],
+            donor_matching="same_source_same_length_different_family_fixed_development_v1",
+            donor_pool="all_validation_windows; unsupported targets excluded before fixed group selection",
+            donor_unsupported_windows=donor_excluded,
+            donor_sample_sha256=_json_hash(donor_sample),
+            macro_source_groups=raw.get("macro_source_groups"))
+    metadata = {"validation_protocol": protocol,
                      "validation_protocol_sha256": _json_hash(protocol),
                      "validation_sample": sample, "validation_sample_sha256": _json_hash(sample),
                      "available_validation_groups": available_groups,
@@ -109,6 +123,7 @@ def prepare_validation(config, method):
                          source: len({window.group_id for window in windows if window.source == source})
                          for source in sources},
                      "tokenizer": identity, "tokenizer_fingerprint": fingerprint}
+    return (windows, metadata, fixed_donors) if include_donors else (windows, metadata)
 
 
 def _parameter_snapshot(module):
@@ -151,6 +166,8 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
     if dataset_path is None:
         raise ValueError("frozen raw evaluation requires raw.dataset")
     dataset_hash = file_sha256(dataset_path)
+    event_path = config.values["raw"].get("event_dataset")
+    event_hash = file_sha256(event_path) if event_path else None
     started = time.monotonic()
     method, _ = create_runtime(config)
     restore_writer(method, payload, config)
@@ -165,7 +182,7 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
     old_tokenizer = old.get("raw_identity", {}).get("tokenizer")
     if old_tokenizer is not None and old_tokenizer != tokenizer:
         raise ValueError("checkpoint raw tokenizer identity differs from the runtime tokenizer")
-    windows, validation = prepare_validation(config, method)
+    windows, validation, fixed_donors = prepare_validation(config, method, include_donors=True)
     if progress_callback is not None:
         progress_callback({"stage": "prepared", "windows": len(windows),
                            "groups_per_source": validation["selected_validation_groups_per_source"],
@@ -182,7 +199,8 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
     with torch.no_grad():
         evaluation = evaluate_raw(method, windows, prefix_tokens=raw["prefix_tokens"], batch_size=raw["batch_size"],
                                   bootstrap_seed=raw["eval_seed"], bootstrap_samples=raw["eval_bootstrap_samples"],
-                                  report_per_source=True)
+                                  report_per_source=True, report_donor=raw.get("eval_donor", False),
+                                  macro_source_groups=raw.get("macro_source_groups"), fixed_donors=fixed_donors)
     writer_after = method.writer.state_dict()
     if writer_before.keys() != writer_after.keys() or any(
             before.shape != writer_after[name].shape or before.dtype != writer_after[name].dtype
@@ -195,6 +213,8 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
                                   (dataset_path, dataset_hash, "dataset"), (config.source, config_hash, "config")):
         if file_sha256(path) != expected:
             raise RuntimeError(f"{label} file changed during frozen evaluation")
+    if event_path and file_sha256(event_path) != event_hash:
+        raise RuntimeError("event dataset file changed during frozen evaluation")
     git_after = git_identity()
     if recorded and (git_after["dirty"] or git_after["commit"] != git_before["commit"]):
         raise RuntimeError("repository changed during recorded frozen evaluation")
@@ -202,12 +222,14 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
              "resolved_commit": resolved, "smoke": config.values["model"]["smoke"],
              "dtype": str(next(method.reader.model.parameters()).dtype), "tokenizer_fingerprint": fingerprint}
     result = {**evaluation, **validation, "protocol": PROTOCOL, "complete": True,
-              "conditions": ["self", "empty"], "evaluation_only": True, "optimizer_steps": 0,
+              "conditions": ["self", "empty", "donor"] if raw.get("eval_donor") else ["self", "empty"],
+              "evaluation_only": True, "optimizer_steps": 0, "backward_calls": 0,
               "checkpoint": {"path": str(checkpoint_path), "sha256": checkpoint_hash,
                   "step": payload["step"], "protocol": payload["protocol"],
                   "training_loss_tokens": old.get("training_loss_tokens"),
                   "raw_identity": old.get("raw_identity"), "writer_tensor_sha256": tensor_hash},
               "dataset": {"path": str(dataset_path), "sha256": dataset_hash},
+              **({"event_dataset": {"path": str(event_path), "sha256": event_hash}} if event_path else {}),
               "model": model, "model_identity_sha256": _json_hash(model),
               "integrity_checks": {"writer_state_dict_exact_equal": True,
                   "writer_parameter_objects_and_versions_unchanged": True,
@@ -226,7 +248,7 @@ def evaluate_checkpoint(config, checkpoint_path, *, require_clean_git=True, prog
                   "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
                   "elapsed_seconds": time.monotonic() - started},
               "limitations": ["Development-set evaluation; no final-test or pretraining-novelty claim.",
-                  "Self and empty only; donor and full-context conditions are not evaluated.",
+                  "Full-context comparison is a separate diagnostic; fixed donor is run only when configured.",
                   "Model identity SHA256 hashes identity metadata, not reader weight contents.",
                   "Reader checks do not detect every .data or buffer mutation; writer tensors are compared exactly."]}
     json.dumps(result, allow_nan=False)

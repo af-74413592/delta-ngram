@@ -3,7 +3,7 @@
 
 Download is explicit and capped; source text is data and is never executed.
 Complete extracted articles are encoded once, without cross-article packing.
-Temporal partitions: 2017-18 train, 2019 H1 validation, 2019 H2 old holdout.
+Temporal partitions: 2017 train, 2018 Jan-Apr validation, 2018 May-Jul holdout.
 This corpus never supplies the separate, recent-event final evaluation.
 """
 from __future__ import annotations
@@ -34,6 +34,9 @@ FILES = (
     (214502216, "e0869a42852439aa408030de51464d0a8cbe5608ff1a7ba9d165e10964c6fdef"),
 )
 SPLITS = ("train", "validation", "holdout")
+TEMPORAL_SPLITS = {"train": ["2017-01-01", "2017-12-31"],
+                   "validation": ["2018-01-01", "2018-04-30"],
+                   "holdout": ["2018-05-01", "2018-07-31"]}
 LENGTHS = (512, 1024, 2048, 4096, 8192)
 SOURCE_LENGTH_SAMPLE = {
     "dataset_revision": REVISION,
@@ -143,13 +146,10 @@ def publication_day(value):
 
 
 def temporal_split(day):
-    if date(2017, 1, 1) <= day <= date(2018, 12, 31):
-        return "train"
-    if date(2019, 1, 1) <= day <= date(2019, 6, 30):
-        return "validation"
-    if date(2019, 7, 1) <= day <= date(2019, 12, 31):
-        return "holdout"
-    raise ValueError("publication date outside registered 2017-2019 corpus")
+    for split, (begin, end) in TEMPORAL_SPLITS.items():
+        if date.fromisoformat(begin) <= day <= date.fromisoformat(end):
+            return split
+    raise ValueError("publication date outside registered 2017 through July 2018 windows")
 
 
 def canonical_url(value):
@@ -415,6 +415,85 @@ def export_document(item, fingerprint):
             "token_ids": item["token_ids"], "tokenizer_identity": fingerprint, "metadata": metadata}
 
 
+def cache_specification(args, download_manifest):
+    """Selection quotas are intentionally absent, so failed quotas can be retried."""
+    return {"dataset_id": DATASET, "dataset_revision": REVISION,
+            "source_files": download_manifest["files"], "temporal_splits": TEMPORAL_SPLITS,
+            "source_script_sha256": file_sha256(Path(__file__)),
+            "dedup_primitives_script_sha256": file_sha256(Path(__file__).with_name("prepare_code_pilot.py")),
+            "parameters": {key: getattr(args, key) for key in ("seed", "train_candidates", "eval_candidates",
+                            "minimum_chars", "maximum_chars", "near_threshold")}}
+
+
+def inspect_cache(directory, stage, specification):
+    directory = Path(directory)
+    manifest_path = directory / f"{stage}_cache_manifest.json"
+    path = directory / f"{stage}_candidates.jsonl.gz"
+    if not manifest_path.exists() and not path.exists():
+        return None
+    if not manifest_path.is_file() or not path.is_file():
+        raise ValueError(f"incomplete {stage} cache; use a new --cache-dir")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if (manifest.get("format") != "delta_ngram_news_stage_cache_v1" or manifest.get("stage") != stage or
+            manifest.get("fingerprint") != digest(specification) or manifest.get("specification") != specification):
+        raise ValueError(f"{stage} cache parameters or code differ; use a new --cache-dir")
+    expected = manifest.get("file", {})
+    if (expected.get("path") != path.name or path.stat().st_size != expected.get("bytes") or
+            file_sha256(path) != expected.get("sha256")):
+        raise ValueError(f"{stage} cache integrity mismatch")
+    return manifest
+
+
+def write_cache(directory, stage, specification, records, statistics):
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    if inspect_cache(directory, stage, specification) is not None:
+        raise FileExistsError(f"refusing to overwrite existing {stage} cache")
+    path = directory / f"{stage}_candidates.jsonl.gz"
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with gzip.open(temporary, "wt", encoding="utf-8") as stream:
+        for record in records:
+            stream.write(json.dumps(record, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
+    temporary.replace(path)
+    manifest = {"format": "delta_ngram_news_stage_cache_v1", "stage": stage,
+                "fingerprint": digest(specification), "specification": specification,
+                "records": len(records), "statistics": statistics, "created_at": datetime.now(timezone.utc).isoformat(),
+                "file": {"path": path.name, "bytes": path.stat().st_size, "sha256": file_sha256(path)}}
+    save_json(directory / f"{stage}_cache_manifest.json", manifest)
+    log("stage_cache_saved", stage=stage, records=len(records), bytes=manifest["file"]["bytes"], sha256=manifest["file"]["sha256"])
+    return manifest
+
+
+def load_cache_records(directory, manifest):
+    path = Path(directory) / manifest["file"]["path"]
+    records, seen = [], set()
+    with gzip.open(path, "rt", encoding="utf-8") as stream:
+        for line in stream:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if not isinstance(record, dict) or record.get("document_id") in seen or not record.get("document_id"):
+                raise ValueError("invalid or duplicate cached candidate")
+            if temporal_split(publication_day(record["publication_date_original"])) != record["split"]:
+                raise ValueError("cached candidate temporal partition mismatch")
+            seen.add(record["document_id"])
+            records.append(record)
+    if len(records) != manifest["records"]:
+        raise ValueError("cached candidate count mismatch")
+    log("stage_cache_loaded", stage=manifest["stage"], records=len(records))
+    return records
+
+
+def verify_local_download(download_path, maximum_bytes):
+    download_path = Path(download_path)
+    manifest = json.loads(download_path.read_text(encoding="utf-8"))
+    for entry in validate_download_manifest(manifest, maximum_bytes):
+        path = download_path.parent / "raw" / entry["path"]
+        if path.stat().st_size != entry["size"] or file_sha256(path) != entry["sha256"]:
+            raise ValueError(f"local shard integrity mismatch: {entry['path']}")
+    return manifest
+
+
 def run(args):
     if args.download_dir:
         download_path = download(args.download_dir, args.max_compressed_bytes)
@@ -423,11 +502,7 @@ def run(args):
     else:
         raise ValueError("specify --download-dir or --download-manifest")
     if args.download_only:
-        supplied = json.loads(download_path.read_text(encoding="utf-8"))
-        for entry in validate_download_manifest(supplied, args.max_compressed_bytes):
-            path = download_path.parent / "raw" / entry["path"]
-            if path.stat().st_size != entry["size"] or file_sha256(path) != entry["sha256"]:
-                raise ValueError(f"local shard integrity mismatch: {entry['path']}")
+        verify_local_download(download_path, args.max_compressed_bytes)
         log("download_only_complete", manifest=str(download_path))
         return
     if not args.output_dir:
@@ -445,16 +520,44 @@ def run(args):
     names = ("train_validation.jsonl", "holdout.jsonl", "selected_texts.jsonl.gz", "data_manifest.json")
     if any((output / name).exists() for name in names):
         raise FileExistsError("refusing to replace an existing exported corpus")
-    candidates, scan_stats, download_manifest = scan(download_path, args)
-    save_json(output / "scan_manifest.json", {"download": download_manifest, "parameters": vars(args), "scan": scan_stats})
-    candidates, dedup_stats = form_families(candidates, threshold=args.near_threshold)
+    cache_directory = Path(args.cache_dir).resolve() if args.cache_dir else output
+    download_manifest = json.loads(download_path.read_text(encoding="utf-8"))
+    validate_download_manifest(download_manifest, args.max_compressed_bytes)
+    family_spec = cache_specification(args, download_manifest)
+    family_cache = inspect_cache(cache_directory, "families", family_spec)
+    candidates = None
+    if family_cache is None:
+        candidates, scan_stats, download_manifest = scan(download_path, args)
+        save_json(output / "scan_manifest.json", {"download": download_manifest, "parameters": vars(args), "scan": scan_stats})
+        candidates, dedup_stats = form_families(candidates, threshold=args.near_threshold)
+        family_cache = write_cache(cache_directory, "families", family_spec, candidates,
+                                   {"scan": scan_stats, "deduplication": dedup_stats})
+    else:
+        verify_local_download(download_path, args.max_compressed_bytes)
+        scan_stats, dedup_stats = family_cache["statistics"]["scan"], family_cache["statistics"]["deduplication"]
+        save_json(output / "scan_manifest.json", {"download": download_manifest, "parameters": vars(args), "scan": scan_stats,
+                                                   "reused_family_cache": family_cache["file"]})
     from transformers import AutoTokenizer
     from delta_ngram.raw_lm import tokenizer_identity
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER, revision=TOKENIZER_REVISION)
     identity = tokenizer_identity(SimpleNamespace(tokenizer=tokenizer))
     fingerprint = "sha256:" + digest(identity)
-    candidates, length_stats = tokenize(candidates, tokenizer, args.minimum_tokens, args.maximum_tokens)
-    save_json(output / "candidate_manifest.json", {"deduplication": dedup_stats, "length_retention": length_stats})
+    token_spec = {"family_cache_fingerprint": family_cache["fingerprint"], "family_records_sha256": family_cache["file"]["sha256"],
+                  "tokenizer_identity": identity, "tokenizer_fingerprint": fingerprint,
+                  "minimum_tokens": args.minimum_tokens, "maximum_tokens": args.maximum_tokens,
+                  "add_special_tokens": False, "truncation": False}
+    token_cache = inspect_cache(cache_directory, "tokenized", token_spec)
+    if token_cache is None:
+        if candidates is None:
+            candidates = load_cache_records(cache_directory, family_cache)
+        candidates, length_stats = tokenize(candidates, tokenizer, args.minimum_tokens, args.maximum_tokens)
+        token_cache = write_cache(cache_directory, "tokenized", token_spec, candidates, {"length_retention": length_stats})
+    else:
+        candidates = load_cache_records(cache_directory, token_cache)
+        length_stats = token_cache["statistics"]["length_retention"]
+    cache_audit = {"directory": str(cache_directory), "families": family_cache, "tokenized": token_cache}
+    save_json(output / "candidate_manifest.json", {"deduplication": dedup_stats, "length_retention": length_stats,
+                                                    "stage_caches": cache_audit})
     selected = choose_documents(candidates, train_tokens=args.target_train_tokens, eval_tokens=args.target_eval_tokens,
                                 minimum_eval_groups=args.minimum_eval_groups, seed=args.seed)
     stats = validate_and_summarize(selected, args.minimum_eval_groups)
@@ -471,12 +574,12 @@ def run(args):
     manifest = {"format": "delta_ngram_news_corpus_v1", "ready": True, "dataset_id": DATASET,
                 "dataset_revision": REVISION, "download": download_manifest, "parameters": vars(args),
                 "tokenizer": {"name": TOKENIZER, "revision": TOKENIZER_REVISION, "identity": identity, "fingerprint": fingerprint},
-                "statistics": stats, "scan": scan_stats, "length_retention": length_stats,
+                "statistics": stats, "scan": scan_stats, "length_retention": length_stats, "stage_caches": cache_audit,
                 "length_retention_denominator": "all bounded, quality/date-eligible candidates after cross-time family quarantine, before token-length selection",
                 "unfiltered_source_length_sample": SOURCE_LENGTH_SAMPLE,
                 "deduplication": {**dedup_stats, "threshold": args.near_threshold,
                     "scope": "all bounded candidates before token filtering; approximate 64-minhash, 16 bands x 4 rows retrieval; all cross-time components excluded"},
-                "temporal_splits": {"train": ["2017-01-01", "2018-12-31"], "validation": ["2019-01-01", "2019-06-30"], "holdout": ["2019-07-01", "2019-12-31"]},
+                "temporal_splits": TEMPORAL_SPLITS,
                 "quality_checks": {"chronological_splits": True, "detected_duplicate_families_split_disjoint": True,
                     "complete_extracted_articles_tokenized_without_truncation": True, "cross_article_concatenation": False,
                     "minimum_64_eval_groups": args.minimum_eval_groups >= 64, "recent_news_evaluation_excluded": True},
@@ -502,6 +605,7 @@ def parser():
     location.add_argument("--download-manifest")
     result.add_argument("--download-only", action="store_true")
     result.add_argument("--output-dir")
+    result.add_argument("--cache-dir", help="reuse verified family/tokenized stage caches; defaults to output-dir")
     result.add_argument("--max-compressed-bytes", type=int, default=1_200_000_000)
     result.add_argument("--seed", type=int, default=17)
     result.add_argument("--train-candidates", type=int, default=400000)
@@ -511,7 +615,7 @@ def parser():
     result.add_argument("--minimum-tokens", type=int, default=1024)
     result.add_argument("--maximum-tokens", type=int, default=16384)
     result.add_argument("--target-train-tokens", type=int, default=50_000_000)
-    result.add_argument("--target-eval-tokens", type=int, default=250_000)
+    result.add_argument("--target-eval-tokens", type=int, default=5_000_000)
     result.add_argument("--minimum-eval-groups", type=int, default=64)
     result.add_argument("--near-threshold", type=float, default=0.85)
     return result
