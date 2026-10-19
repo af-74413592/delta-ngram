@@ -2,6 +2,9 @@
 
 Registered on 2026-10-19, after the P1 diagnostics and before P2 optimization.
 
+The subsequently completed primary comparison is reported in
+[P2 results](p2_results_20261019.md); the protocol below remains the registered setup.
+
 ## Matched Base experiment
 
 - Train one Base arm, seed 17, with a nominal ceiling of 5,000,000 loss tokens.
