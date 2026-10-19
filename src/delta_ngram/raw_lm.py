@@ -19,6 +19,7 @@ import torch.nn.functional as F
 from torch.utils.checkpoint import checkpoint
 
 from .batching import BatchMemoryState, write_batch
+from .block_monitor import MONITOR_PROTOCOL, monitor_source_identity, query_hit_summary
 from .checkpoints import load_checkpoint, restore_writer, save_checkpoint
 from .data.raw_text import RawWindowSampler, build_windows, load_documents
 from .runtime import log_event, save_json, synchronize
@@ -86,12 +87,14 @@ def score_block(reader, state, input_ids, attention_mask, labels, *, checkpoint_
 
 
 def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=False,
-                    memory_mode="self", observer=None):
+                    memory_mode="self", observer=None, block_observer=None, block_context=None):
     """Run full BPTT over complete windows, with one namespace per window.
 
     ``observer`` is an optional correctness/debug callback. It receives the
     fixed snapshot BEFORE a read or write; the trainer does not retain it.
     Empty-memory scoring leaves the reader and writer parameters intact.
+    ``block_observer`` instead receives detached JSON records before each
+    scored read and after each write. It runs outside score checkpointing.
     """
     if method.reader.backend != "external_hash":
         raise NotImplementedError("raw LM currently supports the external hash adapter only")
@@ -117,6 +120,20 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
                 "write_blocks": 0, "trajectories": len(windows)}
     boundary = max(method.reader.orders) - 1
 
+    def emit_block(kind, block, records, eligible):
+        for record in records:
+            owner = record["owner"]
+            if not bool(eligible[owner]):
+                continue
+            window = windows[owner]
+            block_observer({**(block_context or {}), "event": "block_metrics",
+                            "protocol": MONITOR_PROTOCOL, "kind": kind, "owner": owner,
+                            "document_id": window.document_id, "group_id": window.group_id,
+                            "source": window.source, "window_start": window.start,
+                            "window_blocks": window.blocks, "block": block,
+                            "block_start": window.start + block * block_size,
+                            "memory_mode": memory_mode, "metrics": record})
+
     for block in range(tokens.shape[1]):
         current = tokens[:, block]
         active = lengths > block
@@ -129,6 +146,9 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
             labels[:, prefix_tokens:] = torch.where(current_mask.bool(), current, -100)
             if observer is not None:
                 observer("read", block, state, ids, mask, labels)
+            if block_observer is not None:
+                addresses = method.reader.adapter.addresses(ids, mask)
+                emit_block("query", block, query_hit_summary(state, addresses, labels, mask), active)
             loss, count = score_block(method.reader, state, ids, mask, labels,
                                       checkpoint_reader=checkpoint_reader)
             losses.append(loss)
@@ -153,7 +173,11 @@ def trajectory_loss(method, windows, *, prefix_tokens=128, checkpoint_reader=Fal
             rows = method.reader.adapter.addresses(current, write_mask)
         # Old tokens above are addressing-only; they are neither pooled nor
         # written again, and do not enter the evidence encoder a second time.
-        state = write_batch(method.writer, state, hidden, rows, write_mask)
+        if block_observer is None:
+            state = write_batch(method.writer, state, hidden, rows, write_mask)
+        else:
+            state = write_batch(method.writer, state, hidden, rows, write_mask,
+                                observer=lambda records: emit_block("write", block, records, writing))
         encoded = int(write_mask.sum().item())
         counters["writer_new_tokens"] += encoded
         counters["encoder_input_tokens"] += encoded
@@ -362,7 +386,10 @@ def evaluate_raw(method, windows, *, prefix_tokens, batch_size,
             "scope": "held-out writer-training document groups; no pretraining-novelty claim"}
 
 
-def train_raw(config):
+def train_raw(config, *, monitor_blocks=True):
+    """Train raw trajectories, logging detached per-block metrics by default."""
+    if type(monitor_blocks) is not bool:
+        raise ValueError("monitor_blocks must be boolean")
     raw = config.values["raw"]
     if raw["dataset"] is None:
         raise ValueError("train-raw requires raw.dataset (document JSONL)")
@@ -417,6 +444,11 @@ def train_raw(config):
         raise ValueError("raw.loss_tokens is below the already-consumed resume budget")
     initialize_output(args)
     metadata = _writer_metadata(config, method, args, identity)
+    # Observability is recorded separately so existing writer/resume identities
+    # remain evaluable and monitor toggles do not alter the experiment contract.
+    metadata["block_monitor"] = {"enabled": monitor_blocks,
+                                 "path": "block_metrics.jsonl" if monitor_blocks else None,
+                                 **monitor_source_identity()}
     metadata["data_scope"] = "in-memory document JSONL pilot; not the production 200M-token corpus builder"
     metadata.update(validation_metadata)
     save_json(args.out / "config.json", metadata)
@@ -433,7 +465,10 @@ def train_raw(config):
         "overlap_policy": "nonoverlapping within a length bucket; lengths/epochs can reuse source positions"})
     save_checkpoint(args.out / "writer_init.pt", method.writer, metadata, step, protocol=PROTOCOL)
     log_event(args.out / "metrics.jsonl", {"event": "start", "protocol": PROTOCOL,
-                                          "step": step, "counters": counters.copy()})
+                                          "step": step, "counters": counters.copy(),
+                                          "block_monitor": metadata["block_monitor"]})
+    block_observer = ((lambda record: log_event(args.out / "block_metrics.jsonl", record))
+                      if monitor_blocks else None)
     def save_progress(*, snapshot=False):
         # Latest resume is atomic, including when a later evaluation fails.
         _save_resume(args.out / "training.pt", method, optimizer, sampler, identity, step, counters)
@@ -495,7 +530,11 @@ def train_raw(config):
         for start in range(0, len(batch), raw["batch_size"]):
             result = trajectory_loss(method, batch[start:start + raw["batch_size"]],
                                      prefix_tokens=raw["prefix_tokens"],
-                                     checkpoint_reader=raw["checkpoint_reader"])
+                                     checkpoint_reader=raw["checkpoint_reader"],
+                                     block_observer=block_observer,
+                                     block_context={"step": step + 1,
+                                                    "microbatch": start // raw["batch_size"],
+                                                    "phase": "train", "seed": config.values["seed"]})
             loss = result.loss_sum / group_tokens
             if not loss.requires_grad or not bool(torch.isfinite(loss)):
                 raise RuntimeError("raw LM loss is disconnected from writer or non-finite")
@@ -548,6 +587,7 @@ def train_raw(config):
                "last_evaluation": last_evaluation, "elapsed_seconds": time.monotonic() - started,
                "scope": "CPU plumbing only" if args.smoke else "single-device raw LM writer training",
                "native_adapter": False, "ddp": False, "time_parallel_scan": False,
+               "block_monitor": metadata["block_monitor"],
                "checkpoint": "writer.pt", "resume_checkpoint": "training.pt"}
     save_json(args.out / "summary.json", summary)
     log_event(args.out / "metrics.jsonl", {"event": "complete", **summary})

@@ -226,6 +226,33 @@ normal remainder below one complete trajectory is accepted as the nominal 5M
 endpoint while preserving its actual count. Missing replication remains pending.
 Causal and engineering acceptance stays separate from this statistical audit.
 
+#### Frozen P1 diagnostics and block monitoring
+
+The [diagnostic protocol](docs/p1_diagnostics_protocol_20261019.md) freezes the
+development targets and two matched donors before evaluating either seed. It
+compares self, empty, each donor, and full true context, with paired document-group
+bootstrap intervals and token-recurrence, language, and after-write buckets.
+The 4/8/16-write points score the next block; unavailable natural continuations
+are reported as limited coverage.
+
+```sh
+python scripts/p1_diagnostics.py prepare --baseline-run /path/to/seed17 --dataset /path/to/train_validation.jsonl --output /path/to/diagnostic_manifest.json
+python scripts/p1_diagnostics.py evaluate --config configs/p1_code_seed17.yaml --training-run /path/to/seed17 --manifest /path/to/diagnostic_manifest.json --output /path/to/diagnostics/seed17
+python scripts/p1_diagnostics.py evaluate --config configs/p1_code_seed29.yaml --training-run /path/to/seed29 --manifest /path/to/diagnostic_manifest.json --output /path/to/diagnostics/seed29
+```
+
+The evaluator requires a clean committed checkout and verified final 5M run
+artifacts. It freezes the loaded writer, uses one shared manifest, records
+evaluation source/checkpoint hashes, and produces `results.json`,
+`block_metrics.jsonl`, and progress records. Failed or interrupted evaluations
+retain partial logs without a complete result.
+
+Future `train-raw` runs also write `block_metrics.jsonl` by default. Each stream's
+read/write record includes actual beta distributions, touched/new rows, patch
+changes and norms, and query-address hits aligned to causal prediction positions.
+The detached observer does not replay the writer or reader checkpoint; logging
+adds instrumentation cost while leaving the training math and RNG unchanged.
+
 A remainder too small for a complete trajectory stays unspent. Its actual token
 count, nominal endpoint, and `budget_endpoint` are explicit in `summary.json`;
 the existing CLI exit code 2 and `complete: false` are retained for this case.

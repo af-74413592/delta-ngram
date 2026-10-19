@@ -13,6 +13,7 @@ from torch import Tensor
 
 from .state import SparseMemoryState
 from .writer import ForwardWriter
+from .block_monitor import summarize_write
 
 
 def _validate_namespace(batch_size: int, row_capacity: int) -> None:
@@ -176,12 +177,14 @@ class BatchMemoryState:
 
 
 def write_batch(writer: ForwardWriter, state: BatchMemoryState, hidden: Tensor,
-                physical_rows: Tensor, mask: Tensor) -> BatchMemoryState:
+                physical_rows: Tensor, mask: Tensor, *, observer=None) -> BatchMemoryState:
     """Write once per independent stream at the same logical time step.
 
     The existing writer computes every gate from the common old packed state.
     The existing operator then aggregates events by isolated physical row. D4
     exclusions are defined in physical space, so they apply to every owner.
+    The optional observer receives a list of detached JSON owner summaries,
+    computed from this call's applied events and old/new states, exactly once.
     """
     if not isinstance(state, BatchMemoryState):
         raise ValueError("state must be a BatchMemoryState")
@@ -206,6 +209,8 @@ def write_batch(writer: ForwardWriter, state: BatchMemoryState, hidden: Tensor,
         allowed = ~torch.isin(physical_events, frozen)
         event_rows, target, beta = event_rows[allowed], target[allowed], beta[allowed]
     if not event_rows.numel():
+        if observer is not None:
+            observer(summarize_write(state, state, event_rows, beta))
         return state
 
     memory = state.memory
@@ -221,4 +226,7 @@ def write_batch(writer: ForwardWriter, state: BatchMemoryState, hidden: Tensor,
         flags = tuple(old or active for old, active in zip(flags, touched))
 
     updated = operator(memory, event_rows, target, beta)
-    return BatchMemoryState(updated, state.batch_size, state.row_capacity, flags)
+    result = BatchMemoryState(updated, state.batch_size, state.row_capacity, flags)
+    if observer is not None:
+        observer(summarize_write(state, result, event_rows, beta))
+    return result
