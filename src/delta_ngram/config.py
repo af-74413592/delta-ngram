@@ -31,6 +31,11 @@ DEFAULTS = {
                    "query_styles": ["canonical"], "detailed_rows": False},
     "run": {"output_dir": "../../delta-ngram-runs/pilot_seed17", "checkpoint": None,
             "max_wall_seconds": 1500.0, "max_evidence_tokens": 128},
+    "raw": {"dataset": None, "block_size": 512, "prefix_tokens": 128,
+            "block_counts": [8, 16], "length_weights": None, "source_weights": None,
+            "loss_tokens": 5_000_000, "batch_size": 1, "gradient_accumulation_steps": 1, "eval_windows": 8,
+            "eval_every_tokens": 1_000_000, "max_steps": None,
+            "checkpoint_reader": False, "resume": None},
 }
 
 
@@ -127,7 +132,39 @@ class ExperimentConfig:
             raise ValueError("model.revision must be a string or null")
         if not isinstance(values["run"]["output_dir"], str) or not values["run"]["output_dir"]:
             raise ValueError("run.output_dir must be a nonempty path string")
-        for section, key in (("run", "output_dir"), ("run", "checkpoint"), ("data", "manifest")):
+        raw = values["raw"]
+        for key in ("block_size", "prefix_tokens", "loss_tokens", "batch_size", "gradient_accumulation_steps",
+                    "eval_windows", "eval_every_tokens"):
+            if type(raw[key]) is not int or raw[key] < 1:
+                raise ValueError(f"raw.{key} must be a positive integer")
+        if raw["prefix_tokens"] > raw["block_size"]:
+            raise ValueError("raw.prefix_tokens must not exceed raw.block_size")
+        if (not isinstance(raw["block_counts"], list) or not raw["block_counts"]
+                or any(type(n) is not int or n < 2 for n in raw["block_counts"])
+                or len(set(raw["block_counts"])) != len(raw["block_counts"])):
+            raise ValueError("raw.block_counts must contain unique integers >= 2")
+        if raw["max_steps"] is not None and (type(raw["max_steps"]) is not int or raw["max_steps"] < 1):
+            raise ValueError("raw.max_steps must be null or a positive integer")
+        if type(raw["checkpoint_reader"]) is not bool:
+            raise ValueError("raw.checkpoint_reader must be boolean")
+        for key in ("length_weights", "source_weights"):
+            weights = raw[key]
+            if weights is not None:
+                if (not isinstance(weights, dict) or not weights
+                        or any(type(w) not in (int, float) or not math.isfinite(w) or w < 0
+                               for w in weights.values()) or sum(weights.values()) <= 0):
+                    raise ValueError(f"raw.{key} must be a nonempty mapping of nonnegative finite weights")
+                if key == "length_weights":
+                    if (any(type(k) is not int for k in weights)
+                            or set(weights) != set(raw["block_counts"])):
+                        raise ValueError("raw.length_weights must have integer keys matching raw.block_counts")
+                elif any(not isinstance(k, str) or not k for k in weights):
+                    raise ValueError("raw.source_weights keys must be nonempty strings")
+        for key in ("dataset", "resume"):
+            if raw[key] is not None and (not isinstance(raw[key], str) or not raw[key]):
+                raise ValueError(f"raw.{key} must be null or a nonempty path string")
+        for section, key in (("run", "output_dir"), ("run", "checkpoint"), ("data", "manifest"),
+                             ("raw", "dataset"), ("raw", "resume")):
             value = values[section][key]
             if value is not None:
                 expanded = Path(os.path.expandvars(os.path.expanduser(str(value))))

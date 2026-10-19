@@ -20,6 +20,7 @@ models/
 *.zip
 *manifest.json
 *.jsonl
+!examples/raw_smoke.jsonl
 .env
 .env.*
 !.env.example

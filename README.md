@@ -43,8 +43,133 @@ delta-ngram eval --config configs/engram_edit_style.yaml
 `python -m delta_ngram` accepts the same commands. `scripts/run.py` is only a
 thin launcher. Learned-writer `eval` and `diagnose` require `run.checkpoint`;
 online baselines use `eval` and perform their evidence-only updates during that
-same evaluation loop. `train` starts a fresh outer training run; automatic
-training resume is not implemented.
+same evaluation loop. The episode-based `train` command starts a fresh outer
+training run. The separate `train-raw` command supports explicit resume as
+described below.
+
+### Raw-text LM training on one device
+
+See the [training plan](docs/training_plan_20261019.md) for stage budgets,
+acceptance gates, and implementation status.
+
+Run the public, offline CPU example from the source checkout:
+
+```sh
+delta-ngram train-raw --config configs/raw_smoke.yaml
+```
+
+This uses the checked-in `examples/raw_smoke.jsonl`, a tiny random reader, and
+synthetic repeated characters. It needs no model or corpus download and checks
+execution only. The example uses 8-token blocks, a 4-token scoring prefix,
+2/4-block trajectories, two independent streams per batch, and a 128-loss-token
+budget. Artifacts go to the sibling `../delta-ngram-runs/raw_smoke/` directory.
+Use a new or empty output directory before running the command again.
+
+#### Document input
+
+`raw.dataset` names a UTF-8 JSONL file. Each nonblank line is one document:
+
+```json
+{"id":"book-1","group_id":"family-1","source":"books","split":"train","text":"A complete document.","metadata":{"license":"CC0"}}
+```
+
+`id`, `group_id`, `source`, and `split` are required. IDs must be unique;
+`group_id` identifies a document family and may not occur in both `train` and
+`validation`. Both splits must provide complete windows. `text` must be nonempty;
+optional `metadata` (or `meta`) is retained for provenance and never enters the
+model. Unknown record fields are rejected. The loader encodes each entire
+document once with `add_special_tokens=False`, then slices token IDs directly.
+It never decodes and re-encodes windows, joins documents, or pads a short document
+into a training trajectory. Text and token hashes are recorded in the manifest.
+
+Pre-tokenized records replace `text` with a nonempty `token_ids` list of
+nonnegative integers and an explicit `tokenizer_identity`. This identity is the
+exact `sha256:<digest>` tokenizer fingerprint recorded in the run's `config.json`
+and `data_manifest.json`; a model name alone is insufficient. Use token IDs from
+that tokenizer without adding extra special tokens. Each record has exactly one
+of `text` or `token_ids`, and an identity mismatch is rejected.
+
+Windows are continuous and nonoverlapping within each document/length bucket.
+Different length buckets can reuse the same positions, and the sampler reshuffles
+and repeats windows after exhausting a source/length cell. Document IDs, start
+offsets, length buckets, and sampler state expose that reuse; the input is not
+claimed to be globally disjoint across buckets or epochs.
+
+#### Causal objective and token accounting
+
+For a trajectory of `K` blocks of `B` tokens, the objective has `(K - 1) * B`
+target tokens. The first block only warms memory. Each later block is scored
+using the previous memory and then written for future blocks; the final block
+is scored but never written. Scoring prepends `raw.prefix_tokens` from the
+previous block, masks those prefix labels, and predicts every current-block
+token, including its first token. Only current-block tokens enter the evidence
+encoder and writer. A separate addressing prefix supplies cross-boundary
+n-grams; prefix tokens never generate new write events.
+
+`raw.loss_tokens` is the cumulative supervised-target budget, not the number of
+raw input tokens, encoded evidence tokens, or reader input tokens. Warm-up blocks
+and scoring prefixes make these counts different; `metrics.jsonl` and
+`summary.json` report them separately. `raw.length_weights` and
+`raw.source_weights` specify target-token shares. The deterministic token-fair
+scheduler accounts for trajectory cost rather than selecting equal numbers of
+short and long trajectories. Every nonzero source/length quota must have
+complete windows. The sampler never exceeds the remaining target budget and
+never truncates a trajectory; a remainder smaller than every eligible trajectory
+is reported as unspent.
+
+Each batch packs independent streams into separate memory namespaces, including
+when their n-gram row IDs collide. Memory resets for each trajectory. The writer
+uses full backpropagation through the complete trajectory, with no state detach
+between blocks and one optimizer update after the batch. The reader remains
+frozen. `raw.checkpoint_reader: true` checkpoints the whole scoring function and
+recreates the scoped memory hook around the exact state snapshot during backward
+recomputation. It does not enable the reader model's internal Hugging Face layer
+checkpointing.
+
+Set `raw.gradient_accumulation_steps` (default 1) to process several independent
+microbatches before updating the writer. `raw.batch_size` is the number of
+parallel trajectories per microbatch. Every microbatch loss sum is divided by
+the entire optimizer group's valid target count, including a smaller final
+group. This keeps full trajectory gradients while releasing each microbatch's
+graph before the next one; writer parameters stay fixed until the group ends.
+
+#### Checkpoints and continuation
+
+`training.pt` is the resume checkpoint: writer, optimizer, sampler order/cursors,
+random-number states, counters, and the experiment identity at a completed batch
+boundary. To continue, copy the YAML and set, for example:
+
+```yaml
+raw:
+  resume: ../../delta-ngram-runs/raw_smoke/training.pt
+  loss_tokens: 256
+run:
+  output_dir: ../../delta-ngram-runs/raw_smoke_continued
+```
+
+These snippets are edits to the full configuration, not a standalone preset;
+there is no YAML inheritance. The corpus, tokenizer, model, operator, optimizer,
+and effective batch configuration must match the saved identity. The new output
+directory must be empty. `raw.loss_tokens` remains the total budget including
+tokens already consumed. For a split-run comparison with uninterrupted training,
+keep that final total budget fixed and stop the first segment using
+`raw.max_steps`. A smaller intermediate token budget can alter the last length
+choices before saving. Resume restores the actual saved history; it cannot
+replace those earlier choices.
+
+`writer.pt` is a compatible writer export for the existing writer loader and
+evaluation/chat paths when their model/reader/writer/operator configuration
+matches. It is also accepted as `run.checkpoint` initialization for a fresh raw
+training run. It is not an exact-resume substitute for `training.pt`; choose
+either `raw.resume` or `run.checkpoint`, not both.
+
+Current raw validation reports only self-memory and empty-memory held-out
+next-token NLL and their difference. It sets `p6_gate_evaluated: false`: it does
+not implement the complete P6 acceptance evaluation, establish pretraining
+novelty, or measure scientific task quality in the CPU smoke run. The native
+pretrained-table adapter, DDP, and parallel scans across time are not implemented.
+This in-memory JSONL path is the minimal training implementation, not a
+production corpus-preparation pipeline.
 
 ### Interactive memory debugging
 
@@ -83,6 +208,7 @@ Use `--device cpu` or `--device cuda` to override automatic device selection.
 
 ```text
 configs/                         YAML examples, with no model weights or results
+examples/raw_smoke.jsonl          small synthetic raw-text CPU input
 scripts/run.py                   thin CLI launcher
 scripts/debug_forward.py         readable D1 forward-pass walkthrough
 src/delta_ngram/
@@ -93,12 +219,14 @@ src/delta_ngram/
   interfaces.py                  MemoryMethod and WriteResult contracts
   methods.py                     method construction and shared write entry point
   runtime.py                     tokenization, generation, scoring, and timing
-  train.py                       one outer training loop
+  train.py                       episode-based outer training loop
+  raw_lm.py                      causal raw-text trainer and resumable token budget
+  batching.py                    isolated stream namespaces and packed writes
   evaluate.py                    one evaluator and shared row interventions
-  cli.py                         train / eval / diagnose / chat
+  cli.py                         train / train-raw / eval / diagnose / chat
   checkpoints.py                 writer checkpoint schema and legacy migration
   parity.py                      exact historical-artifact comparison
-  data/                          fact/affix episodes, splits, and manifests
+  data/                          episodes plus raw documents, windows, and sampler
   baselines/                     online optimizers, context, BM25, and ridge
 tests/                           CPU correctness and parity checks
 README.md
@@ -125,8 +253,10 @@ target residual, and `log(1 + count)`. D0 gates receive evidence features only.
 
 The external reader adds the sum of the addressed row patches, divided by
 `sqrt(number_of_orders)`, before the configured decoder layer. Queries use fresh
-full-prefix forwards with no KV cache and never write memory. Activation
-checkpointing is disabled to keep query graphs tied to their own state snapshots.
+full-prefix forwards with no KV cache and never write memory. Internal model
+activation checkpointing is disabled to keep scoped hooks tied to their own
+snapshots. Raw training optionally checkpoints the complete scoring call with
+explicit snapshot values, as described above.
 
 Only writer parameters are optimized in outer training. Parameters stay fixed
 through each evidence trajectory; an outer update occurs after the batch of
@@ -238,6 +368,7 @@ consistent when evaluating a checkpoint.
 | Example | Command | Purpose |
 | --- | --- | --- |
 | `smoke.yaml` | `train` | Offline CPU plumbing check. |
+| `raw_smoke.yaml` | `train-raw` | Offline CPU raw-text trajectories, isolated batches, and resume artifacts. |
 | `pilot_seed17.yaml` | `train` | Two-fact D1 run, seed 17, 500 outer steps. |
 | `eval_pilot.yaml` | `eval` | Evaluate that saved writer. |
 | `diagnose.yaml` | `diagnose` | Saved D1 writer with fixed-address row interventions. |
@@ -332,14 +463,15 @@ operator or a native-table backend.
 
 Keep generated artifacts outside this repository. The example paths resolve to
 the sibling `delta-ngram-runs/` directory. Relative `run.output_dir`,
-`run.checkpoint`, and `data.manifest` paths resolve against the **YAML file's
+`run.checkpoint`, `data.manifest`, `raw.dataset`, and `raw.resume` paths resolve against the **YAML file's
 directory**, with environment-variable and home-directory expansion. A run
 requires a new or empty output directory; change its name before repeating it.
 
 Training writes `config.json`, `data_manifest.json`, `metrics.jsonl`,
 `writer_init.pt`, `writer.pt`, endpoint `eval_step_*.json`, and `summary.json`.
 Evaluation/diagnosis writes metadata, manifest, evaluation records, metrics, and
-a summary. Weights, downloaded models, historical results, and generated reports
+a summary. Raw training additionally writes `training.pt` for exact resume and
+records target-token counters and document/window provenance. Weights, downloaded models, historical results, and generated reports
 are not source-package contents. The source distribution includes small golden
 tensor and data fixtures with recorded provenance, not trained-model checkpoints.
 

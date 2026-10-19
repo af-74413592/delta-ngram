@@ -1,0 +1,33 @@
+version: 1
+seed: 17
+model:
+  smoke: true
+  device: cpu
+reader:
+  backend: external_hash
+  buckets: 17
+  orders: [2, 3]
+  layer_index: 1
+writer:
+  hidden_dim: 12
+method:
+  name: forward
+  operator: D1
+train:
+  lr: 0.001
+  gradient_clip: 1.0
+raw:
+  dataset: ../examples/raw_smoke.jsonl
+  block_size: 8
+  prefix_tokens: 4
+  block_counts: [2, 4]
+  length_weights: {2: 1.0, 4: 1.0}
+  source_weights: {synthetic: 1.0}
+  batch_size: 2
+  loss_tokens: 128
+  eval_windows: 2
+  eval_every_tokens: 64
+  checkpoint_reader: true
+run:
+  output_dir: ../../delta-ngram-runs/raw_smoke
+  max_wall_seconds: 120

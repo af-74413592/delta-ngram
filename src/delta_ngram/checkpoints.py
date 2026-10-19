@@ -9,10 +9,10 @@ VERSION = 1
 LEGACY_PROTOCOL = "forward_memory_two_write_fact_pilot_v1"
 
 
-def save_checkpoint(path, writer, config, step, optimizer=None):
+def save_checkpoint(path, writer, config, step, optimizer=None, *, protocol="delta_ngram_pilot_v1"):
     path = Path(path)
     temporary = path.with_suffix(".tmp")
-    payload = {"format": FORMAT, "format_version": VERSION, "protocol": "delta_ngram_pilot_v1",
+    payload = {"format": FORMAT, "format_version": VERSION, "protocol": protocol,
                "step": step, "config": config,
                "writer_state_dict": {name: tensor.detach().cpu() for name, tensor in writer.state_dict().items()}}
     if optimizer is not None:

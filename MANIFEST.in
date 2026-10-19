@@ -3,11 +3,13 @@ include pyproject.toml
 include MANIFEST.in
 recursive-include src *.py
 recursive-include configs *.yaml
+recursive-include docs *.md
 recursive-include scripts *.py
 recursive-include tests *.py
 global-exclude __pycache__ *.py[cod]
 global-exclude */.ipynb_checkpoints/*
 global-exclude *.pt *.pth *.safetensors *.jsonl
+include examples/raw_smoke.jsonl
 prune .git
 prune .venv
 prune build

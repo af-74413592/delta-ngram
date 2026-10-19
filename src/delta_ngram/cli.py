@@ -54,6 +54,7 @@ def main(argv=None):
     parser.add_argument("--version", action="version", version=__version__)
     commands = parser.add_subparsers(dest="command", required=True)
     for name, help_text in (("train", "Train a forward writer using the shared outer loop"),
+                            ("train-raw", "Train on tokenized document trajectories with isolated memories"),
                             ("eval", "Evaluate a writer or evidence-only baseline"),
                             ("diagnose", "Evaluate with counterfactuals and physical-row interventions")):
         sub = commands.add_parser(name, help=help_text)
@@ -67,7 +68,11 @@ def main(argv=None):
         from .chat import run_chat
         run_chat(config, args.checkpoint)
         return 0
-    result = train(config) if args.command == "train" else run_evaluation(config, diagnose=args.command == "diagnose")
+    if args.command == "train-raw":
+        from .raw_lm import train_raw
+        result = train_raw(config)
+    else:
+        result = train(config) if args.command == "train" else run_evaluation(config, diagnose=args.command == "diagnose")
     print(json.dumps({"command": args.command, "output_dir": config.values["run"]["output_dir"],
                       "complete": result.get("complete", result.get("completed_steps") == result.get("requested_steps")),
                       "scores": result.get("scores", result.get("last_evaluation", {}).get("scores"))}, allow_nan=False))
