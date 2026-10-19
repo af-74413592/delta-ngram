@@ -656,6 +656,11 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
             "event": "train", "step": step, "nll": group_loss_sum / group_tokens, "batch_loss_tokens": group_tokens,
             "counters": counters.copy(), "grad_norm_before_clip": float(grad_norm),
             "step_seconds": elapsed, "loss_tokens_per_second": group_tokens / max(elapsed, 1e-9),
+            **({"source_loss_tokens": sampler.source_loss_tokens.copy(),
+                "source_length_loss_tokens": [
+                    {"source": source, "blocks": blocks, "loss_tokens": value}
+                    for (blocks, source), value in sampler.cell_loss_tokens.items()]}
+               if source_lengths is not None else {}),
             "windows": [{"document_id": w.document_id, "start": w.start, "blocks": w.blocks} for w in batch]})
         if counters["loss_tokens"] >= next_evaluation:
             save_progress(snapshot=True)
@@ -682,6 +687,11 @@ def train_raw(config, *, monitor_blocks=True, p2_initialization=None):
                "requested_loss_tokens": raw["loss_tokens"], "unspent_loss_tokens": raw["loss_tokens"] - counters["loss_tokens"],
                "budget_endpoint": budget_endpoint, "nominal_loss_tokens": final_nominal_tokens,
                "last_evaluation": last_evaluation, "elapsed_seconds": time.monotonic() - started,
+               **({"source_loss_tokens": sampler.source_loss_tokens.copy(),
+                   "source_length_loss_tokens": [
+                       {"source": source, "blocks": blocks, "loss_tokens": value}
+                       for (blocks, source), value in sampler.cell_loss_tokens.items()]}
+                  if source_lengths is not None else {}),
                "scope": "CPU plumbing only" if args.smoke else "single-device raw LM writer training",
                "native_adapter": False, "ddp": False, "time_parallel_scan": False,
                "block_monitor": metadata["block_monitor"],
