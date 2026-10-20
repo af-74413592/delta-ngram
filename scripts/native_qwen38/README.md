@@ -4,7 +4,25 @@ This directory holds the GPU runtime and diagnostics for the separately
 registered Qwen3.8 experiment. Reusable writer and memory code lives in
 `src/delta_ngram`; the M1 command-line runner retains its own backend.
 
-## Current alternating training
+## Alpha=1 continuation after the old shared cap
+
+The 2026-10-21 authorization changes the cap to 100M effective model targets
+per arm, retaining all lifetime charges. Only alpha=1 may continue; alpha=.99
+stays at 39,998,107 targets and step 1,669. The old job finishes naturally.
+`qwen38_native_train_staged_alpha100.py --resume-shared-cap-final
+--budget-basis model --execute` requires its final checkpoint, COMPLETE,
+input manifest, runtime identity and durable budget ledger. It preserves both
+independent arm states and runs only alpha=1 through 60M, 80M and 100M DEV64
+milestones, with complete-group endpoints and per-bucket three-pass guards.
+GPU occupancy time is recorded separately from target counts.
+
+`ops/handoff_alpha100_after_shared_cap.py --spec PATH` waits for the identified
+source process to finish, validates its exact natural endpoint on CPU and
+launches once. It does not stop the source or retry failed training. The
+spec freezes all commands and code hashes. See the
+[deviation registration](../../docs/experiments/qwen38_native_20261020/qwen38_native_per_arm_extension_20261021.md).
+
+## Original alternating training
 
 `qwen38_native_train_staged_alternating.py --restart-from-initial --execute`
 starts both fixed-alpha arms from the same seed17 initial writer and calibrated
