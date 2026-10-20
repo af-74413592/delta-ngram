@@ -1,0 +1,38 @@
+{
+  "protocol": "m1_checkpoint_policy_user_amendment_20261020_v1",
+  "registered_at_utc": "2026-10-20T03:42:03.234406+00:00",
+  "decision_authority": "explicit user instruction",
+  "primary": {
+    "label": "endpoint100M",
+    "step": 4173,
+    "training_loss_tokens": 99999524,
+    "checkpoint": "/workspace/delta-ngram-runs/m1_event_mixture_seed17_20261019/writer.pt",
+    "sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d"
+  },
+  "secondary": {
+    "label": "selected65M",
+    "step": 2713,
+    "training_loss_tokens": 65009696,
+    "checkpoint": "/workspace/delta-ngram-runs/m1_event_mixture_seed17_20261019/writer_step_002713_tokens_000065009696.pt",
+    "sha256": "86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71"
+  },
+  "dev64_execution_order": [
+    "endpoint100M",
+    "selected65M"
+  ],
+  "dev64_registry_sha256": "9ea663ad70131e272522cbad8f6c0fa20bc03f41b324fe7b71d0fb8f4fbfccc2",
+  "dev64_annotations_sha256": "7164e9f8b6f23ebfeaaccc2687a6a8b6ad222803f705bacd1a203a2596fdbcce",
+  "final_policy": {
+    "allowed_checkpoint_label": "endpoint100M",
+    "allowed_checkpoint_sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d",
+    "maximum_execution_count": 1,
+    "execute_in_this_dev64_queue": false,
+    "change_checkpoint_based_on_dev64_or_final": false
+  },
+  "previous_rule_preserved": true,
+  "historical_dev_already_inspected": true,
+  "new_selected_checkpoints_dev64_scores_observed_before_registration": false,
+  "prior_5m_dev64_status": "stopped_at_40_of_64_no_result_file_or_scores",
+  "rationale_document": "docs/m1_checkpoint_policy_20261020.md",
+  "rationale_document_sha256": "7197d55bd70f58160c266bfc2c7bc3cb21c6de571c1d7cfd03c38aea13c36af5"
+}

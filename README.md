@@ -8,6 +8,11 @@ explicit memory. Queries read snapshots through the frozen model.
 fixed residual injection. The native pretrained-table adapter is **not
 implemented**; `reader.backend: native` raises `NotImplementedError`.
 
+The [M1 experiment report](docs/reports/m1_20261020/report.md) records the
+100M budget endpoint, all 21 DEV64 checkpoints, analysis, and recovery index.
+The separate [Qwen3.8 native writer prototype](docs/design/qwen38_native_20261020/architecture.md)
+has CPU component validation; its full-model integration is still pending.
+
 ## Install and run
 
 Python 3.11 or newer is required. Install a PyTorch build appropriate for the

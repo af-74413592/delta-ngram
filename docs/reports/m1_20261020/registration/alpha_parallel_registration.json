@@ -1,0 +1,22 @@
+{
+  "git_commit": "30a34215719e3575c8c4a3f15caaa544370c1546",
+  "output_dir": "/workspace/delta-ngram-runs/alpha_m1_prefix_parallel_seed17_20261019",
+  "parallelism": "M1 plus at most one alpha variant",
+  "alpha_cuda_allocator_fraction": 0.45,
+  "resource_scope": "PyTorch allocator cap, not a hardware partition",
+  "launcher_sha256": "576b4a1d8cbb876342390df410d710915b47791de23ded30c3a1681ee22c2935",
+  "orchestrator_sha256": "ecbd15bd07f9cdd80de20c9ef4f284adcf2609f229c53c33b42ce4acc2d863b9",
+  "scheduling_rule": "20-step fixed-0.99 probe; continue overlap if M1 throughput >=80% of prior rate and summed throughput >=110%; otherwise resume after M1 endpoint",
+  "m1_milestone_step": 210,
+  "m1_prefix_loss_tokens": 5013843,
+  "m1_checkpoint": "/workspace/delta-ngram-runs/m1_event_mixture_seed17_20261019/training_step_000210_tokens_000005013843.pt",
+  "frozen_metrics_sha256": "4938e8226bb9d4e96b583762c7e46aaa3836b0cb0e6f4a800afbd03041b51c05",
+  "m1_baseline": {
+    "steps": 30,
+    "tokens": 713578,
+    "summed_step_seconds": 241.8457906577969,
+    "tokens_per_second": 2950.549596332182,
+    "median_step_seconds": 8.42066017803154
+  },
+  "scientific_protocol": "Same unchanged full-budget sampler, writer initialization, 5M optimizer prefix, variants, and evaluation rules; only resource scheduling changes."
+}

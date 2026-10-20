@@ -1,0 +1,24 @@
+{
+  "created_utc": "2026-10-20T05:20:54.741419+00:00",
+  "command": "python -m pytest -q",
+  "exit_code": 0,
+  "passed": 862,
+  "elapsed_seconds": 87.04,
+  "host": "local Windows checkout",
+  "baseline_file_checks": {
+    "src\\delta_ngram\\writer.py": {
+      "sha256": "0772efde1c8cff1ac25277885e363e5acf7201a07c6fe606abfa51aeeee01489",
+      "byte_identical_to": "7ab8b01"
+    },
+    "src\\delta_ngram\\batching.py": {
+      "sha256": "1ae96443d8404b95bdd3dea367fb9498c5410ae6f211ea1a07de4b872e0a8f16",
+      "byte_identical_to": "7ab8b01"
+    },
+    "src\\delta_ngram\\alpha_memory.py": {
+      "sha256": "59c136462c3cb8355a43083cde634a31a8bb2c320fc65e9c7a6a0438a71a7f26",
+      "byte_identical_to": "7ab8b01"
+    }
+  },
+  "unexecuted_prepared_protocol": "scripts/evaluate_d1_revision.py has tests only; no GPU revision evaluation was run.",
+  "native_integration_status": "Independent components tested; full Qwen3.8 model integration pending."
+}

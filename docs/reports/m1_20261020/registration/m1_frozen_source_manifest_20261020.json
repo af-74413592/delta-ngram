@@ -1,0 +1,96 @@
+{
+  "protocol": "m1_frozen_source_snapshot_20261020_v1",
+  "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+  "frozen_files": [
+    {
+      "source_relative_path": "src/delta_ngram/raw_evaluation.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "550ed38375887cd377286bff1c9942d27e25917de192d302fe2b015e6d52268a",
+      "bytes": 6934,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\raw_evaluation.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/raw_lm.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "db9a88f8c34f3995f3005d7c31ed3ce393974a7c71b41052edca9a0f2ff7cfaf",
+      "bytes": 51287,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\raw_lm.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/event_lm.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "cce7c86fdcf1de838cbfe79679bcd68e942d96b1461e7fc7bdb65bc9130b5a78",
+      "bytes": 14011,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\event_lm.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/batching.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "1ae96443d8404b95bdd3dea367fb9498c5410ae6f211ea1a07de4b872e0a8f16",
+      "bytes": 11405,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\batching.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/state.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "e877c704ab7a374f76e2c23c4ba35feca4e9080805051c7ef315310372ed4655",
+      "bytes": 8134,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\state.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/writer.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "0772efde1c8cff1ac25277885e363e5acf7201a07c6fe606abfa51aeeee01489",
+      "bytes": 5891,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\writer.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/operators.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "4a2eabfd92239bc0f8ca994807c317273abb1db1cab9072ac94e130830959105",
+      "bytes": 10311,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\operators.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/ngram_lookup.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "ef6ced910e521b644bf84b25ba20090d6c4b7a2d903c97d397832dc79e12d3d8",
+      "bytes": 1142,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\ngram_lookup.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/block_monitor.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "6c4c7f6be7b5cec99b449ca8671c9bc0cb52157f918fe6554b0b875db614b948",
+      "bytes": 8916,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\block_monitor.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/recent_news_evaluation.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "cb511e7b8ef95bd670a2f9d087e4491d463077a61a3a6fb6367f685694e5e192",
+      "bytes": 39492,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\recent_news_evaluation.py"
+    },
+    {
+      "source_relative_path": "src/delta_ngram/direction_control.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "44f4641ac53ec144065b37a0e49cfc9d1f04f7a55b0af4ef78d194a0a5211dbb",
+      "bytes": 4273,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\direction_control.py"
+    },
+    {
+      "source_relative_path": "scripts/evaluate_recent_news_continuation.py",
+      "git_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+      "sha256": "63ac6c3ddcf670be5df8af156af68e688fa7cbce584d70b7f716d067afce32f6",
+      "bytes": 10446,
+      "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\scripts\\evaluate_recent_news_continuation.py"
+    }
+  ],
+  "auditor_copy": {
+    "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\audit_m1_dev64_capacity_20261020.py",
+    "snapshot_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\scripts\\audit_m1_dev64_capacity_20261020.py",
+    "sha256": "76ba42c9c5c1318eca386c2a0b986fdfe6321cd921333e2bab26819ae63e5f42"
+  },
+  "native_writer_changes_included": false
+}

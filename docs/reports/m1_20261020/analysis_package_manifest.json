@@ -1,0 +1,1408 @@
+{
+  "protocol": "m1_reproducibility_bundle_20261020_v1",
+  "stage": "final",
+  "created_utc": "2026-10-20T05:06:21.697455+00:00",
+  "expected_dev64_checkpoints": 21,
+  "completed_dev64_checkpoints_included": 21,
+  "expected_dev64_steps": [
+    0,
+    210,
+    418,
+    627,
+    836,
+    1044,
+    1253,
+    1461,
+    1670,
+    1879,
+    2088,
+    2296,
+    2505,
+    2713,
+    2922,
+    3130,
+    3339,
+    3547,
+    3756,
+    3965,
+    4173
+  ],
+  "complete_dev64_results": [
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_000m_continuation.json",
+      "step": 0,
+      "checkpoint_sha256": "1cb211007b95a14d982ae1cfaa73500e763ca64fe9fc3504a1c73636c713c73f"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_005m_continuation.json",
+      "step": 210,
+      "checkpoint_sha256": "01594bc91271377a479260e7e431e068dc463d0de29437280afcbc199b26504e"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_010m_continuation.json",
+      "step": 418,
+      "checkpoint_sha256": "94b135efa199766eac6d42ee4c49655ba5753098da7b03498abb141958f310f0"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_015m_continuation.json",
+      "step": 627,
+      "checkpoint_sha256": "516a9c6d2b22acedb2fe9bd3a8e462c68671cef201aabfb369c4284b7fde4e1b"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_020m_continuation.json",
+      "step": 836,
+      "checkpoint_sha256": "d7dc6a6f5283565aedcd2736bf56122d5756b485bc0b2ea742f8a22e576fd971"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_025m_continuation.json",
+      "step": 1044,
+      "checkpoint_sha256": "05686e4810d6ceac7a78706c2a1bb1deb2955b75cbfd062918dfcf8138be8d24"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_030m_continuation.json",
+      "step": 1253,
+      "checkpoint_sha256": "65a7b0f3bb2fb4839ffc0ec4eb265cdd239b2503233ec0a34d20af0b3b37bda4"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_035m_continuation.json",
+      "step": 1461,
+      "checkpoint_sha256": "a5c20cea8b50a460c52e357f719e648fdb37fb37491957ff8ac9a4a0fab972dd"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_040m_continuation.json",
+      "step": 1670,
+      "checkpoint_sha256": "01f917b6d236cfb9b84c9c7b4f8b1528e1969e76d74aa2edc6f341931e044490"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_045m_continuation.json",
+      "step": 1879,
+      "checkpoint_sha256": "7b6dcb8d95e0bd93c68e804981bb1c3744750bc612dffd72d43b2fea6e7e8f7f"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_050m_continuation.json",
+      "step": 2088,
+      "checkpoint_sha256": "474d671c79e78b1f5da39eb48d88763166fd606a80d5811b70caab72b56eada6"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_055m_continuation.json",
+      "step": 2296,
+      "checkpoint_sha256": "b570b6673d98c11fc52e19a2edc8d61a6e2d1af2ee447fafa49e31a23baaaf63"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_060m_continuation.json",
+      "step": 2505,
+      "checkpoint_sha256": "ce4ca04b5a8b77cc22fa88260f5256cabd2216eb4926e275bd6daa1eaf0ad7e4"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_065m_continuation.json",
+      "step": 2713,
+      "checkpoint_sha256": "86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_070m_continuation.json",
+      "step": 2922,
+      "checkpoint_sha256": "a3e9e202d83fe59c4e80b2d963c0d6238b34989ace2a2f63af3273c6b3a69737"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_075m_continuation.json",
+      "step": 3130,
+      "checkpoint_sha256": "c0f2249d1ce2bc7eb106aee432cfcb8de98d7039a7df30653ac3a56108884144"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_080m_continuation.json",
+      "step": 3339,
+      "checkpoint_sha256": "8f767214aee45dfd40a4203bb4f51414c683f93efad07549cfa1c93988fd5f8a"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_085m_continuation.json",
+      "step": 3547,
+      "checkpoint_sha256": "554478ca84bd25e1c49e4ecb695f082b71b0ebcd839e7377bf278ce0ad49a8e8"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_090m_continuation.json",
+      "step": 3756,
+      "checkpoint_sha256": "3b73b7b1a086aa2a0aa51b82d2744fdd48c47c11b1b3daf30bfa4c13fa94c9e8"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_095m_continuation.json",
+      "step": 3965,
+      "checkpoint_sha256": "80aeb3cb9029eb90b1a74f1ca7d45cb30c4e1ed4158c9dc0f84eaf8c336195fc"
+    },
+    {
+      "file": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_100m_continuation.json",
+      "step": 4173,
+      "checkpoint_sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d"
+    }
+  ],
+  "skipped_dev64_files": [
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_failure_first_c12_attempt_20261020.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_failure_second_c12_attempt_20261020.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_request_c12_20261020T043741Z_c1169f16.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_request_c20_20261020T044936Z_bdceba84.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_request_c21_20261020T045932Z_fa76f2dc.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_transfer_c12_20261020T043741Z_c1169f16.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_transfer_c20_20261020T044936Z_bdceba84.json",
+      "reason": "not a recognized complete result or metadata"
+    },
+    {
+      "file": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_transfer_c21_20261020T045932Z_fa76f2dc.json",
+      "reason": "not a recognized complete result or metadata"
+    }
+  ],
+  "primary": "100M",
+  "secondary": "65M",
+  "other_dev64_checkpoints": "diagnostic only",
+  "members": [
+    {
+      "member": "README.txt",
+      "bytes": 8593,
+      "sha256": "970c7feed614116ee70d1d5683c2fe48a3308df261693813489d767c41dc7cb7",
+      "role": "reproduction_instructions"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/M1_analysis_20261020.md",
+      "bytes": 22866,
+      "sha256": "ae79a39ebc6d116c373faeb8ad2851c2c5fb13fdacdd897ef333bfa2078a60ae",
+      "role": "main_markdown_report",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\M1_analysis_20261020.md"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/alpha_first5M_comparison.csv",
+      "bytes": 4132,
+      "sha256": "9d7997a66156832fb94282bd7ac8e397eaed0181db96201b94c55f68abac3963",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\alpha_first5M_comparison.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/endpoint_per_source.csv",
+      "bytes": 1592,
+      "sha256": "c1241edf56395dadcbaebe69acc596947b83a0347ada6602a7c67ef27f427c9f",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\endpoint_per_source.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/first_article_block.csv",
+      "bytes": 3305,
+      "sha256": "7ae3a862b5efda1e13e91cb9626421c469fc7553216dca43778aeda3c0b40a07",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\first_article_block.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/m1_series.csv",
+      "bytes": 14134,
+      "sha256": "47c7b810f11528129fb28d3a3627fa18dd299b93a8f24d33ecd73a79aa4b4214",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\m1_series.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/paired_contrasts.csv",
+      "bytes": 5634,
+      "sha256": "eac981e9a7ca0cce7df4c3747f10120f43bc7c70995f07d36077bc9fc406df6c",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\paired_contrasts.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/report_summary.json",
+      "bytes": 45613,
+      "sha256": "2e09e67d464766b5db3d21f9a4b1c7a8065f2bc8ee09f149750e113a40d1bec2",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\report_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/selected65M_per_source.csv",
+      "bytes": 1577,
+      "sha256": "b844058b56740a8482fea4a00518d78be95816f89e5bf76a8340250546e5c525",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\selected65M_per_source.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/data/source_manifest.json",
+      "bytes": 9757,
+      "sha256": "3ebd047bfd7eeff7f4d95726af3a42bdf1117f9e7e3066ab4c37d7ebda512e09",
+      "role": "derived_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\data\\source_manifest.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/capacity_distance_summary.csv",
+      "bytes": 8184,
+      "sha256": "fc2e8a9cddaa098b290ed16e9f69da0461cd2419e2928b25e8d3bfce658bd20c",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\capacity_distance_summary.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/capacity_family_distance.csv",
+      "bytes": 166009,
+      "sha256": "1d9b086f68ba6e4188b28c4506a3fd3844881064067dfb143b2193d24912cb7d",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\capacity_family_distance.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/capacity_interpretation.md",
+      "bytes": 2844,
+      "sha256": "2f12a6d51659402a285b00edea5136ac5b329a0ad0227cf94412072e0691f59e",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\capacity_interpretation.md"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/capacity_scope_note.json",
+      "bytes": 98791,
+      "sha256": "7b0767e6f89bd7bb3f7c023233dd14458d37dfc1cd80a11d4163794fc95d75cd",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\capacity_scope_note.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_checkpoint_distance_curve.csv",
+      "bytes": 87628,
+      "sha256": "bf5517c5ec3fb13f463a25b30ea73f8912027ceb20b905adf9f503a5ac309a59",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_checkpoint_distance_curve.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_family_distance_results.csv",
+      "bytes": 2108745,
+      "sha256": "7b4bdfb8b01a2fa1995f77fd7f5b40513d5b8a4ad69696738e6943bb9751467f",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_family_distance_results.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_paired_checkpoint_comparisons.csv",
+      "bytes": 11573,
+      "sha256": "7321ab9228c0808ee25b9f434215574ba71d9b67f6ad4cf273fe9957796894d0",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_paired_checkpoint_comparisons.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_prefix_group_results.csv",
+      "bytes": 162662,
+      "sha256": "8f957d56ca6b62a3616b7bf4d2a85876a942616c8e3cfb156fd34086b1538a4e",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_prefix_group_results.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_runtime.csv",
+      "bytes": 2238,
+      "sha256": "ac602fb8964f3eb12365a959decdef8ff7c0be13fdab116e0ed154e2731ad2d0",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_runtime.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_source_manifest.json",
+      "bytes": 8595,
+      "sha256": "6b831d9b5f1fb3220d5fe804931ae6ed801e1c4f6ba328f78d00db2a35f5e291",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_source_manifest.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/dev64_summary.json",
+      "bytes": 70015,
+      "sha256": "05bfd8bcb979595a0015ab4fde95fdfa159f9b0c11d9496e60bfc0c567f59b1e",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\dev64_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/interpretation.md",
+      "bytes": 6951,
+      "sha256": "60d2145f7f417411d9f49a588c913ad3f3adf79d866c251cf5b659fec333dd6f",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\interpretation.md"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/dev64_data/uniform_hash_reference.json",
+      "bytes": 2264,
+      "sha256": "022de48bf9f8f6bc623dba376a7d6d70a0812053723e30cfe0125afb4ba8e494",
+      "role": "derived_dev64_data",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\dev64_data\\uniform_hash_reference.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/alpha_review_audit_20261020.json",
+      "bytes": 7704,
+      "sha256": "cd528f77bb036f21a9cd1a2b2cedb9504c8c0b7813e5e6665e232a549f627af2",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\alpha_review_audit_20261020.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/capacity_block_log_audit.json",
+      "bytes": 43907,
+      "sha256": "b86eb51e16d2250ec22be3cfcb74b9fab1c26652a05e52434acc54afc6652f95",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\capacity_block_log_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/capacity_reproduction/capacity_block_log_audit.json",
+      "bytes": 49802,
+      "sha256": "c76e0411b47b1ea7cc7fe2196af68a6ce2e229c34ea17cc0c4011a43001e4558",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\capacity_reproduction\\capacity_block_log_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/capacity_reproduction/mathematical_capacity_audit.json",
+      "bytes": 45527,
+      "sha256": "8c5f044a0b033d59dec47b29e1fb7cbd8d107bcff257d81d1e4db35b3147c4da",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\capacity_reproduction\\mathematical_capacity_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/capacity_reproduction/mathematical_capacity_audit.txt",
+      "bytes": 4063,
+      "sha256": "840afd565a14fa87bfd1a945fda75c2015853cee6a7162c94e19de46e507f1bd",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\capacity_reproduction\\mathematical_capacity_audit.txt"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/capacity_reproduction/numeric_comparison.json",
+      "bytes": 464,
+      "sha256": "b679e4dcf43179299a0b5325acb6efc980132fa1fddc8c594d7f9778dff2741b",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\capacity_reproduction\\numeric_comparison.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/capacity_reproduction/verification.json",
+      "bytes": 1674,
+      "sha256": "e3a4ae694943c0994f71299c9fabe9cd1556f85f3b957dd151cbc46062743a10",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\capacity_reproduction\\verification.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/diagnosis_summary.json",
+      "bytes": 19915,
+      "sha256": "e356c5c1570f22c23b3468004c0648e7c40d85919ff129feb5d181ba7a357e1c",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\diagnosis_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/event_65m_to_100m_partitions.csv",
+      "bytes": 1532,
+      "sha256": "eac355cb9dbcfb24ad75df493bf51ac415e72603d2dcd341f20e2330d70727b7",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\event_65m_to_100m_partitions.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/event_partition_series.csv",
+      "bytes": 10293,
+      "sha256": "9fbb914053623d1b4d5c86c7fb30063f8cfc537b425128bed0e7da08e327f5eb",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\event_partition_series.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/family_65m_to_100m_changes.csv",
+      "bytes": 129129,
+      "sha256": "a5f02670b278d5951af38e7a008fd54eb6abec95287c74ce3243853d92ed1281",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\family_65m_to_100m_changes.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/family_improvement_counts.csv",
+      "bytes": 525,
+      "sha256": "869c7d3b652f2f9aeb2a762ae67db6328a031f89f0340e05bec2c2fe4f14e306",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\family_improvement_counts.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/first_block_series.csv",
+      "bytes": 6522,
+      "sha256": "626dba337dd59489f9fe1b30544b18376d3a3052eaa02b9f49438ed95eaff912",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\first_block_series.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/macro_nll_series.csv",
+      "bytes": 2826,
+      "sha256": "6936a48a98f4b416ab270eaa070d76079ab5736344af18d5759c157e114d3529",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\macro_nll_series.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/marginal_gain_intervals.csv",
+      "bytes": 803,
+      "sha256": "dfd76a42943d632ae125b569a7af23fbd57e3ce47e259d052b3844a9d64dae9f",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\marginal_gain_intervals.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/mathematical_audit.json",
+      "bytes": 7035,
+      "sha256": "11ad7dbbbfcffe969b020f5d68b51fc5322fbfe20f40796ca3cc6d39d973a64e",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\mathematical_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/mathematical_audit.txt",
+      "bytes": 939,
+      "sha256": "14cb129c25814b2aa681ac53e371ada53a84afb6c7850535372097a0f7fd6d51",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\mathematical_audit.txt"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/mathematical_capacity_audit.json",
+      "bytes": 46952,
+      "sha256": "d3abb12c6b99bf732d4bb03e7d2337ff79c22aa70a5955121c7c2bf06c7b96c6",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\mathematical_capacity_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/mathematical_capacity_audit.txt",
+      "bytes": 5626,
+      "sha256": "94d9c18f96ed9d676590e97fd2ea93c424237a46cdd53c29b27c21674de34bf5",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\mathematical_capacity_audit.txt"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/mathematical_checks_summary.json",
+      "bytes": 5310,
+      "sha256": "5ef3a4562353d1d33416c97c68d28783efb073ad21f3ddf87a9ac368797ec51b",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\mathematical_checks_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/source_65m_to_100m_contributions.csv",
+      "bytes": 3605,
+      "sha256": "bc04a71d4f5671270f8a474aa34782edcdd67ac6de7f831d2326ad86bce6353f",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\source_65m_to_100m_contributions.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/source_manifest.json",
+      "bytes": 8063,
+      "sha256": "a74fcffc2ab5e600fb8405fa443b2de1b92b777af484aea161ce3b699a51cb5d",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\source_manifest.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/source_nll_series.csv",
+      "bytes": 18209,
+      "sha256": "fa06f55d6d6e3d3066962eb6510da38942c43308f5ccca73a59471458857038c",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\source_nll_series.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/training_intervals.csv",
+      "bytes": 2921,
+      "sha256": "7588eb0f4920ee0e50a9a8aa19843beadeddbca9f006064119b88045bca2d1b1",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\training_intervals.csv"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/writer_objective_audit.json",
+      "bytes": 19398,
+      "sha256": "9393a26b3dc10982df2f14cba48a508886d17aad80e6b470588ce046a38473f5",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\writer_objective_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/writer_objective_audit.py",
+      "bytes": 13285,
+      "sha256": "a28c5aacd21960e821db2f4238ad88d8c3522b2e93effcd53142c806cece53de",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\writer_objective_audit.py"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/diagnostics/writer_output_rank_audit.json",
+      "bytes": 728,
+      "sha256": "78c20ca0e3090b7c0c4240330723b2057ac987c1b45eb785fc62a0afa42a9f25",
+      "role": "derived_diagnostics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\writer_output_rank_audit.json"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/alpha_paired_contrasts.png",
+      "bytes": 67175,
+      "sha256": "95388922056ac51e7ead1046edd931dd478214ea6b48eb50fc9ac8c260530534",
+      "role": "figure",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\alpha_paired_contrasts.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_0m_reference.png",
+      "bytes": 185690,
+      "sha256": "9d0404635d77e3680646ec47db474204429cb8582a2be2491e721cf3504fec36",
+      "role": "derived_figures",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\dev64_0m_reference.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_100m_retention.png",
+      "bytes": 190445,
+      "sha256": "66b813e44a77741d192287cc7815dabbbb1b6c1fdcb20893a530c563071d0cd2",
+      "role": "derived_figures",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\dev64_100m_retention.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_capacity.png",
+      "bytes": 346585,
+      "sha256": "f946912e535e1305167124c1ac75c49ad2cc800ade868367606e7c72ff837dd8",
+      "role": "derived_figures",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\dev64_capacity.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_training_curves.png",
+      "bytes": 325051,
+      "sha256": "a6cf5d82d2b0c1e81dd34de75b7fdcdef3242cddb8c1a77d5cb9646d158ab567",
+      "role": "derived_figures",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\dev64_training_curves.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/endpoint_sources.png",
+      "bytes": 63910,
+      "sha256": "2db9cf2cf22df5678301e4b401d54c84bce26591f86a472f288f179c2f61edc3",
+      "role": "figure",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\endpoint_sources.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/mathematical_checks.png",
+      "bytes": 129962,
+      "sha256": "30a6265ec785e2ba7bebc833c1e1d484f84050a98903bc5df786aad91f83f35d",
+      "role": "figure",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\mathematical_checks.png"
+    },
+    {
+      "member": "delta-ngram-runs/m1_analysis_20261020/figures/training_curve.png",
+      "bytes": 165140,
+      "sha256": "ef175a0d7ccf20d750558bb8b6fd5c8b30cd05d72f785569dbe35c25a65ee371",
+      "role": "figure",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\figures\\training_curve.png"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/evidence_block_099_historical.json",
+      "bytes": 10966486,
+      "sha256": "1adf6dabdb05f3723fa2123e70d12e1212f8594a3e3dc9597949882a64916049",
+      "role": "raw_alpha_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\evidence_block_099_historical.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/evidence_block_099_training_summary.json",
+      "bytes": 863,
+      "sha256": "79fde8f33d10253593a43aeaf7963b2b335c5fda18febe83fd99b78ddafa0228",
+      "role": "alpha_training_summary",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\evidence_block_099_training_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/fixed_095_historical.json",
+      "bytes": 10305979,
+      "sha256": "e86e967aaf576ad3dcfbeaf9e3f1016736cee374b0f1c00519551657776b7669",
+      "role": "raw_alpha_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\fixed_095_historical.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/fixed_095_training_summary.json",
+      "bytes": 852,
+      "sha256": "8a9d18cc4a76b2711cec2d563d4ce489d1a09f25bb3d0d1e82efa76fdba5319c",
+      "role": "alpha_training_summary",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\fixed_095_training_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/fixed_099_historical.json",
+      "bytes": 10299892,
+      "sha256": "7aa8be8fc74645dd33ac2efe217162b6d714c73ff7c0ff52a60779182882ffd4",
+      "role": "raw_alpha_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\fixed_099_historical.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/fixed_099_training_summary.json",
+      "bytes": 853,
+      "sha256": "82c42510750e224554c674480d250658728f80893d8866b4cbd512e6858ee4fd",
+      "role": "alpha_training_summary",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\fixed_099_training_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/learned_global_099_historical.json",
+      "bytes": 10977013,
+      "sha256": "911aa4c8878b7721c321f90c40107b08911dcaf855816c49c13d82aaacc17aec",
+      "role": "raw_alpha_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\learned_global_099_historical.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/learned_global_099_training_summary.json",
+      "bytes": 862,
+      "sha256": "c84299312e4db08c404611516772d8182dc8cfecf2cb96dde3e6d4c85560852a",
+      "role": "alpha_training_summary",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\learned_global_099_training_summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/m1_first_5m_prefix.json",
+      "bytes": 2701840,
+      "sha256": "b871b27000502baa6ff2241f69e818bb5d07736fe29e6faa264604aff21b315f",
+      "role": "alpha_prefix_or_execution_policy",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\m1_first_5m_prefix.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/parallel_user_override_20261019.json",
+      "bytes": 831,
+      "sha256": "7e9f78e6ce5c51a09da49f7ef63fd9e86777ab527f25900b7fc8ddf5a12c10bb",
+      "role": "alpha_prefix_or_execution_policy",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\parallel_user_override_20261019.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_evaluations/user_stop_small_alpha_20261019.json",
+      "bytes": 2479,
+      "sha256": "f949095e91ddf1cd1ae35e0fbdfe3c34ef80276b41c0247d856df2f19df612b9",
+      "role": "alpha_prefix_or_execution_policy",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_evaluations\\user_stop_small_alpha_20261019.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/alpha_parallel_registration.json",
+      "bytes": 1325,
+      "sha256": "deb361de609c441dadae8fa038ec29fa2270c2b313391fd41e6a913c3b7131d0",
+      "role": "registration_inventory_or_status",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\alpha_parallel_registration.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_monitor_20261020.jsonl",
+      "bytes": 134530,
+      "sha256": "fe7e250ffd01029cfdbd0a838e68c8de809d26e3deae5f893b531648d31d548c",
+      "role": "read_only_gpu_and_progress_monitor",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_monitor_20261020.jsonl"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/completion.json",
+      "bytes": 9300,
+      "sha256": "d517bc3ca8ebd00622e865aed27cb761a60612fa177d53af2c9ec368eeb5a95d",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\completion.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_manifest_c08_20261020T041840Z_f9c17764.json",
+      "bytes": 3357,
+      "sha256": "653574134fdb9e17499e626d42f74e9772e26a491e219e83c52d7ffe52fc57ae",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_manifest_c08_20261020T041840Z_f9c17764.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_manifest_c12_20261020T043741Z_c1169f16.json",
+      "bytes": 5339,
+      "sha256": "d592b766123bd1b9fa396a880aafc3d760c8f7d2bfacb645a0fcb2747fc0b980",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_manifest_c12_20261020T043741Z_c1169f16.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_manifest_c20_20261020T044936Z_bdceba84.json",
+      "bytes": 4571,
+      "sha256": "bffd3b25c3f07d5d681c46101b33f23c150e7ab9e2717a9775b46a057dd0ded4",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_manifest_c20_20261020T044936Z_bdceba84.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_manifest_c21_20261020T045932Z_fa76f2dc.json",
+      "bytes": 4152,
+      "sha256": "6cf0ae7126b53b9eeb95e9462389f4a36463e57ac18e5a25e6edede6eeabccfc",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_manifest_c21_20261020T045932Z_fa76f2dc.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_verification_c08_20261020T041840Z_f9c17764.json",
+      "bytes": 1129,
+      "sha256": "c38d454a7760d6031f23dab14b9258d50f752d15a9c6b1ccbf0f653825f0871c",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_verification_c08_20261020T041840Z_f9c17764.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_verification_c12_20261020T043741Z_c1169f16.json",
+      "bytes": 1262,
+      "sha256": "1160301440e59bbc51246e4c8f139dd419793445ca819efb4724f30704269d53",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_verification_c12_20261020T043741Z_c1169f16.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_verification_c20_20261020T044936Z_bdceba84.json",
+      "bytes": 1130,
+      "sha256": "5444b26f12b751554a8f5dc7b1079b3b49e39f53bf81745eb10ff7bffc3eb191",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_verification_c20_20261020T044936Z_bdceba84.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/download_verification_c21_20261020T045932Z_fa76f2dc.json",
+      "bytes": 1071,
+      "sha256": "db7d088770ca71ac4dc7dc4d54a11463efbfa6f02944de79405ea9a6d2ed2db0",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\download_verification_c21_20261020T045932Z_fa76f2dc.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/first4_download_manifest.json",
+      "bytes": 1291,
+      "sha256": "c58ced462273e35630246261afdbc445795c032cf299cb9320bb9dc3cf14af3d",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\first4_download_manifest.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/inventory.json",
+      "bytes": 22328,
+      "sha256": "710686bd0c1f77be618b9a4b06c7a62ed5ac4046767c9c03af0602e5feb5d4e9",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\inventory.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_000m_continuation.json",
+      "bytes": 3121387,
+      "sha256": "2116aceb686f59620c5bf33428ef0ba8ae67b0121bfa60ae80607b972b6a8bc1",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_000m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_005m_continuation.json",
+      "bytes": 3116149,
+      "sha256": "8fd04a0c23419b56cb8e043b25533c2c62d9d60967ea2b5d8d40670ce2f29657",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_005m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_010m_continuation.json",
+      "bytes": 3115922,
+      "sha256": "8f3c7b27d8087637d5956c35b47df08a9ea899be7c8aa5bf292a96707d4ff16c",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_010m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_015m_continuation.json",
+      "bytes": 3116049,
+      "sha256": "e9beb2dc12c4c4a7cc3721b4c06b5c8afe73f6027725207c878538586ab4102d",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_015m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_020m_continuation.json",
+      "bytes": 3116063,
+      "sha256": "bb9024789427d446e0dbadc6a91fdcb8c6a4dcc4a228715c48f3feb2c882dc1e",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_020m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_025m_continuation.json",
+      "bytes": 3115952,
+      "sha256": "be1ccf8d6c0f32b30bc76337f88770c62c05da4438a822992b1067a4ce34429c",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_025m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_030m_continuation.json",
+      "bytes": 3115885,
+      "sha256": "b13541d7de5ffa6033b756a51079fcb8d5272da9d2e6af9b7bb2bb0c63498ffc",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_030m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_035m_continuation.json",
+      "bytes": 3116167,
+      "sha256": "70d68ea879a7c1a97acf55195606624422cdd3a58fb2ec93cd69a815b50f6552",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_035m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_040m_continuation.json",
+      "bytes": 3115802,
+      "sha256": "98161856724629bcba28c3144612d7746f3f89b6c626d92d97c5645e9c6d85d5",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_040m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_045m_continuation.json",
+      "bytes": 3115762,
+      "sha256": "8b993570c127b0998bee6340f10cdf8f3d585473568c2c4ab9bde6d5ab964244",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_045m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_050m_continuation.json",
+      "bytes": 3115890,
+      "sha256": "a57ecc2440cfb2cbc3c5b8ee64e43871a2ecd93910f31dd6bd0cddfa5c9dcda7",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_050m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_055m_continuation.json",
+      "bytes": 3115993,
+      "sha256": "9f9cd0baed101540aa7968434e4442ce62498b45c4ded2933460ed9f05a1b0ca",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_055m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_060m_continuation.json",
+      "bytes": 3115971,
+      "sha256": "b36a3274077528918322f48e845d5ec92f07ec61cbed6852e9cf961ed513ae3f",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_060m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_065m_continuation.json",
+      "bytes": 3116023,
+      "sha256": "2a45c967702b6b55555fdc5a0766be92a539c5910d303a57dfa37be38a8fb711",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_065m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_070m_continuation.json",
+      "bytes": 3115836,
+      "sha256": "70895cf0ad165119cb3b39268ffa9166206329fea4bfe7438d02eee0c572d4e1",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_070m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_075m_continuation.json",
+      "bytes": 3116015,
+      "sha256": "6f170196de5829231caa645761fd3e76eb2652e72a4e396a76d7456f3d6735e0",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_075m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_080m_continuation.json",
+      "bytes": 3115901,
+      "sha256": "81e1666affe64b2bc6041e35f282a6d77f754f060e03abc40b7123efb97549aa",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_080m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_085m_continuation.json",
+      "bytes": 3116143,
+      "sha256": "5c285d16201f7ed4c2daf118ec1a84639411c7d5a672f1142f5429a52e8a71b5",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_085m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_090m_continuation.json",
+      "bytes": 3116076,
+      "sha256": "60797419cf54757682596ce733f2200c1cabb083eec8dbe46944d6f6fff20236",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_090m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_095m_continuation.json",
+      "bytes": 3115829,
+      "sha256": "7a781917493cb802ecc7f1405bd8de6020c3f417a0ff9e142d9cada22238f9b3",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_095m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_100m_continuation.json",
+      "bytes": 3115946,
+      "sha256": "7051e93ad164a90e26623a852b2679e1d9d619809cd14f5aabc69635402c9f0c",
+      "role": "complete_dev64_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_100m_continuation.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/m1_checkpoint_policy_20261020.json",
+      "bytes": 1736,
+      "sha256": "d043211e2993aabc781ba3b021d8c20e299279511841044c1d49c6cb37a29c94",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\m1_checkpoint_policy_20261020.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/registration.json",
+      "bytes": 1444,
+      "sha256": "1bad9562b3fb1ca605437859a5d65cea8c9daa7855bac822bab84355edeb4e9f",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\registration.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/runtime.json",
+      "bytes": 22300,
+      "sha256": "447b08093faee2132e7dfe11e9fe9d4d00d97cffddceb57d46944922a371f1c0",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\runtime.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/status.json",
+      "bytes": 9441,
+      "sha256": "c80519411080ae609eee271125cbf361ca509237dce7b7f6a7d6e34556b3e967",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\status.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/status_c08_20261020T041840Z_f9c17764.json",
+      "bytes": 4979,
+      "sha256": "60900142b273968fe11356e989ae44f68f16a0901d66991a51ba8225b6b32955",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\status_c08_20261020T041840Z_f9c17764.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/status_c12_20261020T043741Z_c1169f16.json",
+      "bytes": 8364,
+      "sha256": "ed6fe7f7c986d59a56a81658315445b9f60289be4877fe9a99077e64808b561a",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\status_c12_20261020T043741Z_c1169f16.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/status_c20_20261020T044936Z_bdceba84.json",
+      "bytes": 9267,
+      "sha256": "72b2084033667b284320413b9d6ce22d549c18b09ea015bae0c2a46b7f1a05c4",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\status_c20_20261020T044936Z_bdceba84.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/status_c21_20261020T045932Z_fa76f2dc.json",
+      "bytes": 9441,
+      "sha256": "c80519411080ae609eee271125cbf361ca509237dce7b7f6a7d6e34556b3e967",
+      "role": "dev64_execution_metadata",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\dev64_curve_results_20261020\\status_c21_20261020T045932Z_fa76f2dc.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/diagnostic_logs/metrics.jsonl",
+      "bytes": 30765174,
+      "sha256": "096dc7061263689272330527e94638645c9bbd32ee2657e033b38954bc9119d4",
+      "role": "raw_training_metrics",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\diagnostic_logs\\metrics.jsonl"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/evaluation_cuda_entry.py",
+      "bytes": 597,
+      "sha256": "96bcc448c42175ab834b9abf59476eb64e78ffd7caf6010a9346394b83424e41",
+      "role": "frozen_evaluation_entry_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\evaluation_cuda_entry.py"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_000000.json",
+      "bytes": 1027721,
+      "sha256": "7157eb2632fa6c4d75532d97a962d0779136c671b670ee7e905b03ea922dc32d",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_000000.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_000210.json",
+      "bytes": 1027591,
+      "sha256": "4ac24f36ed0ffbfb8857a5ec569b75517be78fac8d6261314010bf271afe2a93",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_000210.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_000418.json",
+      "bytes": 1027616,
+      "sha256": "657d8a5b8f6d84192da346099330a04762b165184e035c59552bfbdde6b5b5f2",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_000418.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_000627.json",
+      "bytes": 1027583,
+      "sha256": "e9110105bbe91f3bedc58dfaf32f42bb3ec022ed49697825eefc49f5e2e4340b",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_000627.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_000836.json",
+      "bytes": 1027742,
+      "sha256": "bef803de49b833ad8fe9e3deb981eee5c9878eef22f1f937b615c50e1486a5fe",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_000836.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_001044.json",
+      "bytes": 1027629,
+      "sha256": "928d5b9a3f5930352864279cc1d66a9bfbc09934747bc7bc5809e8e09bf56d0b",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_001044.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_001253.json",
+      "bytes": 1027457,
+      "sha256": "6c373d8a2866b46c636efd9da9f3e1d9002ffb09422352fe1463aede17396f1f",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_001253.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_001461.json",
+      "bytes": 1027461,
+      "sha256": "79295dcd610bc08717760d6db4c7f11d23e9176ea8b83eb7e7f601c63b5ebca9",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_001461.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_001670.json",
+      "bytes": 1027729,
+      "sha256": "bee9590e55a28a0b5b809798855aa1a57e1e945e7cd35b7b66cad5ce1d432de7",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_001670.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_001879.json",
+      "bytes": 1027661,
+      "sha256": "927d9f5de46da1737c56baae4ed464981faaee70ddab02642a80c09c6ae53c97",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_001879.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_002088.json",
+      "bytes": 1027517,
+      "sha256": "76f279ba4b8a1b9b66263823ae3e5e5d89e260cdd0108751e24f507b3965d151",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_002088.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_002296.json",
+      "bytes": 1027620,
+      "sha256": "d2a323d236e7f54cd032266327d3013e887c67818ec6c306b2619b618512d815",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_002296.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_002505.json",
+      "bytes": 1027558,
+      "sha256": "e9da014b5f860f9d0355fdbbc8572a582a09720466e6e24a7b9645d6c28301f4",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_002505.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_002713.json",
+      "bytes": 1027544,
+      "sha256": "7bb189ab2f0804da427c908c26563d820394c90b5bef361159e03e6e32e52841",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_002713.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_002922.json",
+      "bytes": 1027541,
+      "sha256": "ec07477cbf017549deceac5566fbd362aeb67093917cbb7bd408855412a306ef",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_002922.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_003130.json",
+      "bytes": 1027492,
+      "sha256": "e974a59ef5344e000d8751cb947a369f6a12e91033fbee38df5d7e6b415ed470",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_003130.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_003339.json",
+      "bytes": 1027596,
+      "sha256": "f8e5ce5b212f28dfe902ac022ed5d12e56619dc9309ba5bf85a47c4f9069b6fc",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_003339.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_003547.json",
+      "bytes": 1027444,
+      "sha256": "c0342819a1d37cb82c4716da4068f79d1118ef0638f2c4d0299e8170de068000",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_003547.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_003756.json",
+      "bytes": 1027483,
+      "sha256": "f8855741ff063b438381b79082df777bf657eb93efe6054c8b3a4d8395d10d9a",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_003756.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_003965.json",
+      "bytes": 1027718,
+      "sha256": "378effb0557ac2620f8c82040518aa78ba854084f7960048b3e5c7be0e5d78d3",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_003965.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/eval_step_004173.json",
+      "bytes": 1027737,
+      "sha256": "0faca0a0a4acf4f2a672586d8eb85a66a7dd88262099b5477d9e091e06fa803d",
+      "role": "raw_historical_evaluation",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\eval_step_004173.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/summary.json",
+      "bytes": 1090028,
+      "sha256": "ac5cf9bdd5ff3fb499ebf26eb4d85106ec045724d79b47c92a0415c35f3bda0d",
+      "role": "raw_training_summary",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\summary.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/first_m1_checkpoint/config.json",
+      "bytes": 14353,
+      "sha256": "71f157fee31c0134e82733afbd6f42c7e596a24b8d2e3fc89e3fe96513e853c8",
+      "role": "original_capacity_config",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\first_m1_checkpoint\\config.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/m1_checkpoint_policy_20261020.json",
+      "bytes": 1736,
+      "sha256": "d043211e2993aabc781ba3b021d8c20e299279511841044c1d49c6cb37a29c94",
+      "role": "registration_inventory_or_status",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_checkpoint_policy_20261020.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/m1_dev64_curve_inventory_20261020.json",
+      "bytes": 22328,
+      "sha256": "710686bd0c1f77be618b9a4b06c7a62ed5ac4046767c9c03af0602e5feb5d4e9",
+      "role": "registration_inventory_or_status",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_dev64_curve_inventory_20261020.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/m1_dev64_curve_registration_20261020.json",
+      "bytes": 1444,
+      "sha256": "1bad9562b3fb1ca605437859a5d65cea8c9daa7855bac822bab84355edeb4e9f",
+      "role": "registration_inventory_or_status",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_dev64_curve_registration_20261020.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/m1_frozen_source_manifest_20261020.json",
+      "bytes": 5929,
+      "sha256": "a4c9ed8b43d04ed20b94ec5ef7d3fab9448b40cfb93ae61f6b42083895f2d66e",
+      "role": "registration_inventory_or_status",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_manifest_20261020.json"
+    },
+    {
+      "member": "delta-ngram-runs/multidomain_launch_20261019/run_m1_dev64_curve_20261020.py",
+      "bytes": 15313,
+      "sha256": "4b012d0a191c329f87510c515d550b570a009e3eba9ceeafe1fa9a765c976456",
+      "role": "frozen_curve_execution_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\run_m1_dev64_curve_20261020.py"
+    },
+    {
+      "member": "delta-ngram/configs/m1_event_mixture_seed17.yaml",
+      "bytes": 1854,
+      "sha256": "0c2d4f876c1245040a459cb3b1e76cac3b393491544e5d4b62add747d2a2948b",
+      "role": "training_config",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\configs\\m1_event_mixture_seed17.yaml"
+    },
+    {
+      "member": "delta-ngram/docs/m1_checkpoint_policy_20261020.md",
+      "bytes": 2832,
+      "sha256": "7197d55bd70f58160c266bfc2c7bc3cb21c6de571c1d7cfd03c38aea13c36af5",
+      "role": "policy_document",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\docs\\m1_checkpoint_policy_20261020.md"
+    },
+    {
+      "member": "delta-ngram/docs/m1_dev64_curve_registration_20261020.md",
+      "bytes": 1246,
+      "sha256": "75bf0e64f571b0a93fa629515d5d40b12851d1f3f9c9cfa4ff841be18ca66248",
+      "role": "policy_document",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\docs\\m1_dev64_curve_registration_20261020.md"
+    },
+    {
+      "member": "delta-ngram/scripts/analyze_m1_dev64_curve_20261020.py",
+      "bytes": 32749,
+      "sha256": "a42b2fdf48631eef8ddd82e504e0b77191e945b20aeab3645ebc1e835e3b65ac",
+      "role": "dev64_analysis_or_execution_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\analyze_m1_dev64_curve_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/analyze_m1_results_20261020.py",
+      "bytes": 23657,
+      "sha256": "27353d71fb061988f2ed1ced32a5e649a6a64e0defcc6fd657359095a31fccc1",
+      "role": "analysis_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\analyze_m1_results_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/audit_m1_capacity_20261020.py",
+      "bytes": 24502,
+      "sha256": "99add952902aa63c6e5ad527df9e45a09c4c0b7d8c544ad66e24073ef74380a8",
+      "role": "analysis_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\audit_m1_capacity_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/audit_m1_dev64_capacity_20261020.py",
+      "bytes": 28840,
+      "sha256": "76ba42c9c5c1318eca386c2a0b986fdfe6321cd921333e2bab26819ae63e5f42",
+      "role": "dev64_analysis_or_execution_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\audit_m1_dev64_capacity_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/build_m1_analysis_report_20261020.py",
+      "bytes": 8037,
+      "sha256": "a340a6930692b2fdb728acf7f18e98241209aa4adc299dadbe4b03c1643653df",
+      "role": "analysis_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\build_m1_analysis_report_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/build_m1_dev64_capacity_figure_20261020.py",
+      "bytes": 4582,
+      "sha256": "4ec6614683209db7568e9b50500e64320df43bfa4dd9d1ff358d9de579ff67d2",
+      "role": "dev64_analysis_or_execution_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\build_m1_dev64_capacity_figure_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/diagnose_m1_endpoint_20261020.py",
+      "bytes": 23277,
+      "sha256": "6c9218fba2b6abad41912b5531625d804e6b8c707956ca223dc319973ffddea4",
+      "role": "analysis_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\diagnose_m1_endpoint_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/evaluate_recent_news_continuation.py",
+      "bytes": 10446,
+      "sha256": "63ac6c3ddcf670be5df8af156af68e688fa7cbce584d70b7f716d067afce32f6",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\scripts\\evaluate_recent_news_continuation.py"
+    },
+    {
+      "member": "delta-ngram/scripts/package_m1_analysis_20261020.py",
+      "bytes": 27048,
+      "sha256": "7ab3cf7ab1eaf4e7ca9269e9548972921dc4250d17a8eed7473c71d6096849cc",
+      "role": "analysis_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\package_m1_analysis_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/pull_m1_dev64_results_20261020.py",
+      "bytes": 16671,
+      "sha256": "fddc259d26f3fc032d78827f9d30fe446554b84e14d182af3ded078074910c61",
+      "role": "dev64_analysis_or_execution_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\pull_m1_dev64_results_20261020.py"
+    },
+    {
+      "member": "delta-ngram/scripts/verify_m1_analysis_portable_20261020.py",
+      "bytes": 8490,
+      "sha256": "8898e5103a29e8bb8696dc1b719e30300dd204a1051469f46882e866d78acbb6",
+      "role": "analysis_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram\\scripts\\verify_m1_analysis_portable_20261020.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/batching.py",
+      "bytes": 11405,
+      "sha256": "1ae96443d8404b95bdd3dea367fb9498c5410ae6f211ea1a07de4b872e0a8f16",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\batching.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/block_monitor.py",
+      "bytes": 8916,
+      "sha256": "6c4c7f6be7b5cec99b449ca8671c9bc0cb52157f918fe6554b0b875db614b948",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\block_monitor.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/direction_control.py",
+      "bytes": 4273,
+      "sha256": "44f4641ac53ec144065b37a0e49cfc9d1f04f7a55b0af4ef78d194a0a5211dbb",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\direction_control.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/event_lm.py",
+      "bytes": 14011,
+      "sha256": "cce7c86fdcf1de838cbfe79679bcd68e942d96b1461e7fc7bdb65bc9130b5a78",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\event_lm.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/ngram_lookup.py",
+      "bytes": 1142,
+      "sha256": "ef6ced910e521b644bf84b25ba20090d6c4b7a2d903c97d397832dc79e12d3d8",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\ngram_lookup.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/operators.py",
+      "bytes": 10311,
+      "sha256": "4a2eabfd92239bc0f8ca994807c317273abb1db1cab9072ac94e130830959105",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\operators.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/raw_evaluation.py",
+      "bytes": 6934,
+      "sha256": "550ed38375887cd377286bff1c9942d27e25917de192d302fe2b015e6d52268a",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\raw_evaluation.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/raw_lm.py",
+      "bytes": 51287,
+      "sha256": "db9a88f8c34f3995f3005d7c31ed3ce393974a7c71b41052edca9a0f2ff7cfaf",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\raw_lm.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/recent_news_evaluation.py",
+      "bytes": 39492,
+      "sha256": "cb511e7b8ef95bd670a2f9d087e4491d463077a61a3a6fb6367f685694e5e192",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\recent_news_evaluation.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/state.py",
+      "bytes": 8134,
+      "sha256": "e877c704ab7a374f76e2c23c4ba35feca4e9080805051c7ef315310372ed4655",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\state.py"
+    },
+    {
+      "member": "delta-ngram/src/delta_ngram/writer.py",
+      "bytes": 5891,
+      "sha256": "0772efde1c8cff1ac25277885e363e5acf7201a07c6fe606abfa51aeeee01489",
+      "role": "frozen_m1_evaluator_source",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\m1_frozen_source_20261020\\delta-ngram\\src\\delta_ngram\\writer.py"
+    },
+    {
+      "member": "verify_bundle.py",
+      "bytes": 730,
+      "sha256": "1a0769e7b74cfc660e86140928fe7ae626eaa2eb3c64e50d12b51602015f160b",
+      "role": "payload_verification_script"
+    }
+  ],
+  "external_inputs": [
+    {
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\diagnostic_logs\\block_metrics.jsonl.gz",
+      "role": "capacity_raw_block_log",
+      "bytes": 90184212,
+      "sha256": "3ff959ad3eea5ad1a6e1cfb2f59a7ead5622c0e37f36bb7264bc60d62063a00e",
+      "reason_not_bundled": "Required to recompute capacity observations; excluded for size.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/diagnostic_logs/block_metrics.jsonl.gz"
+    },
+    {
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\data_manifest.json",
+      "role": "capacity_full_data_manifest",
+      "bytes": 133954142,
+      "sha256": "b0d68097d30a205909d6ad12e3e1d5bb97f70a8c8c76400301c6f5120849f074",
+      "reason_not_bundled": "Required to recompute frozen validation length bounds; excluded for size.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/data_manifest.json"
+    },
+    {
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\selected_65m_backup\\writer_step_002713_tokens_000065009696.pt",
+      "role": "selected_writer_weights",
+      "bytes": 4777397,
+      "sha256": "86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/selected_65m_backup/writer_step_002713_tokens_000065009696.pt"
+    },
+    {
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\selected_65m_backup\\training_step_002713_tokens_000065009696.pt",
+      "role": "selected_training_weights",
+      "bytes": 14564565,
+      "sha256": "579704edf9971854aac1c624b513c2fe5e3359b082d64682115591c90a0cab00",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/selected_65m_backup/training_step_002713_tokens_000065009696.pt"
+    },
+    {
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\writer.pt",
+      "role": "endpoint_writer_weights",
+      "bytes": 4776245,
+      "sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/writer.pt"
+    },
+    {
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\final_backup_20261020\\training.pt",
+      "role": "endpoint_training_weights",
+      "bytes": 14563093,
+      "sha256": "cc3dda11d06914b533897c97c7faa8d5ff7e834af8b56cc12987ba19500f9c12",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/training.pt"
+    }
+  ],
+  "self_hash_note": "The manifest excludes itself to avoid recursive hashing. All other archive members are hashed here; the external ZIP SHA-256 covers the entire archive.",
+  "reproduction_scope": {
+    "historical_main_statistics": "self-contained; Python standard library",
+    "endpoint_and_training_loss_diagnosis": "self-contained; Python standard library",
+    "figures": "data included; matplotlib, numpy and an external Chinese font required",
+    "capacity": "requires the two declared external raw inputs",
+    "new_dev64_statistics": "self-contained; numpy required, matplotlib optional",
+    "new_dev64_address_capacity": "requires omitted frozen source texts and tokenizer; CPU torch/transformers",
+    "writer_parameter_displacement": "requires omitted weights, PyTorch and original path adjustment",
+    "new_dev64_inference": "not self-contained; source articles and model weights intentionally omitted"
+  },
+  "contains_pdf": false,
+  "contains_model_weights": false,
+  "sealed_final_accessed": false,
+  "python_version": "3.12.7 | packaged by Anaconda, Inc. | (main, Oct  4 2024, 13:17:27) [MSC v.1929 64 bit (AMD64)]"
+}

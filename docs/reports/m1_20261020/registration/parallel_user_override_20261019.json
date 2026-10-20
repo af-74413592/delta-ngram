@@ -1,0 +1,12 @@
+{
+  "registered_at_utc": "2026-10-19T11:21:24.879918+00:00",
+  "authority": "User explicitly requested parallel execution after reviewing the measured 29% M1 throughput reduction and 38% estimated combined throughput increase.",
+  "decision": "Continue M1 plus one alpha variant concurrently; alpha variants remain sequential.",
+  "supersedes": "Only the M1 >=80% throughput scheduling gate; scientific protocol and budgets unchanged.",
+  "resume_from": "/workspace/delta-ngram-runs/alpha_m1_prefix_parallel_seed17_20261019/fixed_099_probe20/training.pt",
+  "resume_step": 20,
+  "resume_loss_tokens": 460099,
+  "prefix_sha256": "a3617be507ec2408c6c73e408f25bc92a1c166ed62146a0baffa870a6380fb35",
+  "orchestrator_sha256": "16701ab2971c88d38de8f0f5a55535f5eafc5ca881e5405d047974075dd3b66e",
+  "alpha_cuda_allocator_fraction": 0.45
+}

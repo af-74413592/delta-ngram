@@ -1,0 +1,198 @@
+{
+  "protocol": "m1_git_report_archive_index_20261020_v1",
+  "created_utc": "2026-10-20T05:15:49.291956+00:00",
+  "scientific_status": {
+    "main_run_budget_endpoint": true,
+    "primary_nominal_tokens": 100000000,
+    "secondary_nominal_tokens": 65000000,
+    "completed_dev64_checkpoints": 21,
+    "failed_dev64_checkpoints": 0,
+    "final_evaluation_run": false,
+    "native_prototype_included_in_results": false
+  },
+  "analysis_bundle": {
+    "filename": "m1_analysis_bundle_20261020.zip",
+    "bytes": 27767060,
+    "sha256": "e9cad1aea3cf5a7e90a6ec55da57026aa1cefedc9f7682e6cd1ca314be11cb40",
+    "stage": "final",
+    "stage_note": "Final analysis package, not a sealed FINAL evaluation.",
+    "payload_files": 167,
+    "manifest": "analysis_package_manifest.json",
+    "manifest_sha256": "a226bba384eaf49b4e81c2ea481a491848e83f8340a92fa7515b1050197f4449",
+    "receipt": "reproduction_receipt.json",
+    "report_member": "delta-ngram-runs/m1_analysis_20261020/M1_analysis_20261020.md",
+    "derived_data_root": "delta-ngram-runs/m1_analysis_20261020/"
+  },
+  "object_storage": {
+    "status": "pending_upload_and_restore_receipts",
+    "analysis_bundle_uri": null,
+    "full_data_manifest_uri": null,
+    "weights_manifest_uri": null,
+    "code_archive_uri": null,
+    "verification_receipt_uri": null,
+    "uploaded_code_commit": null,
+    "note": "Fill only from verified upload and restore receipts. Local archive verification does not establish B2 upload completion."
+  },
+  "source_report": {
+    "archive_member": "delta-ngram-runs/m1_analysis_20261020/M1_analysis_20261020.md",
+    "bytes": 22866,
+    "sha256": "ae79a39ebc6d116c373faeb8ad2851c2c5fb13fdacdd897ef333bfa2078a60ae",
+    "adaptation": "Preserve accepted analysis and confidence intervals; add overview/recovery sections and repo-relative links."
+  },
+  "frozen_implementation": {
+    "evaluator_commit": "167d24783161be7842bbb9aec52f2c7804191ba9",
+    "source_manifest_member": "delta-ngram-runs/multidomain_launch_20261019/m1_frozen_source_manifest_20261020.json",
+    "config_repository_path": "configs/m1_event_mixture_seed17.yaml",
+    "config_sha256": "aa4319dd172b545563e705f644c167675c0c6ebede9cd7be5ed9d5018519530a",
+    "training_core_source_hashes": {
+      "raw_lm.py": "db9a88f8c34f3995f3005d7c31ed3ce393974a7c71b41052edca9a0f2ff7cfaf",
+      "event_lm.py": "cce7c86fdcf1de838cbfe79679bcd68e942d96b1461e7fc7bdb65bc9130b5a78",
+      "writer.py": "0772efde1c8cff1ac25277885e363e5acf7201a07c6fe606abfa51aeeee01489",
+      "operators.py": "4a2eabfd92239bc0f8ca994807c317273abb1db1cab9072ac94e130830959105",
+      "reader.py": "507ac70082864e507ca491ae59760b03e4c6358c7c6994eea3f560bbf1e76451",
+      "batching.py": "1ae96443d8404b95bdd3dea367fb9498c5410ae6f211ea1a07de4b872e0a8f16",
+      "state.py": "e877c704ab7a374f76e2c23c4ba35feca4e9080805051c7ef315310372ed4655",
+      "raw_evaluation.py": "550ed38375887cd377286bff1c9942d27e25917de192d302fe2b015e6d52268a"
+    },
+    "native_writer_changes_included": false
+  },
+  "checkpoints": [
+    {
+      "role": "primary",
+      "nominal_loss_tokens": 100000000,
+      "actual_loss_tokens": 99999524,
+      "step": 4173,
+      "writer_filename": "writer.pt",
+      "writer_sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d",
+      "training_filename": "training.pt",
+      "training_sha256": "cc3dda11d06914b533897c97c7faa8d5ff7e834af8b56cc12987ba19500f9c12"
+    },
+    {
+      "role": "secondary",
+      "nominal_loss_tokens": 65000000,
+      "actual_loss_tokens": 65009696,
+      "step": 2713,
+      "writer_filename": "writer_step_002713_tokens_000065009696.pt",
+      "writer_sha256": "86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71",
+      "training_filename": "training_step_002713_tokens_000065009696.pt",
+      "training_sha256": "579704edf9971854aac1c624b513c2fe5e3359b082d64682115591c90a0cab00"
+    }
+  ],
+  "runtime_evidence": {
+    "preflight_relative_path": "delta-ngram-runs/multidomain_launch_20261019/m1_preflight.json",
+    "preflight_in_analysis_zip": false,
+    "preflight_file": {
+      "bytes": 287950,
+      "sha256": "c5b29613fde71444081f67bb05bc111b96e028fc5a04220a0030681a74763256"
+    },
+    "preflight_torch": "2.14.1+cu132",
+    "preflight_cuda": "13.2",
+    "training_summary_member": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/summary.json",
+    "dev64_runtime_member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/runtime.json",
+    "dev64_completion_member": "delta-ngram-runs/multidomain_launch_20261019/dev64_curve_results_20261020/completion.json"
+  },
+  "figures": [
+    {
+      "path": "figures/alpha_paired_contrasts.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/alpha_paired_contrasts.png",
+      "bytes": 67175,
+      "sha256": "95388922056ac51e7ead1046edd931dd478214ea6b48eb50fc9ac8c260530534"
+    },
+    {
+      "path": "figures/dev64_0m_reference.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_0m_reference.png",
+      "bytes": 185690,
+      "sha256": "9d0404635d77e3680646ec47db474204429cb8582a2be2491e721cf3504fec36"
+    },
+    {
+      "path": "figures/dev64_100m_retention.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_100m_retention.png",
+      "bytes": 190445,
+      "sha256": "66b813e44a77741d192287cc7815dabbbb1b6c1fdcb20893a530c563071d0cd2"
+    },
+    {
+      "path": "figures/dev64_capacity.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_capacity.png",
+      "bytes": 346585,
+      "sha256": "f946912e535e1305167124c1ac75c49ad2cc800ade868367606e7c72ff837dd8"
+    },
+    {
+      "path": "figures/dev64_training_curves.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/dev64_training_curves.png",
+      "bytes": 325051,
+      "sha256": "a6cf5d82d2b0c1e81dd34de75b7fdcdef3242cddb8c1a77d5cb9646d158ab567"
+    },
+    {
+      "path": "figures/endpoint_sources.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/endpoint_sources.png",
+      "bytes": 63910,
+      "sha256": "2db9cf2cf22df5678301e4b401d54c84bce26591f86a472f288f179c2f61edc3"
+    },
+    {
+      "path": "figures/mathematical_checks.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/mathematical_checks.png",
+      "bytes": 129962,
+      "sha256": "30a6265ec785e2ba7bebc833c1e1d484f84050a98903bc5df786aad91f83f35d"
+    },
+    {
+      "path": "figures/training_curve.png",
+      "archive_member": "delta-ngram-runs/m1_analysis_20261020/figures/training_curve.png",
+      "bytes": 165140,
+      "sha256": "ef175a0d7ccf20d750558bb8b6fd5c8b30cd05d72f785569dbe35c25a65ee371"
+    }
+  ],
+  "external_inputs": [
+    {
+      "role": "capacity_raw_block_log",
+      "bytes": 90184212,
+      "sha256": "3ff959ad3eea5ad1a6e1cfb2f59a7ead5622c0e37f36bb7264bc60d62063a00e",
+      "reason_not_bundled": "Required to recompute capacity observations; excluded for size.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/diagnostic_logs/block_metrics.jsonl.gz"
+    },
+    {
+      "role": "capacity_full_data_manifest",
+      "bytes": 133954142,
+      "sha256": "b0d68097d30a205909d6ad12e3e1d5bb97f70a8c8c76400301c6f5120849f074",
+      "reason_not_bundled": "Required to recompute frozen validation length bounds; excluded for size.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/data_manifest.json"
+    },
+    {
+      "role": "selected_writer_weights",
+      "bytes": 4777397,
+      "sha256": "86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/selected_65m_backup/writer_step_002713_tokens_000065009696.pt"
+    },
+    {
+      "role": "selected_training_weights",
+      "bytes": 14564565,
+      "sha256": "579704edf9971854aac1c624b513c2fe5e3359b082d64682115591c90a0cab00",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/selected_65m_backup/training_step_002713_tokens_000065009696.pt"
+    },
+    {
+      "role": "endpoint_writer_weights",
+      "bytes": 4776245,
+      "sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/writer.pt"
+    },
+    {
+      "role": "endpoint_training_weights",
+      "bytes": 14563093,
+      "sha256": "cc3dda11d06914b533897c97c7faa8d5ff7e834af8b56cc12987ba19500f9c12",
+      "reason_not_bundled": "Required only for the parameter-displacement audit; weights intentionally excluded.",
+      "expected_relative_path_if_supplied": "delta-ngram-runs/multidomain_launch_20261019/final_backup_20261020/training.pt"
+    }
+  ],
+  "reproduction_scope": {
+    "historical_main_statistics": "self-contained; Python standard library",
+    "endpoint_and_training_loss_diagnosis": "self-contained; Python standard library",
+    "figures": "data included; matplotlib, numpy and an external Chinese font required",
+    "capacity": "requires the two declared external raw inputs",
+    "new_dev64_statistics": "self-contained; numpy required, matplotlib optional",
+    "new_dev64_address_capacity": "requires omitted frozen source texts and tokenizer; CPU torch/transformers",
+    "writer_parameter_displacement": "requires omitted weights, PyTorch and original path adjustment",
+    "new_dev64_inference": "not self-contained; source articles and model weights intentionally omitted"
+  }
+}

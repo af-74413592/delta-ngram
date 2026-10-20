@@ -25,3 +25,11 @@ models/
 .env.*
 !.env.example
 
+# Curated M1 report and reproducibility metadata; generated run trees stay ignored.
+!docs/reports/
+docs/reports/*
+!docs/reports/m1_20261020/
+!docs/reports/m1_20261020/**
+!docs/design/qwen38_native_20261020/references/*manifest.json
+!scripts/archive/m1_20261020/provenance_manifest.json
+
