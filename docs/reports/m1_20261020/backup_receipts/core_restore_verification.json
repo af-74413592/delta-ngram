@@ -1,0 +1,20 @@
+{
+  "complete": true,
+  "verified_at_utc": "2026-10-20T05:37:47.711632+00:00",
+  "restore_root": "/workspace/delta-ngram-backup-restorecheck-20261020",
+  "object_storage_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/",
+  "expected_seal_sha256_from_preupload_local_receipt": {
+    "metadata/COMPLETE.json": "ae0efc8a826d4173664cff3ee8e046a8a55ee38b9aa6d6c53123c6fce9507e95",
+    "metadata/member_manifest.jsonl": "be4a8b39dd2f5c3e50fe9aea472a1f2d06c9a28e3717db674d1762b821502611",
+    "metadata/member_sha256.txt": "72dd24744e0c0551851e0edbb917189b860e88c63c88cc4a8443a5f9d4f34b43"
+  },
+  "seal_hashes_matched": true,
+  "all_members_sha256_matched": true,
+  "object_set_exact": true,
+  "all_restored_inodes_distinct_from_stage": true,
+  "restored_files_stable_through_verification": true,
+  "verified_files": 1733,
+  "verified_bytes": 23885567983,
+  "elapsed_seconds": 20.87825279601384,
+  "scope": "Byte-for-byte recovery check of the independent CloudRestore tree. No model loading, GPU job, source/stage mutation, or shutdown."
+}

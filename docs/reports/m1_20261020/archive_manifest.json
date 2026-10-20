@@ -8,7 +8,8 @@
     "completed_dev64_checkpoints": 21,
     "failed_dev64_checkpoints": 0,
     "final_evaluation_run": false,
-    "native_prototype_included_in_results": false
+    "native_prototype_included_in_results": false,
+    "dev64_full_context_reference_status": "pending_execution_and_incremental_archive"
   },
   "analysis_bundle": {
     "filename": "m1_analysis_bundle_20261020.zip",
@@ -24,14 +25,22 @@
     "derived_data_root": "delta-ngram-runs/m1_analysis_20261020/"
   },
   "object_storage": {
-    "status": "pending_upload_and_restore_receipts",
-    "analysis_bundle_uri": null,
-    "full_data_manifest_uri": null,
-    "weights_manifest_uri": null,
-    "code_archive_uri": null,
-    "verification_receipt_uri": null,
-    "uploaded_code_commit": null,
-    "note": "Fill only from verified upload and restore receipts. Local archive verification does not establish B2 upload completion."
+    "status": "verified",
+    "verification_scope": "Existing sealed core and supplement only; excludes the pending DEV64 full-context reference and its future incremental archive.",
+    "core_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/",
+    "supplement_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/",
+    "analysis_bundle_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/analysis/m1_analysis_bundle_20261020.zip",
+    "full_data_manifest_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/metadata/member_manifest.jsonl",
+    "weights_manifest_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/metadata/weights_manifest.json",
+    "code_archive_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/code/delta_ngram_code_fcd0564_20261020.bundle",
+    "verification_receipt_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/metadata/core_restore_verification.json",
+    "verification_receipt_uri_scope": "Core restore verification; the later supplement restore receipt is saved in Git and is not a member of its own sealed B2 package.",
+    "supplement_verification_receipt": "backup_receipts/supplement_restore_verification.json",
+    "supplement_verification_receipt_sha256": "6a62d724fc22910ca140d3361ab632ce1af228c9cf61ac1ec9a08b97e5da375e",
+    "verified_objects_total": 1753,
+    "verified_bytes_total": 25120671034,
+    "uploaded_code_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
+    "note": "Core and supplement were independently restored from B2 with exact object sets, sizes, SHA256 and independent inodes verified. Later report updates and the supplement restore receipt are saved in subsequent Git commits; sealed B2 members remain unchanged."
   },
   "source_report": {
     "archive_member": "delta-ngram-runs/m1_analysis_20261020/M1_analysis_20261020.md",
@@ -194,5 +203,50 @@
     "new_dev64_address_capacity": "requires omitted frozen source texts and tokenizer; CPU torch/transformers",
     "writer_parameter_displacement": "requires omitted weights, PyTorch and original path adjustment",
     "new_dev64_inference": "not self-contained; source articles and model weights intentionally omitted"
+  },
+  "core_restore_verification": {
+    "receipt": "backup_receipts/core_restore_verification.json",
+    "receipt_sha256": "bb243094e0ea3052ab9264a3e4e37b13ea4f98fd3489b09156e9e96af97c9cc0",
+    "files": 1733,
+    "bytes": 23885567983,
+    "all_sha256_matched": true,
+    "all_restored_inodes_distinct": true
+  },
+  "supplement_restore_verification": {
+    "receipt": "backup_receipts/supplement_restore_verification.json",
+    "receipt_sha256": "6a62d724fc22910ca140d3361ab632ce1af228c9cf61ac1ec9a08b97e5da375e",
+    "verified_at_utc": "2026-10-20T05:56:17.804734+00:00",
+    "files": 20,
+    "bytes": 1235103051,
+    "all_sha256_matched": true,
+    "object_set_exact": true,
+    "all_restored_inodes_distinct": true,
+    "receipt_storage": "Git; generated after sealing and not contained in the B2 package it verifies.",
+    "seals": {
+      "complete": {
+        "path": "backup_receipts/supplement_COMPLETE.json",
+        "sha256": "f1dbbb7c2795b4c480b7fdac01ba5bac2a8bc9a832a9c7bfedef9593ad3a148f"
+      },
+      "member_manifest": {
+        "path": "backup_receipts/supplement_member_manifest.jsonl",
+        "sha256": "762e62db16cfa7d30058e05cd897dcbbc31fc2d6af7f02926b44824e3b11600f"
+      },
+      "sha256_list": {
+        "path": "backup_receipts/supplement_sha256.txt",
+        "sha256": "48f97e76611d3c5b4018cc7106f9c88634d1c614634dc42675b752f1acc1f40c"
+      },
+      "external_finalization_receipt": {
+        "path": "backup_receipts/supplement_finalization_receipt.json",
+        "sha256": "4a5843e838df636267c768fc3b1082f390b1cd480c64d6f0a7b77ad6ea30f8a6"
+      }
+    }
+  },
+  "code_backup": {
+    "repository": "https://github.com/af-74413592/delta-ngram",
+    "branch": "codex/raw-text-training",
+    "verified_remote_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
+    "bundle_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
+    "bundle_sha256": "bf5f2728b311938ec9830ebc980c3f36bb3db38fc5ac77827709dde1373ec550",
+    "local_restore_receipt": "backup_receipts/code_bundle_restore_verification.json"
   }
 }

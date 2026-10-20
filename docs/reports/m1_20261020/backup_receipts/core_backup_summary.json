@@ -1,0 +1,95 @@
+{
+  "complete": true,
+  "completed_at_utc": "2026-10-20T05:23:38.313784+00:00",
+  "stage": "/workspace/delta-ngram-backup-stage-20261020",
+  "member_files": 1727,
+  "member_logical_bytes": 23883977643,
+  "groups": {
+    "data": {
+      "files": 386,
+      "logical_bytes": 19222173356
+    },
+    "model_dependencies": {
+      "files": 7,
+      "logical_bytes": 1519182365
+    },
+    "operations": {
+      "files": 228,
+      "logical_bytes": 1335523539
+    },
+    "runs": {
+      "files": 314,
+      "logical_bytes": 1790450256
+    },
+    "source_snapshots/delta-ngram-alpha": {
+      "files": 172,
+      "logical_bytes": 3932015
+    },
+    "source_snapshots/delta-ngram-evaluation-20261019": {
+      "files": 175,
+      "logical_bytes": 4033093
+    },
+    "source_snapshots/delta-ngram-m1": {
+      "files": 165,
+      "logical_bytes": 3837381
+    },
+    "source_snapshots/delta-ngram-sdist-before-git-d7b49ee8cff1": {
+      "files": 96,
+      "logical_bytes": 844462
+    },
+    "source_snapshots/delta-ngram": {
+      "files": 178,
+      "logical_bytes": 3972240
+    },
+    "environment": {
+      "files": 6,
+      "logical_bytes": 28936
+    }
+  },
+  "pt_files": 112,
+  "distinct_pt_file_sha256": 101,
+  "m1_pt_files": 43,
+  "registered_M1_weights_sha256_verified": 21,
+  "alpha_triplets_sha256": {
+    "fixed_099": {
+      "writer.pt": "caf09fd3adc33819e14623e77efdb774b6d90016d0d51e01158d5954d9ac3ed5",
+      "training.pt": "f06fe2f7f5d27797bc115a9119b2d2f2f49a04572c9f75b77fb8a1676ce6580b",
+      "alpha.pt": "0938f8aad7f456da7269e00965c70de7e83a29a7546b5324998c1bc62331ddf9"
+    },
+    "fixed_095": {
+      "writer.pt": "1eb5bb853960feb2d87e740eda092d5120934650b339cb4c53855f149c90d223",
+      "training.pt": "f3e290f3198996275cbe626ab543410919cc2b8a1efb384ff9681013540dfe26",
+      "alpha.pt": "ff45c81b74c4f1a99e04703be363d8df21af41331934bc50e825282834d1ba77"
+    },
+    "learned_global_099": {
+      "writer.pt": "b9a20adabc169e82166150eb80aef19e216f721c00bf79253ce9b3cc76f7fd5d",
+      "training.pt": "dd7c2ef7a21ad436c76b14411e3a7c3a6e1e23f4c214f007c1020dae1055170b",
+      "alpha.pt": "a30a8d9da17fefaf0be1b21ba80a64c9b986979af6271e3b7173a14dcd8e1558"
+    },
+    "evidence_block_099": {
+      "writer.pt": "b93238868640e15b4b86ba66aa3196360c653205064f90f98a9f864104bf4810",
+      "training.pt": "bba5312d2fe67d48a5e34ba5cf6e1b38d61718701d65d0969f9e550eb1aef80f",
+      "alpha.pt": "6d817424019d91573a25c2c8ac16dc7cb8fb7e38afe53a8b01b7f77a4a88fb07"
+    },
+    "fixed_099_probe20": {
+      "writer.pt": "3863b2be6406717be8b2d6378ccb313a4de4205b7e2aab1d6a46ab39a00dbb1e",
+      "training.pt": "1bf291fb7441cdbe70188239dc5bf33da91d6725f79953638a3bd76b3cfadb64",
+      "alpha.pt": "428573b1fe8943ab6f97d1caa6ecd46ccfe980e5d2ffa5116407b48d5d1806bf"
+    }
+  },
+  "source_mtime_size_inode_stability_verified": true,
+  "all_source_files_and_exclusions_rechecked": true,
+  "excluded_paths": 24,
+  "copy_method_counts": {
+    "files_hashed": 1721,
+    "bytes_hashed": 23883948707,
+    "hardlinks": 1721,
+    "copies": 0,
+    "existing": 0
+  },
+  "elapsed_seconds": 20.044022494985256,
+  "disk_free_bytes": 511322001408,
+  "exclusions_scope": "Secret/private-key filename matches; ordinary symlinks; .git/cache in source snapshots. Only the explicitly pinned Qwen3-0.6B snapshot is resolved from HF blobs; other caches and credentials are excluded.",
+  "immutability_rule": "Do not change staging after COMPLETE. Hardlinks share source inodes; keep source jobs frozen until upload/restore SHA validation finishes.",
+  "restore_check": "Validate metadata/COMPLETE.json manifest digests, then run sha256sum -c metadata/member_sha256.txt from the restored root. File names are relative to that root."
+}

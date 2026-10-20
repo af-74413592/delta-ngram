@@ -1,0 +1,11 @@
+{
+  "created_utc": "2026-10-20T05:26:19.336908+00:00",
+  "commit": "fcd056414fd148425940d76c845b39e0ec14e381",
+  "bundle": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\delta_ngram_code_fcd0564_20261020.bundle",
+  "bytes": 3617902,
+  "sha256": "bf5f2728b311938ec9830ebc980c3f36bb3db38fc5ac77827709dde1373ec550",
+  "complete_history": true,
+  "restored_to": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\code_restorecheck_fcd0564_20261020",
+  "verified_manifest_payloads": 31,
+  "all_match": true
+}

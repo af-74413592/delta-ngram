@@ -1,0 +1,14 @@
+{
+  "complete": true,
+  "verified_at_utc": "2026-10-20T05:56:17.804734+00:00",
+  "root": "/workspace/delta-ngram-supplement-restorecheck-20261020",
+  "expected_complete_sha256": "f1dbbb7c2795b4c480b7fdac01ba5bac2a8bc9a832a9c7bfedef9593ad3a148f",
+  "verified_files": 20,
+  "verified_bytes": 1235103051,
+  "all_sha256_matched": true,
+  "object_set_exact": true,
+  "no_symlinks_or_partial_files": true,
+  "files_stable_during_verification": true,
+  "source_stage": "/workspace/delta-ngram-closure-supplement-20261020",
+  "independent_restore_inodes_verified": true
+}

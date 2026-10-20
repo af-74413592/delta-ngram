@@ -4,6 +4,8 @@
 
 本报告汇总已完成的历史留出评测、5M α 对照、数学诊断与新事件 DEV64。**DEV64 的 0M、5M、10M……100M 共 21 点已全部完成并校验，0 项失败；FINAL 尚未启动。** 100M 为主、65M 为次，其余点用于诊断训练曲线。文中的历史事件首块诊断不属于新 DEV64。
 
+新增的 **DEV64 full-context 原始权重参照尚待执行**，完成后将另作增量分析与归档；本报告已有数值与两组已封存 B2 备份均不包含该新增结果。
+
 ## 0. 实验概览与冻结范围
 
 本次实验检验：**在 reader 参数固定时，离线训练的小型 writer 能否把新文本写入外置 n-gram 记忆，并改善后续文本的预测。** 离线训练通过后续预测损失更新 writer；在线评测固定 reader、writer 参数，只前向更新各条轨迹的记忆状态。预测、写入和新建空表的边界遵循冻结协议。
@@ -64,6 +66,8 @@ M1 已走完预算允许的完整训练轨迹：step 4173，实际 **99,999,524*
 
 用户随后将原两点计划扩展为 21 点 DEV64 曲线，使用同一冻结数据和协议并行评测；此扩展不改变 100M 主、65M 次的身份，其余点只作诊断。原登记保留，扩展范围以新增曲线登记为准。FINAL 仅允许使用已锁定的 100M 权重执行一次，不根据后续分数换检查点；本轮不启动 FINAL。详见[检查点登记](../../m1_checkpoint_policy_20261020.md)。
 
+<a id="historical-curve"></a>
+
 ## 2. 图一｜历史留出：预测继续改善，donor 差距有波动
 
 ![21 个检查点的收益与预测损失](figures/training_curve.png)
@@ -83,6 +87,8 @@ $$
 
 65M 的 Δdonor 优势与相邻点变化幅度同量级，但不能称为“纯噪声”：65M−100M 的探索性配对区间为 **[0.002768, 0.004340]**，未跨零。选择 100M 体现对自身预测与预算终点的重视，而非否定 65M 的原指标优势。
 
+<a id="source-results"></a>
+
 ## 3. 图二：100M 的收益覆盖哪些来源
 
 ![100M 六个来源的收益及原始 95% 区间](figures/endpoint_sources.png)
@@ -99,6 +105,8 @@ $$
 | web | 64 | 0.135172 | 0.102970 |
 
 六行供观察来源差异，不能直接等权平均为主指标。100M 五类宏平均 95% 区间：Δempty **[0.141032, 0.146910]**；Δdonor **[0.094557, 0.100069]**。这些是续写概率收益，不是事实记忆率或问答正确率。
+
+<a id="capacity-writer-audit"></a>
 
 ## 4. 图三：容量与 writer 的数学检查
 
@@ -142,6 +150,8 @@ $$
 
 要由此保证改善，右侧必须小于零：训练更新既要沿着降低留出风险的方向，也不能步幅过大。表未满、过去没有观测到过拟合，都不能确定这个内积与曲率项的符号和大小。保存日志中的非零训练梯度也无法代替它们。因此，本次数学检查能支持“已观察区间内仍有收益”，无法推出“未来训练量无限增加仍必然受益”。
 
+<a id="cross-article"></a>
+
 ## 5. 跨文章首块：旧记忆的帮助仍在增加
 
 历史 `news_event` 首块诊断覆盖 **64 个 family、75 篇后续文章**。评分时当前文章尚未写入记忆；full 从本地 BOS/EOS 预测首块，after-prefix 给出真实前 128 token 后评分，二者输入约定不同。
@@ -154,6 +164,8 @@ $$
 四项原始区间均为正。65→100M，full 首块 Δdonor **增加 0.003996**，after-prefix 增加 **0.005332**。相反，文章后续块的 Δdonor 减少 **0.009998**：self NLL 仅改善 0.000178，donor 改善 0.010177。
 
 这将差距收缩定位到后续块。此时当前文章的已读部分可写入记忆，不能把整条轨迹的差距变化直接等同于跨文章能力退化。错配记忆更有用，可能涉及领域统计或通用表示校正；仅凭 NLL 无法确定具体机制。
+
+<a id="alpha-ablation"></a>
 
 ## 6. 图四：5M α 对照的取舍
 
@@ -171,6 +183,8 @@ $$
 | 证据块 | −0.001737 | +0.013835 |
 
 证据块 α 的 self NLL **变差 0.001737**，donor NLL **变差 0.015571**，后者更大，扩大了两者差距。固定 .95 与全局 α 的 Δempty 差值区间跨零；固定 .99 的小幅预测改善伴随 donor 差距减小。目前不存在两项指标全面领先的方案。
+
+<a id="dev64"></a>
 
 ## 7. 新事件 DEV64：21 点完整曲线
 
@@ -267,6 +281,8 @@ $$
 
 队列启动配置为 4 个 worker、每个 8 个 CPU 线程，并发上限为 8；上限不表示实际使用过 8 个。并发项的 elapsed 总和不能当作墙钟时间、GPU 活跃时间或账单耗时。本轮全部是纯评测，`optimizer_steps=0`、`backward_calls=0`。
 
+<a id="scope"></a>
+
 ## 8. 完成状态与未执行范围
 
 | 项目 | 状态／允许结论 |
@@ -274,6 +290,7 @@ $$
 | 历史 M1 21 点与四组 α 历史评测 | 完整，可用于本报告 |
 | 新事件 DEV64：0M＋5M 至 100M，共 21 点 | **全部完成，21/21；0 失败；身份、统计与传输校验通过** |
 | 新 DEV64 精确地址容量审计 | 完成；全部 21 点容量输入身份一致，640 个写入条件 |
+| 新增 DEV64 full-context 原始权重参照 | 待执行；结果另作增量分析与归档，不在本报告既有结果和已封存 B2 包内 |
 | 旧 D1 首个 5M 的 DEV64 基线 | 随 α 队列在 **40/64** 停止；无完整结果或可用分数 |
 | 更早 2 事件运行 | 仅流程检查 |
 | α 补充续写、修订、裁剪套件 | 已取消，不据历史分数补写结论 |
@@ -302,6 +319,8 @@ $$
 
 本报告及数据包保留 100M 主、65M 次的登记和完整历史分析。包内提供原始评测、派生表格、图与分析脚本，可在 CPU 上重算主要数值统计。评测依赖的模型、源文章和 tokenizer 未打包；历史容量的两个大型原始输入及权重位移审计所需权重也作为外部依赖列明。包中的评测源码固定为 commit `167d24783161be7842bbb9aec52f2c7804191ba9`，后续原生 writer 修改不混入本次分析。
 
+<a id="backup"></a>
+
 ## 10. 归档、复算与恢复索引
 
 ### 10.1 已核验分析包
@@ -318,15 +337,20 @@ e9cad1aea3cf5a7e90a6ec55da57026aa1cefedc9f7682e6cd1ca314be11cb40
 
 ### 10.2 下载与完整恢复状态
 
-| 资产 | 当前报告记录 | 恢复身份入口 |
-|---|---|---|
-| 完整分析包 | 本地包与独立复算已核验；B2 URI、上传/回读收据待补 | [归档索引](archive_manifest.json)的 `analysis_bundle` 与 `object_storage` |
-| 训练数据、源文章、tokenizer/模型依赖 | 不包含在上述分析 ZIP；B2 对象与清单待补 | `object_storage.full_data_manifest_uri` |
-| writer 与完整训练恢复状态 | 不包含在上述分析 ZIP；B2 对象与清单待补 | `object_storage.weights_manifest_uri` |
-| 代码归档 | 冻结评测 commit 已锁定；本次上传 commit/归档收据待补 | `object_storage.code_archive_uri` |
-| 关机前完整备份验证 | 待上传、成员核对及恢复抽查收据 | `object_storage.verification_receipt_uri` |
+**主体 B2 备份已验收：1,733 个对象、23,885,567,983 字节；从云端恢复到独立目录后，全部 SHA256、大小与上传前封口清单匹配。** [核验收据](backup_receipts/core_restore_verification.json)同时确认所有恢复文件与源暂存文件使用不同 inode。该验证没有重新运行 GPU 模型。
 
-**本报告当前不宣称 B2 上传或整机恢复验证已经完成。** 上表与机器可读索引须在实际收据到齐后更新。恢复 100M 主权重需匹配 SHA256 `20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d`；65M 次权重需匹配 `86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71`。仅有 writer 权重不能替代包含 optimizer、sampler、计数和 RNG 的完整训练恢复点。
+**补充 B2 备份也已验收：20 个对象、1,235,103,051 字节；两组合计 1,753 个对象、25,120,671,034 字节。** [补充回读收据](backup_receipts/supplement_restore_verification.json)确认精确文件集合、全部 SHA256、大小及独立 inode，完成时间为 2026-10-20 05:56:17.804734 UTC。分开下载和校验两份归档的命令见[恢复说明](restore.md)。
+
+| 归档内容 | 当前状态 | 身份与入口 |
+|---|---|---|
+| 训练数据、源文章、M1 tokenizer/底座、历史运行记录 | B2 上传及全量独立回读通过 | `b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/` |
+| writer 与完整训练恢复状态 | 112 个 `.pt` 文件在已核验主体内；含全部 M1 检查点及 optimizer 状态 | [主体摘要](backup_receipts/core_backup_summary.json)、[归档索引](archive_manifest.json) |
+| 完整分析包、代码 bundle 与 P2 Base 底座补充 | B2 上传及全量独立回读通过，20 个对象 | `b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/`；[补充回读收据](backup_receipts/supplement_restore_verification.json) |
+| GitHub 代码 | 已推送并核验远端 commit `fcd056414fd148425940d76c845b39e0ec14e381` | [代码分支](https://github.com/af-74413592/delta-ngram/tree/codex/raw-text-training)；[Git bundle 恢复核验](backup_receipts/code_bundle_restore_verification.json) |
+
+100M 主权重 SHA256 为 `20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d`；65M 次权重为 `86b044f39eea131f5b8120133f80e22e181ccbc8c93540e51f22e3404d4b1b71`。仅有 writer 权重不能替代包含 optimizer、sampler、计数和 RNG 的完整训练恢复点。Python/CUDA 环境记录了版本与包清单，未归档全部安装包。
+
+补充包的代码快照固定为 `fcd056414fd148425940d76c845b39e0ec14e381`；本报告、恢复说明与最终回读收据在后续 Git 提交中保存。补充回读收据产生于封存之后，因此不在自身所验证的 B2 包内。[封口原件](backup_receipts/supplement_COMPLETE.json)保留封存时的 `b2_restore_verified=false`，最终成功状态由上述独立回读收据证明，不回写封存文件。新增 full-context 参照的执行与归档状态须另行记录。
 
 ### 10.3 CPU 复算入口
 
@@ -341,7 +365,7 @@ python delta-ngram/scripts/analyze_m1_dev64_curve_20261020.py --no-figures
 
 要求 Python 3.11 或更高版本；历史数值分析使用标准库，DEV64 数值分析另需 NumPy。可选重绘需要 Matplotlib，中文历史图还需本机提供中文字体。脚本会重写解压副本中的派生输出，保留原始评测输入。
 
-依赖边界如下。历史容量与权重位移所需的六项外部输入，其预期恢复相对路径和 SHA256 见成员清单的 `external_inputs`。DEV64 的源文章与 token 身份见包内 `dev64_data/capacity_scope_note.json` 和原始评测 manifest；完整下载对象待 B2 恢复索引补齐：
+依赖边界如下。历史容量与权重位移所需的六项外部输入，其预期恢复相对路径和 SHA256 见成员清单的 `external_inputs`。DEV64 的源文章与 token 身份见包内 `dev64_data/capacity_scope_note.json` 和原始评测 manifest；这些外部输入已在主体 B2 备份中保存，下载对象与路径映射见[归档索引](archive_manifest.json)及[恢复说明](restore.md)：
 
 - 历史容量重放另需 `block_metrics.jsonl.gz` 和 `data_manifest.json` 两个大型原始文件。
 - writer 位移审计另需 65M/100M 的 writer 与 training 权重、PyTorch，并调整原脚本路径。
