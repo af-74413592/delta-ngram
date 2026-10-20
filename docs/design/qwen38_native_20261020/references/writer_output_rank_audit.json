@@ -1,0 +1,16 @@
+{
+  "checkpoint_sha256": "20b2bef8788d6c3c5c65e22eef3646d220aea01905193d42e99028e19b7f8c1d",
+  "W_shape": [
+    1024,
+    128
+  ],
+  "rank_W_float64": 128,
+  "rank_W_plus_bias_float64": 129,
+  "min_singular_value_W": 0.10645387405344105,
+  "bias_norm": 0.694875886537923,
+  "bias_outside_W_columnspace_norm": 0.41689398738571554,
+  "affine_target_dimension_bound": 128,
+  "zero_initialized_D1_state_linear_span_dimension_bound": 129,
+  "scope": "Fixed checkpoint; zero initial delta; scalar-gated D1 averages. This is a per-row output-subspace constraint, not total memory information capacity and not proof of the cause of verbatim recall weakness.",
+  "runtime": "CPU only; no forward inference or training"
+}

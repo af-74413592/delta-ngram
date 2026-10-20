@@ -1,0 +1,36 @@
+{
+  "scope": "Read-only research references and CPU audit; not imported by runtime.",
+  "source_document": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\research\\qwen38_delta_writer_architecture_20261020.md",
+  "files": [
+    {
+      "path": "references/config.json",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_tokenizer_audit\\config.json",
+      "bytes": 4745,
+      "sha256": "889658f2508e8c61d409b02e70e0d78d8d4452ec65aaafbe129805d213d2e74b"
+    },
+    {
+      "path": "references/ple.py",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_swift_source\\ple.py",
+      "bytes": 35445,
+      "sha256": "dbd02fac13bfb2134d3ae0110a56a1a9581f18b01a1efe3dcdbc9515de3f4b86"
+    },
+    {
+      "path": "references/official_model_gpts_qwen4_exp.py",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_swift_source\\official_model_gpts_qwen4_exp.py",
+      "bytes": 46734,
+      "sha256": "9f5c059368caffc1ed781089e8b5220db73a737ba44c8711a932bd05f107a399"
+    },
+    {
+      "path": "references/delta_ngram_writer_review_20261020.md",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\research\\delta_ngram_writer_review_20261020.md",
+      "bytes": 8922,
+      "sha256": "a61443b4ea67d51ec656cb704db575472008bf4028ffbd1d8ca10c403c326ca1"
+    },
+    {
+      "path": "references/writer_output_rank_audit.json",
+      "original_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\m1_analysis_20261020\\diagnostics\\writer_output_rank_audit.json",
+      "bytes": 728,
+      "sha256": "78c20ca0e3090b7c0c4240330723b2057ac987c1b45eb785fc62a0afa42a9f25"
+    }
+  ]
+}
