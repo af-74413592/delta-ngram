@@ -9,7 +9,7 @@
     "failed_dev64_checkpoints": 0,
     "final_evaluation_run": false,
     "native_prototype_included_in_results": false,
-    "dev64_full_context_reference_status": "pending_execution_and_incremental_archive"
+    "dev64_full_context_reference_status": "complete_incremental_archive_pending"
   },
   "analysis_bundle": {
     "filename": "m1_analysis_bundle_20261020.zip",
@@ -26,7 +26,7 @@
   },
   "object_storage": {
     "status": "verified",
-    "verification_scope": "Existing sealed core and supplement only; excludes the pending DEV64 full-context reference and its future incremental archive.",
+    "verification_scope": "Existing sealed core and supplement only; excludes the completed DEV64 full-context reference whose incremental archive is pending.",
     "core_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/",
     "supplement_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/",
     "analysis_bundle_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/analysis/m1_analysis_bundle_20261020.zip",

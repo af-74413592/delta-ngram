@@ -32,4 +32,5 @@ docs/reports/*
 !docs/reports/m1_20261020/**
 !docs/design/qwen38_native_20261020/references/*manifest.json
 !scripts/archive/m1_20261020/provenance_manifest.json
+!scripts/archive/m1_context_20261020/provenance_manifest.json
 

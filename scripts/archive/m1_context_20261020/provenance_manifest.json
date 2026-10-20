@@ -1,0 +1,35 @@
+{
+  "scope": "Historical one-shot DEV64 context deployment, transfer, packaging and backup helpers; executed/staged paths remain explicit.",
+  "members": [
+    {
+      "filename": "deploy_dev64_context_20261020.py",
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\deploy_dev64_context_20261020.py",
+      "bytes": 4415,
+      "sha256": "e8476cee022eada12b4afce1d8dcd703315abb1235b177499d26be466a16378b"
+    },
+    {
+      "filename": "pull_dev64_context_results_20261020.py",
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\pull_dev64_context_results_20261020.py",
+      "bytes": 6735,
+      "sha256": "8bae831ca3687e2b9c2b3ddd27d3e60b56ce99e9ffa6860e26cc09ee48b0736b"
+    },
+    {
+      "filename": "package_dev64_context_addon_20261020.py",
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\package_dev64_context_addon_20261020.py",
+      "bytes": 6070,
+      "sha256": "98a733720d930bfd790bc6f2e15235557bf0c7a17ca1a3275b3aecdfa3503633"
+    },
+    {
+      "filename": "stage_dev64_context_backup_20261020.py",
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\stage_dev64_context_backup_20261020.py",
+      "bytes": 13605,
+      "sha256": "0e1a9b8dd8f4c5b6a03f62748b7e624520cec1457ef3c7b9955560967e9113ea"
+    },
+    {
+      "filename": "verify_context_backup_20261020.py",
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram-runs\\multidomain_launch_20261019\\verify_context_backup_20261020.py",
+      "bytes": 6941,
+      "sha256": "495da3ca1fc7b809c70951b00d7dc3a587d9e7049f14d1bafe0db96f0e189960"
+    }
+  ]
+}

@@ -5,4 +5,5 @@
 *.md text eol=lf
 *.sh text eol=lf
 docs/reports/m1_20261020/backup_receipts/** -text
+docs/reports/m1_20261020/context_data/** -text
 
