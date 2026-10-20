@@ -4,7 +4,7 @@
 
 **当前状态：代码组件与 CPU 正确性已验证；完整原生模型的 hook、分布式梯度与真实读出扰动尚未验收。本文的结构选择是实现方案，尚无原生训练收益结果。**
 
-**代码隔离：已训练 M1 使用的 `writer.py`、`batching.py`、`alpha_memory.py` 保持原版本。原生适配单列在 `qwen38_writer.py` 和 `qwen38_native.py`，没有接入 M1 训练或评测入口。**
+**代码隔离：已训练 M1 使用的 `writer.py`、`batching.py`、`alpha_memory.py` 保持原版本。原生 writer、地址适配、PLE hook 和梯度桥分别位于 `qwen38_writer.py`、`qwen38_native.py`、`qwen38_adapter.py`、`qwen38_training.py`。四卡运行入口独立放在 `scripts/native_qwen38/`。**
 
 ## 1. 架构图
 
@@ -27,6 +27,7 @@
 |---|---|
 | 模型 | `Qwen/Qwen3.8-Flash-Next`，项目登记 revision `de4b8e4d43b917e7706784d8bb445c9af86a3540`；运行时另核对权重指纹 |
 | writer 输入 H | HC mixer 收缩后、LM head 之前的 2560 维张量，detach |
+| writer 输入归一化 | 参数无关 RMSNorm，epsilon=1e-6；两条 α 分支共用 |
 | HC 残差宽度 | `4 × 2560 = 10240`；不能误作 writer 输入 |
 | 特殊点 | 该模型没有独立 final layernorm；HC norms 与 mixer 承担末端处理 |
 | 原生 PLE | config 中 `ple_layer_ids=[2]` |
@@ -59,7 +60,7 @@ s_h^{new}=s_h^{old}\,
      {\operatorname{RMS}(v_h)}.
 \]
 
-它令这批校准证据上的目标 RMS 等于基表 RMS 的指定比例 ρ；不读取后续答案。T⁰ 必须先应用 checkpoint 的 `weight_scale`，不能对原始 FP8 编码直接算尺度。ρ 必须在真实原生启动前登记，当前没有用合成测试的 `0.01` 冒充已选定的实验值。
+它令这批校准证据上的目标 RMS 等于基表 RMS 的指定比例 ρ；不读取后续答案。T⁰ 使用实际有效行值：本次固定 revision 的 PLE 权重已核实为 BF16，可直接计算；量化 checkpoint 才需要先反量化并应用其 scale。ρ 必须在优化前登记。本次真实训练侧观测后的短测候选固定为 `0.01`，仍须通过初始扰动和梯度检查。
 
 这只校准**目标向量尺度**。D1 的实际首块变化还乘门控，并对碰撞事件平均；原生 key normalization、门控和卷积又会改变响应。因此还需测量真实 PLE 输出增量与初始 Δ_empty，不能把目标 RMS 比例等同于主干扰动比例。两条 α 分支必须共享同一校准结果。
 
@@ -148,7 +149,9 @@ writer 的目标只依赖未打补丁的 H，但门控读取旧 Δ，因此状�
 
 隔离后的相关 **94 项 CPU 测试通过**。包含已执行 D1 的 golden fixture：初始化 RNG、参数 keys/值、两次写入与梯度逐项一致；原生路径单独比较 dense concat reference 与共享投影的前向、参数梯度和旧状态梯度。完整模型运行没有包含在这些测试里。
 
-真实原生验收仍需将“native hash 输出 → lookup overlay → 原生 PLE”的接口安装到指定版本运行时，核对前缀/EOS/cache、重算、多卡通信与梯度；并用真实 T⁰ 完成尺度登记与前向检查。旧 `reader.backend=native` 的通用加载入口仍未接通，不能据本次组件测试宣布原生训练已经可启动。
+2026-10-20 已在固定版本运行时的四张 H200 上完成原生接口预检：空状态保持原输出，原生地址/EOS 检查通过，梯度可经过 lookup overlay 返回。原生 TP scatter/gather 的两处伴随重建误差均为 0，应使用各 TP rank 上已完整的 replica 梯度，不再重复求和。真实 PLE 权重与输入的 12 个局部环节、3 个整链方向均通过 FP64 参考有限差分；原生 BF16 输入梯度与参考的相对 L2 误差约 0.006946，余弦约 0.999976。早先整模型 BF16 有限差分仍保留为未通过验收，不由参考结果替代。
+
+目前另有两个独立问题：grad/no_grad 前向不一致，以及初始小 Δ 被 lookup 的 BF16 舍入扭曲。单独将两个 HC helper 改为 eager 未消除前者；所有已执行检查都关闭了 PLE 融合核。主评测暂定与训练一致的开梯度前向、不做反传，并单独核对真实训练 schedule 的前向。读取精度修复和 writer 反传核对完成前不启动优化。最终读取实现确定后，重算证据 H 与每头尺度，旧缓存仅作历史诊断。旧 `reader.backend=native` 的通用加载入口仍未接通。运行边界与当前状态见 [native runtime guide](../../../scripts/native_qwen38/README.md)。
 
 ### 本地一手依据
 

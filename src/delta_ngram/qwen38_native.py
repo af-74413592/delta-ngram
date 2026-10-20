@@ -180,7 +180,8 @@ def calibrate_qwen38_target_scale(writer: NativeForwardWriter, hidden: Tensor,
     """Set per-head target RMS using arrived evidence and measured T0 RMS only.
 
     Run before optimization, identically for both alpha arms. T0 statistics
-    must use dequantized native rows, including the checkpoint weight_scale.
+    must use the effective native row values: BF16 directly, or dequantized
+    values including weight_scale when the checkpoint is quantized.
     This calibrates targets, not the nonlinear downstream PLE response.
     """
     if (writer.input_dim, writer.width, writer.num_heads) != (2560, 160, 16):

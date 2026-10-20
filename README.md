@@ -4,14 +4,18 @@ Persistent sparse memory for frozen language models. A learned writer converts
 arrived evidence into row targets and gates; a pure update operator changes the
 explicit memory. Queries read snapshots through the frozen model.
 
-**Current scope:** an external n-gram hash table with an implicit zero base and
-fixed residual injection. The native pretrained-table adapter is **not
-implemented**; `reader.backend: native` raises `NotImplementedError`.
+**Current scope:** the M1 runner uses an external n-gram hash table with an
+implicit zero base and fixed residual injection. A separate Qwen3.8 native
+PLE adapter and writer-gradient bridge support the pinned Megatron runtime.
+The generic M1 `reader.backend: native` entry point remains unsupported.
 
 The [M1 experiment report](docs/reports/m1_20261020/report.md) records the
 100M budget endpoint, all 21 DEV64 checkpoints, analysis, and recovery index.
-The separate [Qwen3.8 native writer prototype](docs/design/qwen38_native_20261020/architecture.md)
-has CPU component validation; its full-model integration is still pending.
+The [Qwen3.8 native writer](docs/design/qwen38_native_20261020/architecture.md)
+has passed the four-H200 frozen-reader interface preflight. Its bounded
+normalization experiment is in preparation; optimizer training remains gated
+on numerical gradient checks. See the [native runtime guide](scripts/native_qwen38/README.md)
+for code boundaries, launch prerequisites, and current validation status.
 
 ## Install and run
 
