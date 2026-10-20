@@ -1,0 +1,700 @@
+{
+  "protocol": "qwen38_native_exact_B3_reader_repeat_diagnostic_v1",
+  "status": "four_reader_calls_completed",
+  "first_query_wave": 1,
+  "group_denominator": 33397,
+  "global_targets_per_query": 5632,
+  "assignment": [
+    [
+      7,
+      5,
+      11
+    ],
+    [
+      8,
+      4,
+      10
+    ],
+    [
+      0,
+      2,
+      6
+    ],
+    [
+      1,
+      3,
+      9
+    ]
+  ],
+  "group_identity_sha256": "8a2e7fab2dc006c3e57c22476f8603b1335d348989d9c72df630f111f252d81d",
+  "budget": {
+    "protocol": "qwen38_native_reader_diagnostic_ledger_v1",
+    "prior_optimizer_target_accesses": 1468915,
+    "prior_diagnostic_target_accesses": 14564,
+    "total_optimizer_target_accesses": 1468915,
+    "total_diagnostic_target_accesses": 37092,
+    "trial_optimizer_targets_dispatched": 0,
+    "trial_diagnostic_targets_dispatched": 22528,
+    "trial_diagnostic_targets_completed": 22528,
+    "optimizer_updates": 0,
+    "failed_or_partial_dispatches_are_not_refunded": true
+  },
+  "first_three_bitwise_repeatable": false,
+  "first_three_cotangents_within_existing_tolerance": false,
+  "fourth_call_delta_sensitivity_interpretable": false,
+  "small_buffer_hash_limit_each_bytes": 1048576,
+  "small_buffer_hash_limit_total_bytes": 16777216,
+  "optimizer_updates": 0,
+  "training_state_saved": false,
+  "tensor_artifacts_saved": false,
+  "formal_checkpoint_unchanged": true,
+  "calls": [
+    {
+      "call": 1,
+      "global_targets": 5632,
+      "global_loss_sum": 9182.678955078125,
+      "input_fingerprints": [
+        {
+          "rank": 0,
+          "input_leaf_sha256": "f27f1cf707ea23f8eab86002f41de1a2d9128ec22e1489d221eef29c3a10b2b7",
+          "structure_sha256": "b66ca4ecd7f7711399d79686768327199e0ac459b6424749bda55204c184fe1b",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 1,
+          "input_leaf_sha256": "dcefb2a491f52acf1e8845d80cda6c70de66b9ef3178c8285c1c1fcd06d557c7",
+          "structure_sha256": "9172b85fb668471b21eb735c58ff1d9c7a4fb722bd5f4b4e6ec94255eaab81c4",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 2,
+          "input_leaf_sha256": "292ae255127b1b50f1f4a2feb8a5054d78098bf61de6333a29b7a0be2158b1ef",
+          "structure_sha256": "50802d2ec983f25e02ab86d6a79c964a732efe36b1f76172dc08c43c83d2c587",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 3,
+          "input_leaf_sha256": "ccddc73556e32d89efbea46286ffc9d68e6ac73312389a731423e3f0a1255128",
+          "structure_sha256": "bcc285c8f225b4c30ea7f8f68314c594e44b6cbf431ade233664f7855f1407b3",
+          "same_original_leaf_object": true
+        }
+      ],
+      "buffer_changes": [
+        {
+          "rank": 0,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 1,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 2,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 3,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        }
+      ],
+      "routing_summary": {
+        "changed_rank_layer_maps": 0,
+        "changed_layer_token_rows": 0,
+        "first_changed_map_each_rank": [
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "call": 2,
+      "global_targets": 5632,
+      "global_loss_sum": 9182.678955078125,
+      "input_fingerprints": [
+        {
+          "rank": 0,
+          "input_leaf_sha256": "f27f1cf707ea23f8eab86002f41de1a2d9128ec22e1489d221eef29c3a10b2b7",
+          "structure_sha256": "b66ca4ecd7f7711399d79686768327199e0ac459b6424749bda55204c184fe1b",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 1,
+          "input_leaf_sha256": "dcefb2a491f52acf1e8845d80cda6c70de66b9ef3178c8285c1c1fcd06d557c7",
+          "structure_sha256": "9172b85fb668471b21eb735c58ff1d9c7a4fb722bd5f4b4e6ec94255eaab81c4",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 2,
+          "input_leaf_sha256": "292ae255127b1b50f1f4a2feb8a5054d78098bf61de6333a29b7a0be2158b1ef",
+          "structure_sha256": "50802d2ec983f25e02ab86d6a79c964a732efe36b1f76172dc08c43c83d2c587",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 3,
+          "input_leaf_sha256": "ccddc73556e32d89efbea46286ffc9d68e6ac73312389a731423e3f0a1255128",
+          "structure_sha256": "bcc285c8f225b4c30ea7f8f68314c594e44b6cbf431ade233664f7855f1407b3",
+          "same_original_leaf_object": true
+        }
+      ],
+      "buffer_changes": [
+        {
+          "rank": 0,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 1,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 2,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 3,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        }
+      ],
+      "versus_call1": {
+        "selected_per_token_CE": {
+          "parts": 4,
+          "elements": 5632,
+          "reference_l2": 216.4967371322994,
+          "candidate_l2": 216.4967371322994,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        },
+        "leaf_cotangent": {
+          "parts": 4,
+          "elements": 12121440,
+          "reference_l2": 0.07940386418258887,
+          "candidate_l2": 0.07957894479940172,
+          "difference_l2": 0.0017024410740667747,
+          "relative_l2": 0.021440279910710874,
+          "cosine": 0.9997730884010662,
+          "max_abs": 5.550251808017492e-05,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": false
+        },
+        "full_final_H": {
+          "parts": 4,
+          "elements": 19660800,
+          "reference_l2": 16264.183064869478,
+          "candidate_l2": 16264.183064869478,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        },
+        "valid_final_H": {
+          "parts": 4,
+          "elements": 18022400,
+          "reference_l2": 15152.586122751578,
+          "candidate_l2": 15152.586122751578,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        },
+        "leaf_values": {
+          "parts": 4,
+          "elements": 12121440,
+          "reference_l2": 10.39921746706092,
+          "candidate_l2": 10.39921746706092,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        }
+      },
+      "cotangent_within_existing_gradient_tolerance": false,
+      "routing_summary": {
+        "changed_rank_layer_maps": 0,
+        "changed_layer_token_rows": 0,
+        "first_changed_map_each_rank": [
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "call": 3,
+      "global_targets": 5632,
+      "global_loss_sum": 9182.678955078125,
+      "input_fingerprints": [
+        {
+          "rank": 0,
+          "input_leaf_sha256": "f27f1cf707ea23f8eab86002f41de1a2d9128ec22e1489d221eef29c3a10b2b7",
+          "structure_sha256": "b66ca4ecd7f7711399d79686768327199e0ac459b6424749bda55204c184fe1b",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 1,
+          "input_leaf_sha256": "dcefb2a491f52acf1e8845d80cda6c70de66b9ef3178c8285c1c1fcd06d557c7",
+          "structure_sha256": "9172b85fb668471b21eb735c58ff1d9c7a4fb722bd5f4b4e6ec94255eaab81c4",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 2,
+          "input_leaf_sha256": "292ae255127b1b50f1f4a2feb8a5054d78098bf61de6333a29b7a0be2158b1ef",
+          "structure_sha256": "50802d2ec983f25e02ab86d6a79c964a732efe36b1f76172dc08c43c83d2c587",
+          "same_original_leaf_object": true
+        },
+        {
+          "rank": 3,
+          "input_leaf_sha256": "ccddc73556e32d89efbea46286ffc9d68e6ac73312389a731423e3f0a1255128",
+          "structure_sha256": "bcc285c8f225b4c30ea7f8f68314c594e44b6cbf431ade233664f7855f1407b3",
+          "same_original_leaf_object": true
+        }
+      ],
+      "buffer_changes": [
+        {
+          "rank": 0,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 1,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 2,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 3,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        }
+      ],
+      "versus_call1": {
+        "selected_per_token_CE": {
+          "parts": 4,
+          "elements": 5632,
+          "reference_l2": 216.4967371322994,
+          "candidate_l2": 216.4967371322994,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        },
+        "leaf_cotangent": {
+          "parts": 4,
+          "elements": 12121440,
+          "reference_l2": 0.07940386418258887,
+          "candidate_l2": 0.07950692005683639,
+          "difference_l2": 0.0014640907010446264,
+          "relative_l2": 0.01843853213085393,
+          "cosine": 0.9998310717462605,
+          "max_abs": 2.9732358598266728e-05,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": false
+        },
+        "full_final_H": {
+          "parts": 4,
+          "elements": 19660800,
+          "reference_l2": 16264.183064869478,
+          "candidate_l2": 16264.183064869478,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        },
+        "valid_final_H": {
+          "parts": 4,
+          "elements": 18022400,
+          "reference_l2": 15152.586122751578,
+          "candidate_l2": 15152.586122751578,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        },
+        "leaf_values": {
+          "parts": 4,
+          "elements": 12121440,
+          "reference_l2": 10.39921746706092,
+          "candidate_l2": 10.39921746706092,
+          "difference_l2": 0.0,
+          "relative_l2": 0.0,
+          "cosine": 1.0,
+          "max_abs": 0.0,
+          "bitwise_equal": true,
+          "allclose_rtol1e-6_atol1e-7": true
+        }
+      },
+      "cotangent_within_existing_gradient_tolerance": true,
+      "routing_summary": {
+        "changed_rank_layer_maps": 0,
+        "changed_layer_token_rows": 0,
+        "first_changed_map_each_rank": [
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "call": 4,
+      "global_targets": 5632,
+      "global_loss_sum": 9183.5361328125,
+      "input_fingerprints": [
+        {
+          "rank": 0,
+          "input_leaf_sha256": "f70d917ad5177a46c6ec1e6c93414378bfd9ff6e806a3496783b29b77d5f7b8b",
+          "structure_sha256": "b66ca4ecd7f7711399d79686768327199e0ac459b6424749bda55204c184fe1b",
+          "same_original_leaf_object": false
+        },
+        {
+          "rank": 1,
+          "input_leaf_sha256": "73af4236c110c37d4a8d242bf9e68c61a5b97bc9cffcd7f00fb9e7dfcfe30689",
+          "structure_sha256": "9172b85fb668471b21eb735c58ff1d9c7a4fb722bd5f4b4e6ec94255eaab81c4",
+          "same_original_leaf_object": false
+        },
+        {
+          "rank": 2,
+          "input_leaf_sha256": "c885a1a714a76e788cddc1838066c23f2b2a3ffea99835b4f6c2e4863bef9400",
+          "structure_sha256": "50802d2ec983f25e02ab86d6a79c964a732efe36b1f76172dc08c43c83d2c587",
+          "same_original_leaf_object": false
+        },
+        {
+          "rank": 3,
+          "input_leaf_sha256": "d62e4ab1f3c7f2322c7dc3682f89b8321fae43049c89ecc9a35f9d52669e651b",
+          "structure_sha256": "bcc285c8f225b4c30ea7f8f68314c594e44b6cbf431ade233664f7855f1407b3",
+          "same_original_leaf_object": false
+        }
+      ],
+      "buffer_changes": [
+        {
+          "rank": 0,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 1,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 2,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        },
+        {
+          "rank": 3,
+          "changed_during_call": [],
+          "changed_from_first_call_start": [],
+          "version_changed": [],
+          "buffer_object_replaced": []
+        }
+      ],
+      "versus_call1": {
+        "selected_per_token_CE": {
+          "parts": 4,
+          "elements": 5632,
+          "reference_l2": 216.4967371322994,
+          "candidate_l2": 216.60845728892554,
+          "difference_l2": 6.899531134611611,
+          "relative_l2": 0.03186898438287023,
+          "cosine": 0.9994925789115466,
+          "max_abs": 1.3049259185791016,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": false
+        },
+        "leaf_cotangent": {
+          "parts": 4,
+          "elements": 12121440,
+          "reference_l2": 0.07940386418258887,
+          "candidate_l2": 0.07855150814775007,
+          "difference_l2": 0.022069419202067397,
+          "relative_l2": 0.2779388563674793,
+          "cosine": 0.9610141185495881,
+          "max_abs": 0.0006841403665021062,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": false
+        },
+        "full_final_H": {
+          "parts": 4,
+          "elements": 19660800,
+          "reference_l2": 16264.183064869478,
+          "candidate_l2": 16262.721774843105,
+          "difference_l2": 1021.5408522551978,
+          "relative_l2": 0.06280923229779176,
+          "cosine": 0.9980273269663407,
+          "max_abs": 22.7705078125,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": false
+        },
+        "valid_final_H": {
+          "parts": 4,
+          "elements": 18022400,
+          "reference_l2": 15152.586122751578,
+          "candidate_l2": 15151.017621459381,
+          "difference_l2": 1021.5408522551978,
+          "relative_l2": 0.0674169309436464,
+          "cosine": 0.9977272488075792,
+          "max_abs": 22.7705078125,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": false
+        },
+        "leaf_values": {
+          "parts": 4,
+          "elements": 12121440,
+          "reference_l2": 10.39921746706092,
+          "candidate_l2": 10.399217467055415,
+          "difference_l2": 5.143071118345875e-08,
+          "relative_l2": 4.945632817696461e-09,
+          "cosine": 1.0,
+          "max_abs": 1.862645149230957e-09,
+          "bitwise_equal": false,
+          "allclose_rtol1e-6_atol1e-7": true
+        }
+      },
+      "cotangent_within_existing_gradient_tolerance": false,
+      "routing_summary": {
+        "changed_rank_layer_maps": 188,
+        "changed_layer_token_rows": 43500,
+        "first_changed_map_each_rank": [
+          {
+            "rank": 0,
+            "layer": "language_model.decoder.layers.1.mlp.router#0",
+            "changed_token_rows": 2,
+            "changed_bits": 4
+          },
+          {
+            "rank": 1,
+            "layer": "language_model.decoder.layers.1.mlp.router#0",
+            "changed_token_rows": 4,
+            "changed_bits": 8
+          },
+          {
+            "rank": 2,
+            "layer": "language_model.decoder.layers.1.mlp.router#0",
+            "changed_token_rows": 1,
+            "changed_bits": 2
+          },
+          {
+            "rank": 3,
+            "layer": "language_model.decoder.layers.1.mlp.router#0",
+            "changed_token_rows": 8,
+            "changed_bits": 16
+          }
+        ]
+      }
+    }
+  ],
+  "runtime_config": {
+    "additional_router_config": {
+      "moe_router_force_load_balancing": false,
+      "moe_router_force_biased": null,
+      "moe_enable_routing_replay": false
+    },
+    "execution_config": {
+      "moe_token_dispatcher_type": "alltoall",
+      "moe_permute_fusion": true,
+      "moe_router_fusion": false,
+      "moe_grouped_gemm": true,
+      "moe_shared_expert_overlap": false,
+      "deterministic_mode": false,
+      "sequence_parallel": false,
+      "fp8": null
+    },
+    "torch_deterministic_algorithms": false,
+    "cudnn_deterministic": false,
+    "cudnn_benchmark": false,
+    "router_map_hooks": 48
+  },
+  "source_checkpoint_unchanged_verified": true,
+  "code": {
+    "scripts/native_qwen38/qwen38_native_ep4_trial.py": {
+      "bytes": 28008,
+      "sha256": "1759bb2a43b558577315957fde923dc84007c2799913365780d76a403ac58ab3"
+    },
+    "scripts/native_qwen38/qwen38_native_ep4_session.py": {
+      "bytes": 13061,
+      "sha256": "f9213c5a16c69f9bfa2bf9edbb36664abd50d1178b28178e9585dc6d4b9180bb"
+    },
+    "scripts/native_qwen38/qwen38_native_ep4_schedule.py": {
+      "bytes": 9214,
+      "sha256": "6e00d64f664e201f75485a95414348b68e897ab763516d8d2b27f4cb10c144af"
+    },
+    "scripts/native_qwen38/qwen38_native_train_batched.py": {
+      "bytes": 65936,
+      "sha256": "c201afff6b52e156c777e1f34cd05eae4d5f3e2583b32a13a86d3784cf56edfd"
+    },
+    "scripts/native_qwen38/qwen38_native_batched_schedule.py": {
+      "bytes": 18698,
+      "sha256": "262b68ffcc57c0eb3fab50f1886839e532efeb4e033b3f72dab837c9728398bb"
+    },
+    "scripts/native_qwen38/qwen38_native_frozen_session.py": {
+      "bytes": 10621,
+      "sha256": "0373b66255dbd7d6b876ba91090fe5af156b76f2cb24fb3e13c9ba5dd710e802"
+    },
+    "scripts/native_qwen38/qwen38_native_runtime_preflight.py": {
+      "bytes": 42134,
+      "sha256": "9e47920b432e4c7b7659bd0069b385227c3c3c50e319398407b37430856254c2"
+    },
+    "scripts/native_qwen38/qwen38_native_norm_probe.py": {
+      "bytes": 35053,
+      "sha256": "26eae826f181af5a0c92bba744511a1533a8127287b7fc4165bbce20c0fb25a6"
+    },
+    "scripts/native_qwen38/qwen38_native_dispatch.py": {
+      "bytes": 5768,
+      "sha256": "81eee204e7466817706bcd49710439a1ffa99d916763561a94007c48188d1e7d"
+    },
+    "scripts/native_qwen38/qwen38_native_router.py": {
+      "bytes": 3261,
+      "sha256": "90086da11a565dab1157a6f8719db7a127f6297d930beed1ef5e05d0d0d5faea"
+    },
+    "scripts/native_qwen38/qwen38_native_bounded_checks.py": {
+      "bytes": 8125,
+      "sha256": "d2cdee8f4daed3690174d24528f5bb4298d7b5bba6178298bc64f751271d8d58"
+    },
+    "src/delta_ngram/qwen38_ep4_batching.py": {
+      "bytes": 7995,
+      "sha256": "f1562220669073ffdea6ab54b28e2c88f8597189232a22e86bf656ce2152439e"
+    },
+    "src/delta_ngram/qwen38_train_batching.py": {
+      "bytes": 11589,
+      "sha256": "a4b5125828047429012208e3a9245be929438503448df2a54d8a494c9c4116c1"
+    },
+    "src/delta_ngram/qwen38_train_data.py": {
+      "bytes": 13784,
+      "sha256": "159d2f743dfd95585875db1d9e017a080dc41849cbb533a12f913743f79c167e"
+    },
+    "src/delta_ngram/qwen38_training.py": {
+      "bytes": 28736,
+      "sha256": "6ac8303a87f15bb3d6d7ab100097b95d3906f0a988d21f7c506bd6284db22bad"
+    },
+    "src/delta_ngram/qwen38_native.py": {
+      "bytes": 11405,
+      "sha256": "c98eabd958f49ff1143743b6cfab75c134c790abd4b0f7f34dcbaf8acfd0d33a"
+    },
+    "src/delta_ngram/qwen38_adapter.py": {
+      "bytes": 15099,
+      "sha256": "ebef7c6353da1b5cc2e9cfd0c8874242f11af821cc39cc5c49352cf2fefb00a6"
+    },
+    "src/delta_ngram/qwen38_precision.py": {
+      "bytes": 15427,
+      "sha256": "6a2a1a01dd23649fc15c31b9782f6bc5d7a9c8cd23608f675830595939c69c80"
+    },
+    "src/delta_ngram/qwen38_writer.py": {
+      "bytes": 9056,
+      "sha256": "6930bc0105fde8052543f39a71070ae45183e4dcba5897cedeb5e75ff27c1b26"
+    },
+    "src/delta_ngram/qwen38_probe.py": {
+      "bytes": 13910,
+      "sha256": "55b32a1bfffbc52808a58055fc078a4cbf957d5e5776a86eee125c600e3d6bfe"
+    },
+    "src/delta_ngram/alpha_memory.py": {
+      "bytes": 25167,
+      "sha256": "59c136462c3cb8355a43083cde634a31a8bb2c320fc65e9c7a6a0438a71a7f26"
+    },
+    "src/delta_ngram/batching.py": {
+      "bytes": 11405,
+      "sha256": "1ae96443d8404b95bdd3dea367fb9498c5410ae6f211ea1a07de4b872e0a8f16"
+    },
+    "src/delta_ngram/state.py": {
+      "bytes": 8278,
+      "sha256": "45a3fb7fffebd85f57305017723c3226f507f9e2f227a419d3e627f2b2e70278"
+    },
+    "src/delta_ngram/operators.py": {
+      "bytes": 10513,
+      "sha256": "051cc2143f0479295037d21aa5282891df05d1214b5282b5f77464f1f8c0b689"
+    },
+    "src/delta_ngram/raw_corpora.py": {
+      "bytes": 3608,
+      "sha256": "319d9b3a6c6c53eee21c0d748abab7aec61ea8aa401b6331d109677956538f79"
+    },
+    "src/delta_ngram/data/raw_text.py": {
+      "bytes": 24463,
+      "sha256": "6b02c1d47c770f45ea7ac087419e4d3c8813057d213ee254b305150103a209fc"
+    },
+    "src/delta_ngram/data/event_streams.py": {
+      "bytes": 24077,
+      "sha256": "74ff0bb186f5f9d2076bb0622b707ddfae0113bf4a96ac3fbf83d70b41ee9cb4"
+    },
+    "scripts/native_qwen38/qwen38_native_reader_repeat_diagnostic.py": {
+      "bytes": 30158,
+      "sha256": "79720280873a97a34de1d3423804c5ff7203f71bea13bd8bfbd7ffad361e4ff4"
+    },
+    "scripts/native_qwen38/qwen38_native_staged_diagnostic.py": {
+      "bytes": 38217,
+      "sha256": "1faee05b44281bc5606b9e44dffd0b84949e832066370e976ffd9492556f6384"
+    },
+    "scripts/native_qwen38/qwen38_native_staged_trial.py": {
+      "bytes": 39287,
+      "sha256": "12a36b629133a6dbceb689e3aeb6abbeb0ee66977904cb17e2a904c5c090cb02"
+    },
+    "scripts/native_qwen38/qwen38_native_staged_schedule.py": {
+      "bytes": 11904,
+      "sha256": "a67a38dbb7196391b896331cbfe406bc2bb7c70d51895dd1d9151892e8696a9d"
+    },
+    "src/delta_ngram/qwen38_staged_batching.py": {
+      "bytes": 7833,
+      "sha256": "fb7e2a9a00db33ad76c868b71924366890a1bc61d48dd09f27d71260210651fa"
+    }
+  },
+  "receipt_archive_sha256": "a4102128203ce5657a50ae7fd20574f4524ca85574f8ad61360c6712a935925c",
+  "interpretation": "Exact repeated input has bitwise identical per-token CE, final H and routes, with about 1.8-2.1 percent leaf-cotangent variation. Rebuilding delta from the same H changed delta by about 1.9e-9 and changed forward/routes, with 27.8 percent cotangent difference. That call also allocated a new leaf: a separate same-leaf value-toggle control is required before attributing the forward change to values alone."
+}

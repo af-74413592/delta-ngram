@@ -12,9 +12,11 @@ The generic M1 `reader.backend: native` entry point remains unsupported.
 The [M1 experiment report](docs/reports/m1_20261020/report.md) records the
 100M budget endpoint, all 21 DEV64 checkpoints, analysis, and recovery index.
 The [Qwen3.8 native writer](docs/design/qwen38_native_20261020/architecture.md)
-has passed the four-H200 frozen-reader interface preflight. Its bounded
-normalization experiment is in preparation; optimizer training remains gated
-on numerical gradient checks. See the [native runtime guide](scripts/native_qwen38/README.md)
+has passed the four-H200 frozen-reader interface preflight. The current run
+trains fresh alpha=1 and alpha=.99 arms with EP4 and four-stage scheduling,
+saving and evaluating fixed DEV64 at each arm's 20M milestones before switching.
+The user waived the remaining numerical launch gates; historical failures and
+unverified checks remain recorded. See the [native runtime guide](scripts/native_qwen38/README.md)
 for code boundaries, launch prerequisites, and current validation status.
 
 ## Install and run

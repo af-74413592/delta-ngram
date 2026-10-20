@@ -1,0 +1,220 @@
+{
+  "protocol": "qwen38_native_staged_schedule_user_adoption_v3",
+  "recorded_date": "2026-10-20",
+  "status": "training_first_three_groups_completed",
+  "authorization": {
+    "source": "explicit_user_instruction",
+    "prior_instruction": "新调度直接跑完整100M，不要验证了已经很晚",
+    "latest_instruction": "不用第47组接续，从头来吧",
+    "latest_instruction_summary": "Both alpha arms restart from the same seed17 initial writer and fixed calibrated scale with fresh AdamW, sampler and RNG. Each saves and evaluates fixed DEV64 at its own 20M, 40M and subsequent 20M model-target milestones, then switches arms; both share the existing 100M optimizer-target access cap including prior consumption.",
+    "adopt_staged_schedule": true,
+    "run_to_shared_optimizer_target_cap": true,
+    "additional_schedule_validation_cancelled": true,
+    "DEV64_milestone_evaluation_authorized": true
+  },
+  "acceptance_deviation": {
+    "original_single_group_gradient_gate": {
+      "maximum_relative_l2": 0.02,
+      "minimum_cosine": 0.999
+    },
+    "decision": "waive_this_gate_as_a_requirement_for_formal_staged_training",
+    "historical_failures_preserved": true,
+    "historical_failures_reclassified_as_passes": false,
+    "replacement_numeric_threshold": null,
+    "numerical_equivalence_established": false,
+    "zero_mean_noise_established": false,
+    "harmless_noise_established": false,
+    "same_noise_distribution_established": false
+  },
+  "formal_continuation": {
+    "run_id": "main05",
+    "launch_pid": 67307,
+    "started_utc": "2026-10-20T13:13:23.349768+00:00",
+    "training_launched": true,
+    "runner": "scripts/native_qwen38/qwen38_native_train_staged_alternating.py",
+    "runner_sha256": "eaf6fd988a77328fc658f426f0145ad291cb29e324b4294c3049118382cca44e",
+    "launch_receipt": "qwen38_native_main05_launch_20261020.json",
+    "observed_completed_optimizer_groups": 3,
+    "observed_alpha100_model_targets": 61440,
+    "observed_alpha099_model_targets": 0,
+    "first_three_groups_seconds": 80.57149061199016,
+    "latest_joint_checkpoint_saved": true,
+    "DEV64_executed_at_launch": false,
+    "execution": "alternate_alpha_arms_after_each_per_arm_20M_model_target_milestone_and_DEV64_evaluation",
+    "initial_optimizer_step_per_arm": 0,
+    "initial_completed_model_targets_per_arm": 0,
+    "initialization_seed": 17,
+    "fresh_initialization_both_arms": true,
+    "source_checkpoint_role": "fixed_calibration_scale_and_corpus_identity_only",
+    "source_checkpoint_optimizer_step": 47,
+    "source_checkpoint_completed_model_targets": 1107675,
+    "restore_source_learned_writer_weights": false,
+    "restore_source_AdamW": false,
+    "restore_source_sampler": false,
+    "restore_source_RNG": false,
+    "source_checkpoint_retained": true,
+    "resume_from_short_trial_state": false,
+    "prior_short_trial_training_state_saved": false,
+    "checkpoint_policy": "save_joint_latest_after_each_complete_optimizer_group_and_archive_each_20M_per_arm_milestone_before_DEV64",
+    "milestone_model_targets_interval": 20000000,
+    "milestone_boundary": "last_complete_12_trajectory_group_at_or_below_the_next_per_arm_threshold; rollback_unscheduled_next_group",
+    "group_truncation_for_milestone": false,
+    "evaluation_controls_arm_selection_or_switch_order": false,
+    "terminal_budget_boundary": "save_joint_latest_and_final_archive; DEV64_only_if_a_registered_milestone_was_reached",
+    "arms": [
+      {
+        "name": "alpha100_rmsnorm",
+        "alpha": 1.0,
+        "source": "seed17_fresh_initial_writer_with_fixed_calibrated_target_scale",
+        "initial_optimizer_step": 0,
+        "initial_completed_model_targets": 0,
+        "writer_optimizer_sampler_and_RNG_resumed": false,
+        "independent_fresh_optimizer_sampler_and_RNG": true
+      },
+      {
+        "name": "alpha099_rmsnorm",
+        "alpha": 0.99,
+        "source": "seed17_fresh_initial_writer_with_the_same_fixed_calibrated_target_scale",
+        "initial_optimizer_step": 0,
+        "initial_completed_model_targets": 0,
+        "writer_optimizer_sampler_and_RNG_resumed": false,
+        "independent_fresh_optimizer_sampler_and_RNG": true
+      }
+    ],
+    "topology": {
+      "TP": 1,
+      "PP": 1,
+      "EP": 4,
+      "ETP": 1,
+      "DP": 4,
+      "CP": 1
+    },
+    "trajectories_per_group": 12,
+    "trajectories_per_rank": 3,
+    "evidence_microbatch_maximum": 12,
+    "query_microbatch_maximum": 4,
+    "writer": "existing_D1_architecture_with_seed17_fresh_parameters_and_fixed_calibrated_scale",
+    "alphas": [1.0, 0.99],
+    "evidence_preprocessing": "rmsnorm",
+    "gradient_contract": "complete_trajectory_writer_VJP_then_one_DP4_SUM_clip_and_AdamW_update",
+    "query_loss_denominator": "actual_global_group_target_tokens",
+    "trajectory_BPTT_truncated": false
+  },
+  "withdrawn_main04": {
+    "run_id": "main04",
+    "pid": 66264,
+    "started_utc": "2026-10-20T13:09:15Z",
+    "status": "terminated_during_model_loading_by_latest_user_instruction",
+    "signal": "SIGTERM",
+    "CE_target_accesses": 0,
+    "optimizer_updates": 0,
+    "DEV64_evaluations": 0,
+    "historical_budget_changed": false
+  },
+  "budget_carry_forward": {
+    "total_optimizer_target_accesses": 1468915,
+    "total_diagnostic_target_accesses": 59620,
+    "shared_optimizer_target_cap": 100000000,
+    "remaining_shared_optimizer_target_accesses": 98531085,
+    "total_DEV64_evaluation_target_accesses_at_launch": 0,
+    "discarded_trial_optimizer_accesses_retained": true,
+    "reset_budget_from_source_checkpoint": false,
+    "optimizer_interface_diagnostic_and_DEV64_evaluation_ledgers_separate": true,
+    "per_arm_100M_budget": false
+  },
+  "DEV64_evaluation": {
+    "prepare_entry": "scripts/native_qwen38/qwen38_native_dev64_prepare.py",
+    "prepare_entry_sha256": "0977aad794b375596527f33f6cd81d9c40a2521ea265f072709d3c8f2622dd63",
+    "source_registry_file_sha256": "9ea663ad70131e272522cbad8f6c0fa20bc03f41b324fe7b71d0fb8f4fbfccc2",
+    "source_annotations_file_sha256": "7164e9f8b6f23ebfeaaccc2687a6a8b6ad222803f705bacd1a203a2596fdbcce",
+    "native_tokenizer_fingerprint": "sha256:47a5ecb7efba199d03fdebf84bfffb685da70065ff76c4a160dd08c9bc4771ec",
+    "independent_event_families": 64,
+    "paired_articles": 128,
+    "background_articles": 18,
+    "data_preparation_status": "complete_CPU_only_zero_CE",
+    "deployment_cache_relative_path": "data/native_dev64",
+    "prepared_data_files": {
+      "COMPLETE.json": {
+        "bytes": 672,
+        "sha256": "2c28fe875fc00cd1fda528e8a66c1cbb7443f205cab9d42fc13d40851280a453"
+      },
+      "plan.json": {
+        "bytes": 1168752,
+        "sha256": "ab2b9abd82413a2de547a14bd0dd99587090b211c91c20599fd7e334b2522ed9"
+      },
+      "tokens.json": {
+        "bytes": 1359367,
+        "sha256": "4afff5d18894cdd214896180c8762ee080e7f16bc18526c7e74e4cb4fdba0a844"
+      }
+    },
+    "native_target_tokens_per_distance": 53593,
+    "actual_CE_target_accesses_per_complete_evaluation": 2197313,
+    "native_prefix_label_counts": {
+      "restated": 34,
+      "not_restated": 23,
+      "unknown": 7
+    },
+    "data_preparation_CE_targets": 0,
+    "fixed_donor_and_distractor_membership_preserved": true,
+    "derive_from_original_UTF8_text": true,
+    "decode_legacy_token_IDs_to_recover_text": false,
+    "interference_article_counts": [0, 1, 4, 8, 16],
+    "conditions": ["self", "empty", "donor", "self_perm", "donor_perm"],
+    "direction_control_seeds": [17, 29, 43],
+    "initial_native_prefix_tokens": 128,
+    "maximum_target_tokens_per_window": 384,
+    "all_remaining_later_article_targets_scored": true,
+    "target_article_memory_writes": false,
+    "CE_target_accesses_per_complete_evaluation": "41 * sum(native_later_article_token_count - 128)",
+    "budget_class": "separate_DEV64_evaluation_ledger",
+    "primary": "equal_family_mean_NLL_empty_minus_self_and_NLL_donor_minus_self",
+    "secondary": "pooled_token_NLL_and_first_target_window_benefit",
+    "legacy_prefix_labels_used_without_native_boundary_adaptation": false,
+    "native_prefix_label_policy": "retain_only_logically_sufficient_frozen_span_or_prefix_containment_evidence; otherwise_unknown",
+    "all_64_families_in_primary_metrics": true,
+    "FINAL_contents_accessed": false,
+    "evaluation_executed_before_training_launch": false
+  },
+  "completed_value_toggle_evidence": {
+    "targets_per_query_call": 5632,
+    "query_calls": 4,
+    "diagnostic_targets_added": 22528,
+    "optimizer_updates": 0,
+    "same_leaf_recomputed_values": {
+      "delta_max_abs": 1.862645149e-9,
+      "leaf_cotangent_relative_l2": 0.3155838,
+      "leaf_cotangent_cosine": 0.9495638,
+      "valid_final_H_relative_l2": 0.05429254,
+      "selected_per_token_CE_relative_l2": 0.03451983,
+      "rank_layer_routing_maps_changed": 188
+    },
+    "same_leaf_restored_original_values": {
+      "CE_H_and_routes_bitwise_equal_to_original": true,
+      "leaf_cotangent_relative_l2": 0.01847
+    },
+    "fresh_leaf_exact_original_values": {
+      "CE_H_and_routes_bitwise_equal_to_original": true,
+      "leaf_cotangent_relative_l2": 0.01826
+    },
+    "interpretation": "the_value_perturbation_triggers_this_forward_and_routing_change_without_requiring_a_new_leaf_allocation"
+  },
+  "root_cause_status": {
+    "D1_FP32_index_add": "candidate_only_not_empirically_isolated",
+    "candidate_location": "src/delta_ngram/operators.py:functional_d1",
+    "candidate_operation": "index_add(0, inverse, changes)",
+    "zero_CE_CUDA_reduction_probe_executed": false,
+    "zero_CE_CUDA_reduction_probe_execution": "cancelled_by_latest_user_instruction"
+  },
+  "cancelled_work": [
+    "zero_CE_CUDA_D1_reduction_probe_execution",
+    "25_group_comparison",
+    "additional_schedule_equivalence_validation"
+  ],
+  "superseded_decisions": {
+    "single_arm_run_to_budget": "replaced_by_two_alpha_milestone_alternation",
+    "development_set_evaluation_cancelled": "replaced_by_explicitly_authorized_DEV64_milestone_evaluation",
+    "alpha100_resume_from_step47": "replaced_by_explicit_user_request_to_fresh_initialize_both_arms_in_main05"
+  },
+  "validation_prerequisites_for_launch": [],
+  "report": "qwen38_native_staged_schedule_20261020.md"
+}

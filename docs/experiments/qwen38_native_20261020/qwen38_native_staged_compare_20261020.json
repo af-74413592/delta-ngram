@@ -1,0 +1,1441 @@
+{
+  "status": "implemented_but_paired_native_gradient_check_failed",
+  "protocol": "qwen38_native_four_stage_paired_trial_v1",
+  "source_optimizer_step": 47,
+  "source_model_targets": 1107675,
+  "fixed_group_count": 3,
+  "global_batch_trajectories": 12,
+  "evidence_local_batch_max": 12,
+  "query_local_batch_max": 4,
+  "first_use_compilation_included": true,
+  "timing_caution": "Several first-use batch shapes occur in both groups 1 and 2. Group 3 alone is not a general steady-state estimate. Evidence also skips the unused LM head.",
+  "all_pairs_within_registered_tolerances": false,
+  "groups": [
+    {
+      "trial_group": 1,
+      "group_loss_targets": 33397,
+      "group_identity_sha256": "8cfc3bc7b26128301d635a12a51d307b44b33d9df2f7dbfdcdb5dee6104fc9c1",
+      "first_use_batch_shapes": [
+        {
+          "branch": "reference",
+          "kind": "evidence",
+          "local_batch": 3,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        },
+        {
+          "branch": "reference",
+          "kind": "query",
+          "local_batch": 3,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        },
+        {
+          "branch": "staged",
+          "kind": "evidence",
+          "local_batch": 12,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        },
+        {
+          "branch": "staged",
+          "kind": "evidence",
+          "local_batch": 9,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        },
+        {
+          "branch": "staged",
+          "kind": "query",
+          "local_batch": 4,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        },
+        {
+          "branch": "staged",
+          "kind": "query",
+          "local_batch": 3,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        }
+      ],
+      "runtime": {
+        "reference": {
+          "seconds_max_rank": 75.92775684699882,
+          "peak_allocated_bytes": 106660304384,
+          "phases": [
+            {
+              "phase": "reference_interleaved_H_write_query_VJP",
+              "seconds_max_rank": 75.76335097799893,
+              "peak_allocated_bytes": 106660304384,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 75.75957876200118,
+                  "peak_allocated_bytes": 106660304384,
+                  "peak_reserved_bytes": 107346919424,
+                  "end_allocated_bytes": 71260476928
+                },
+                {
+                  "rank": 1,
+                  "seconds": 75.76335097799893,
+                  "peak_allocated_bytes": 105726311936,
+                  "peak_reserved_bytes": 106426269696,
+                  "end_allocated_bytes": 71227801088
+                },
+                {
+                  "rank": 2,
+                  "seconds": 75.72259718500209,
+                  "peak_allocated_bytes": 106028164608,
+                  "peak_reserved_bytes": 106617110528,
+                  "end_allocated_bytes": 71207901184
+                },
+                {
+                  "rank": 3,
+                  "seconds": 75.72461647700038,
+                  "peak_allocated_bytes": 105667827200,
+                  "peak_reserved_bytes": 106086531072,
+                  "end_allocated_bytes": 71207901184
+                }
+              ],
+              "query_and_evidence_local_batch": 3,
+              "evidence_LM_head_and_unused_logits_executed": true
+            },
+            {
+              "phase": "reference_DP_SUM_clip_AdamW",
+              "seconds_max_rank": 0.1601611039986892,
+              "peak_allocated_bytes": 71309391360,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.1601611039986892,
+                  "peak_allocated_bytes": 71309391360,
+                  "peak_reserved_bytes": 107346919424,
+                  "end_allocated_bytes": 71260476928
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.1573659370005771,
+                  "peak_allocated_bytes": 71276715520,
+                  "peak_reserved_bytes": 106426269696,
+                  "end_allocated_bytes": 71227801088
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.1572955980009283,
+                  "peak_allocated_bytes": 71256815616,
+                  "peak_reserved_bytes": 106617110528,
+                  "end_allocated_bytes": 71207901184
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.15730671400160645,
+                  "peak_allocated_bytes": 71256815616,
+                  "peak_reserved_bytes": 106086531072,
+                  "end_allocated_bytes": 71207901184
+                }
+              ]
+            }
+          ]
+        },
+        "staged": {
+          "seconds_max_rank": 57.30559036100021,
+          "peak_allocated_bytes": 118237637632,
+          "phases": [
+            {
+              "phase": "1_native_evidence_H_to_CPU",
+              "seconds_max_rank": 20.477196997002466,
+              "peak_allocated_bytes": 75889478656,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 20.477196997002466,
+                  "peak_allocated_bytes": 75889478656,
+                  "peak_reserved_bytes": 107346919424,
+                  "end_allocated_bytes": 72419171840
+                },
+                {
+                  "rank": 1,
+                  "seconds": 20.476944868998544,
+                  "peak_allocated_bytes": 75889478656,
+                  "peak_reserved_bytes": 106426269696,
+                  "end_allocated_bytes": 72419171840
+                },
+                {
+                  "rank": 2,
+                  "seconds": 20.476304510000773,
+                  "peak_allocated_bytes": 75889478656,
+                  "peak_reserved_bytes": 106617110528,
+                  "end_allocated_bytes": 72419171840
+                },
+                {
+                  "rank": 3,
+                  "seconds": 20.475646295999468,
+                  "peak_allocated_bytes": 75889478656,
+                  "peak_reserved_bytes": 106086531072,
+                  "end_allocated_bytes": 72419171840
+                }
+              ],
+              "cached_real_evidence_frames_by_rank": [
+                21,
+                17,
+                15,
+                15
+              ],
+              "local_batch": 12,
+              "local_batch_is_upper_limit": true,
+              "actual_batch_shapes": [
+                {
+                  "branch": "staged",
+                  "kind": "evidence",
+                  "local_batch": 12,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": true,
+                  "real_frames_by_rank": [
+                    12,
+                    12,
+                    12,
+                    12
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "evidence",
+                  "local_batch": 9,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": true,
+                  "real_frames_by_rank": [
+                    9,
+                    5,
+                    3,
+                    3
+                  ]
+                }
+              ],
+              "native_H_source": "LM_head_input_after_final_HC",
+              "LM_head_and_unused_logits_executed": false
+            },
+            {
+              "phase": "2_writer_histories_and_query_snapshots",
+              "seconds_max_rank": 0.109876392998558,
+              "peak_allocated_bytes": 74788708864,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.109876392998558,
+                  "peak_allocated_bytes": 74788708864,
+                  "peak_reserved_bytes": 107346919424,
+                  "end_allocated_bytes": 74763759104
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.08106879000115441,
+                  "peak_allocated_bytes": 74065100800,
+                  "peak_reserved_bytes": 106426269696,
+                  "end_allocated_bytes": 74041209856
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.07695043100102339,
+                  "peak_allocated_bytes": 73959129600,
+                  "peak_reserved_bytes": 106617110528,
+                  "end_allocated_bytes": 73933978624
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.07576327999777277,
+                  "peak_allocated_bytes": 73854118912,
+                  "peak_reserved_bytes": 106086531072,
+                  "end_allocated_bytes": 73828383744
+                }
+              ],
+              "queries_by_rank": [
+                19,
+                17,
+                15,
+                15
+              ]
+            },
+            {
+              "phase": "3_batched_query_forward_backward",
+              "seconds_max_rank": 36.57820506999997,
+              "peak_allocated_bytes": 118237637632,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 36.568197480999515,
+                  "peak_allocated_bytes": 118237637632,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 74092907520
+                },
+                {
+                  "rank": 1,
+                  "seconds": 36.57311273099913,
+                  "peak_allocated_bytes": 117072867840,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 73008785408
+                },
+                {
+                  "rank": 2,
+                  "seconds": 36.5775279139998,
+                  "peak_allocated_bytes": 117019320320,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 72921820160
+                },
+                {
+                  "rank": 3,
+                  "seconds": 36.57820506999997,
+                  "peak_allocated_bytes": 116663483392,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 72744395776
+                }
+              ],
+              "local_batch": 4,
+              "local_batch_is_upper_limit": true,
+              "actual_batch_shapes": [
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": true,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    3,
+                    3
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 3,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": true,
+                  "real_frames_by_rank": [
+                    3,
+                    1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "LM_head_and_native_CE_executed": true
+            },
+            {
+              "phase": "4_joint_writer_VJP_DP_SUM_clip_AdamW",
+              "seconds_max_rank": 0.13201076800032752,
+              "peak_allocated_bytes": 74627423232,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.13201076800032752,
+                  "peak_allocated_bytes": 74627423232,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71237310464
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.12929120899934787,
+                  "peak_allocated_bytes": 73209530368,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71212238336
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.12929159700070159,
+                  "peak_allocated_bytes": 73079834624,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207902720
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.1292524649979896,
+                  "peak_allocated_bytes": 72791138816,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71207902720
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "reference_mean_nll": 1.3348409928729243,
+        "staged_mean_nll": 1.3337866827146405,
+        "mean_nll_absolute_difference": 0.0010543101582838332,
+        "mean_nll_relative_difference": 0.0007898395119067209,
+        "preclip_writer_gradient": {
+          "reference_l2": 0.0838181501053179,
+          "candidate_l2": 0.07579610273900657,
+          "difference_l2": 0.0508023949806638,
+          "relative_l2": 0.6061025555542606,
+          "cosine": 0.8019443733931798,
+          "max_abs": 0.005079347640275955
+        },
+        "preclip_gradient_by_module": {
+          "gate_head": {
+            "reference_l2": 0.031717347006740074,
+            "candidate_l2": 0.013860465418118174,
+            "difference_l2": 0.0381175642312704,
+            "relative_l2": 1.201789173072081,
+            "cosine": -0.28985001632285956,
+            "max_abs": 0.005079347640275955
+          },
+          "head_embedding": {
+            "reference_l2": 2.8825420125718346e-05,
+            "candidate_l2": 2.4351805933239546e-05,
+            "difference_l2": 1.1234661724858209e-05,
+            "relative_l2": 0.38974841219519724,
+            "cosine": 0.924350563960911,
+            "max_abs": 3.2037036703513877e-06
+          },
+          "pool_score": {
+            "reference_l2": 0.008763476572396471,
+            "candidate_l2": 0.005803573149664519,
+            "difference_l2": 0.004136697358749742,
+            "relative_l2": 0.47203838848382007,
+            "cosine": 0.9178989128096776,
+            "max_abs": 0.001347605139017105
+          },
+          "target_head": {
+            "reference_l2": 0.07708886322544772,
+            "candidate_l2": 0.07429168617349598,
+            "difference_l2": 0.03332900000886254,
+            "relative_l2": 0.43234520025793216,
+            "cosine": 0.9037029708619689,
+            "max_abs": 0.0012450642243493348
+          }
+        },
+        "AdamW_parameter_update": {
+          "reference_l2": 0.15700867199145524,
+          "candidate_l2": 0.15586175878667882,
+          "difference_l2": 0.023510292477181904,
+          "relative_l2": 0.14973881492648627,
+          "cosine": 0.9887335244506096,
+          "max_abs": 0.00021529837977141142
+        },
+        "criteria": {
+          "loss_absolute_or_relative_max": 0.001,
+          "gradient_relative_l2_max": 0.02,
+          "gradient_cosine_min": 0.999
+        },
+        "loss_within_tolerance": true,
+        "gradient_within_tolerance": false,
+        "within_registered_tolerances": false,
+        "scope": "paired finite-run numerical closeness; not bitwise equality or a general proof"
+      },
+      "speedup_reference_over_staged": 1.3249624751911129
+    },
+    {
+      "trial_group": 2,
+      "group_loss_targets": 22528,
+      "group_identity_sha256": "9cb0c0e62b0bd43cc45fb50d5dce301568030b0c7308cd664206ea3c4505d03e",
+      "first_use_batch_shapes": [
+        {
+          "branch": "staged",
+          "kind": "evidence",
+          "local_batch": 5,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        },
+        {
+          "branch": "staged",
+          "kind": "query",
+          "local_batch": 1,
+          "sequence_length": 640,
+          "first_use_in_this_session": true
+        }
+      ],
+      "runtime": {
+        "reference": {
+          "seconds_max_rank": 22.249506336000195,
+          "peak_allocated_bytes": 106165720576,
+          "phases": [
+            {
+              "phase": "reference_interleaved_H_write_query_VJP",
+              "seconds_max_rank": 22.15605150400006,
+              "peak_allocated_bytes": 106165720576,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 22.15605150400006,
+                  "peak_allocated_bytes": 106165720576,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71244976640
+                },
+                {
+                  "rank": 1,
+                  "seconds": 22.122440711002128,
+                  "peak_allocated_bytes": 104886772224,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207902720
+                },
+                {
+                  "rank": 2,
+                  "seconds": 22.121662312001718,
+                  "peak_allocated_bytes": 105149395968,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207902720
+                },
+                {
+                  "rank": 3,
+                  "seconds": 22.12059810699793,
+                  "peak_allocated_bytes": 104821623296,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71207902720
+                }
+              ],
+              "query_and_evidence_local_batch": 3,
+              "evidence_LM_head_and_unused_logits_executed": true
+            },
+            {
+              "phase": "reference_DP_SUM_clip_AdamW",
+              "seconds_max_rank": 0.09028236999802175,
+              "peak_allocated_bytes": 71293891072,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.09028236999802175,
+                  "peak_allocated_bytes": 71293891072,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71244976640
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.08760027699827333,
+                  "peak_allocated_bytes": 71256817152,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207902720
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.08768050999788102,
+                  "peak_allocated_bytes": 71256817152,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207902720
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.08758823599782772,
+                  "peak_allocated_bytes": 71256817152,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71207902720
+                }
+              ]
+            }
+          ]
+        },
+        "staged": {
+          "seconds_max_rank": 42.645170883999526,
+          "peak_allocated_bytes": 117310303232,
+          "phases": [
+            {
+              "phase": "1_native_evidence_H_to_CPU",
+              "seconds_max_rank": 6.867831252002361,
+              "peak_allocated_bytes": 75860825088,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 6.867713970998011,
+                  "peak_allocated_bytes": 75860825088,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71600792064
+                },
+                {
+                  "rank": 1,
+                  "seconds": 6.867831252002361,
+                  "peak_allocated_bytes": 75814718464,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71600792064
+                },
+                {
+                  "rank": 2,
+                  "seconds": 6.8651561309998215,
+                  "peak_allocated_bytes": 75731151872,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71600792064
+                },
+                {
+                  "rank": 3,
+                  "seconds": 6.86389516899726,
+                  "peak_allocated_bytes": 75645883904,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71600792064
+                }
+              ],
+              "cached_real_evidence_frames_by_rank": [
+                17,
+                9,
+                9,
+                9
+              ],
+              "local_batch": 12,
+              "local_batch_is_upper_limit": true,
+              "actual_batch_shapes": [
+                {
+                  "branch": "staged",
+                  "kind": "evidence",
+                  "local_batch": 12,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    12,
+                    9,
+                    9,
+                    9
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "evidence",
+                  "local_batch": 5,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": true,
+                  "real_frames_by_rank": [
+                    5,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "native_H_source": "LM_head_input_after_final_HC",
+              "LM_head_and_unused_logits_executed": false
+            },
+            {
+              "phase": "2_writer_histories_and_query_snapshots",
+              "seconds_max_rank": 0.08815275600136374,
+              "peak_allocated_bytes": 73433608192,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.08815275600136374,
+                  "peak_allocated_bytes": 73433608192,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 73407689216
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.04264328999852296,
+                  "peak_allocated_bytes": 72523046912,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 72497973760
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.043183607998798834,
+                  "peak_allocated_bytes": 72550721024,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 72525999616
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.05344916200192529,
+                  "peak_allocated_bytes": 72426540032,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 72401236480
+                }
+              ],
+              "queries_by_rank": [
+                17,
+                9,
+                9,
+                9
+              ]
+            },
+            {
+              "phase": "3_batched_query_forward_backward",
+              "seconds_max_rank": 35.54842523899788,
+              "peak_allocated_bytes": 117310303232,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 35.54111022100187,
+                  "peak_allocated_bytes": 117310303232,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 72937385984
+                },
+                {
+                  "rank": 1,
+                  "seconds": 35.54553523099821,
+                  "peak_allocated_bytes": 116300328448,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71794068480
+                },
+                {
+                  "rank": 2,
+                  "seconds": 35.54842523899788,
+                  "peak_allocated_bytes": 116317795840,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71843196416
+                },
+                {
+                  "rank": 3,
+                  "seconds": 35.54550629299774,
+                  "peak_allocated_bytes": 116111383040,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71634997248
+                }
+              ],
+              "local_batch": 4,
+              "local_batch_is_upper_limit": true,
+              "actual_batch_shapes": [
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    4,
+                    4
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 1,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": true,
+                  "real_frames_by_rank": [
+                    1,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "LM_head_and_native_CE_executed": true
+            },
+            {
+              "phase": "4_joint_writer_VJP_DP_SUM_clip_AdamW",
+              "seconds_max_rank": 0.13103817099909065,
+              "peak_allocated_bytes": 73305438208,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.13103817099909065,
+                  "peak_allocated_bytes": 73305438208,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 70803724800
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.12843377599710948,
+                  "peak_allocated_bytes": 71924756992,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 70798713344
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.12841961900267052,
+                  "peak_allocated_bytes": 72004669440,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 70798713344
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.12844209100148873,
+                  "peak_allocated_bytes": 71687352320,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 70798713344
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "reference_mean_nll": 1.3898905096575618,
+        "staged_mean_nll": 1.3896221599795602,
+        "mean_nll_absolute_difference": 0.00026834967800160037,
+        "mean_nll_relative_difference": 0.00019307253063244225,
+        "preclip_writer_gradient": {
+          "reference_l2": 0.13623871837658627,
+          "candidate_l2": 0.12168556052955846,
+          "difference_l2": 0.06392733970150795,
+          "relative_l2": 0.4692303367446708,
+          "cosine": 0.8831329536784241,
+          "max_abs": 0.002017454127781093
+        },
+        "preclip_gradient_by_module": {
+          "gate_head": {
+            "reference_l2": 0.05474295647772859,
+            "candidate_l2": 0.05404652978216478,
+            "difference_l2": 0.003097593375039704,
+            "relative_l2": 0.05658432745224341,
+            "cosine": 0.9984604426409729,
+            "max_abs": 0.0006604623049497604
+          },
+          "head_embedding": {
+            "reference_l2": 3.2672551042820005e-05,
+            "candidate_l2": 3.5058414589026584e-05,
+            "difference_l2": 1.8858812736987256e-05,
+            "relative_l2": 0.5772066194730636,
+            "cosine": 0.8472377088140634,
+            "max_abs": 4.8970862280839356e-06
+          },
+          "pool_score": {
+            "reference_l2": 0.0023182401542636063,
+            "candidate_l2": 0.00354516575846974,
+            "difference_l2": 0.0033587572006981295,
+            "relative_l2": 1.4488391957670346,
+            "cosine": 0.4052534381889566,
+            "max_abs": 0.002017454127781093
+          },
+          "target_head": {
+            "reference_l2": 0.12473500629760571,
+            "candidate_l2": 0.10896687033475301,
+            "difference_l2": 0.0637638461120943,
+            "relative_l2": 0.5111944754302566,
+            "cosine": 0.8595792134611512,
+            "max_abs": 0.001779066224116832
+          }
+        },
+        "AdamW_parameter_update": {
+          "reference_l2": 0.14799755666707393,
+          "candidate_l2": 0.1489934915224996,
+          "difference_l2": 0.031170643209101394,
+          "relative_l2": 0.2106159311752756,
+          "cosine": 0.9779912131321564,
+          "max_abs": 0.00033643003553152084
+        },
+        "criteria": {
+          "loss_absolute_or_relative_max": 0.001,
+          "gradient_relative_l2_max": 0.02,
+          "gradient_cosine_min": 0.999
+        },
+        "loss_within_tolerance": true,
+        "gradient_within_tolerance": false,
+        "within_registered_tolerances": false,
+        "scope": "paired finite-run numerical closeness; not bitwise equality or a general proof"
+      },
+      "speedup_reference_over_staged": 0.521735659039139
+    },
+    {
+      "trial_group": 3,
+      "group_loss_targets": 12830,
+      "group_identity_sha256": "e885f88671b5147ff45a61fd84517fb78a3468c569865c17a78981138cf0662c",
+      "first_use_batch_shapes": [],
+      "runtime": {
+        "reference": {
+          "seconds_max_rank": 10.879160771000898,
+          "peak_allocated_bytes": 104857100800,
+          "phases": [
+            {
+              "phase": "reference_interleaved_H_write_query_VJP",
+              "seconds_max_rank": 10.787086192998686,
+              "peak_allocated_bytes": 104857100800,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 10.787086192998686,
+                  "peak_allocated_bytes": 104834972160,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71237616640
+                },
+                {
+                  "rank": 1,
+                  "seconds": 10.782027088996983,
+                  "peak_allocated_bytes": 104857100800,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71235179008
+                },
+                {
+                  "rank": 2,
+                  "seconds": 10.768349833000684,
+                  "peak_allocated_bytes": 104659553792,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207903744
+                },
+                {
+                  "rank": 3,
+                  "seconds": 10.76470936700207,
+                  "peak_allocated_bytes": 104322481664,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71207903744
+                }
+              ],
+              "query_and_evidence_local_batch": 3,
+              "evidence_LM_head_and_unused_logits_executed": true
+            },
+            {
+              "phase": "reference_DP_SUM_clip_AdamW",
+              "seconds_max_rank": 0.08957228399958694,
+              "peak_allocated_bytes": 71286531072,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.08957228399958694,
+                  "peak_allocated_bytes": 71286531072,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71237616640
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.08684522199837375,
+                  "peak_allocated_bytes": 71284093440,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71235179008
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.08700209000016912,
+                  "peak_allocated_bytes": 71256818176,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71207903744
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.08690870200007339,
+                  "peak_allocated_bytes": 71256818176,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71207903744
+                }
+              ]
+            }
+          ]
+        },
+        "staged": {
+          "seconds_max_rank": 4.13217578900003,
+          "peak_allocated_bytes": 116164758528,
+          "phases": [
+            {
+              "phase": "1_native_evidence_H_to_CPU",
+              "seconds_max_rank": 0.7761432599982072,
+              "peak_allocated_bytes": 74548463104,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.7741988159978064,
+                  "peak_allocated_bytes": 74548463104,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 72419173376
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.7761432599982072,
+                  "peak_allocated_bytes": 74436719104,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 72419173376
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.7718559229979292,
+                  "peak_allocated_bytes": 74487088640,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 72419173376
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.7687048580010014,
+                  "peak_allocated_bytes": 74427190272,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 72419173376
+                }
+              ],
+              "cached_real_evidence_frames_by_rank": [
+                9,
+                9,
+                7,
+                3
+              ],
+              "local_batch": 12,
+              "local_batch_is_upper_limit": true,
+              "actual_batch_shapes": [
+                {
+                  "branch": "staged",
+                  "kind": "evidence",
+                  "local_batch": 9,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    9,
+                    9,
+                    7,
+                    3
+                  ]
+                }
+              ],
+              "native_H_source": "LM_head_input_after_final_HC",
+              "LM_head_and_unused_logits_executed": false
+            },
+            {
+              "phase": "2_writer_histories_and_query_snapshots",
+              "seconds_max_rank": 0.04333237700120662,
+              "peak_allocated_bytes": 73354025984,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.04333237700120662,
+                  "peak_allocated_bytes": 73353271296,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 73331902976
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.04286082899852772,
+                  "peak_allocated_bytes": 73354025984,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 73328445440
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.03217236300042714,
+                  "peak_allocated_bytes": 73028116992,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 73002936832
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.014930896999430843,
+                  "peak_allocated_bytes": 72713845760,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 72688648704
+                }
+              ],
+              "queries_by_rank": [
+                9,
+                9,
+                5,
+                3
+              ]
+            },
+            {
+              "phase": "3_batched_query_forward_backward",
+              "seconds_max_rank": 3.198354174997803,
+              "peak_allocated_bytes": 116164758528,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 3.1934086399996886,
+                  "peak_allocated_bytes": 116164758528,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 71824592896
+                },
+                {
+                  "rank": 1,
+                  "seconds": 3.196079366000049,
+                  "peak_allocated_bytes": 116134329344,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71820533248
+                },
+                {
+                  "rank": 2,
+                  "seconds": 3.197839042997657,
+                  "peak_allocated_bytes": 115905652736,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 71407108608
+                },
+                {
+                  "rank": 3,
+                  "seconds": 3.198354174997803,
+                  "peak_allocated_bytes": 115491382272,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 71064380928
+                }
+              ],
+              "local_batch": 4,
+              "local_batch_is_upper_limit": true,
+              "actual_batch_shapes": [
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    4,
+                    3
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 4,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    4,
+                    4,
+                    1,
+                    0
+                  ]
+                },
+                {
+                  "branch": "staged",
+                  "kind": "query",
+                  "local_batch": 1,
+                  "sequence_length": 640,
+                  "first_use_in_this_session": false,
+                  "real_frames_by_rank": [
+                    1,
+                    1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "LM_head_and_native_CE_executed": true
+            },
+            {
+              "phase": "4_joint_writer_VJP_DP_SUM_clip_AdamW",
+              "seconds_max_rank": 0.10772096100117778,
+              "peak_allocated_bytes": 71975953408,
+              "ranks": [
+                {
+                  "rank": 0,
+                  "seconds": 0.10772096100117778,
+                  "peak_allocated_bytes": 71975953408,
+                  "peak_reserved_bytes": 119059513344,
+                  "end_allocated_bytes": 70801871360
+                },
+                {
+                  "rank": 1,
+                  "seconds": 0.10518763800064335,
+                  "peak_allocated_bytes": 71963871232,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 70803612160
+                },
+                {
+                  "rank": 2,
+                  "seconds": 0.10519176700108801,
+                  "peak_allocated_bytes": 71453361664,
+                  "peak_reserved_bytes": 118004645888,
+                  "end_allocated_bytes": 70798713344
+                },
+                {
+                  "rank": 3,
+                  "seconds": 0.10518564300218713,
+                  "peak_allocated_bytes": 71074537984,
+                  "peak_reserved_bytes": 117495037952,
+                  "end_allocated_bytes": 70798713344
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "reference_mean_nll": 1.9260776879540293,
+        "staged_mean_nll": 1.92532308018031,
+        "mean_nll_absolute_difference": 0.0007546077737192736,
+        "mean_nll_relative_difference": 0.0003917847023714052,
+        "preclip_writer_gradient": {
+          "reference_l2": 0.17574162158897721,
+          "candidate_l2": 0.14745721129147998,
+          "difference_l2": 0.04285972488819176,
+          "relative_l2": 0.24387919321941653,
+          "cosine": 0.9799927959944883,
+          "max_abs": 0.003972969949245453
+        },
+        "preclip_gradient_by_module": {
+          "gate_head": {
+            "reference_l2": 0.16243044244185603,
+            "candidate_l2": 0.13385302497183105,
+            "difference_l2": 0.028847397436695465,
+            "relative_l2": 0.17759846616819838,
+            "cosine": 0.999643462241227,
+            "max_abs": 0.003972969949245453
+          },
+          "head_embedding": {
+            "reference_l2": 2.9342935296083168e-05,
+            "candidate_l2": 2.5722746820253932e-05,
+            "difference_l2": 8.768083228470466e-06,
+            "relative_l2": 0.29881411453887063,
+            "cosine": 0.9577536214324198,
+            "max_abs": 2.254431649362232e-06
+          },
+          "pool_score": {
+            "reference_l2": 0.01277720688134877,
+            "candidate_l2": 0.010099029010026284,
+            "difference_l2": 0.002986343889287508,
+            "relative_l2": 0.23372431213012243,
+            "cosine": 0.9932360178322918,
+            "max_abs": 0.0008474455680698156
+          },
+          "target_head": {
+            "reference_l2": 0.06586509735944467,
+            "candidate_l2": 0.061032825750949246,
+            "difference_l2": 0.03155733436012022,
+            "relative_l2": 0.47912074262796306,
+            "cosine": 0.8790384689808765,
+            "max_abs": 0.001113600970711559
+          }
+        },
+        "AdamW_parameter_update": {
+          "reference_l2": 0.13643667155844671,
+          "candidate_l2": 0.13776500354050933,
+          "difference_l2": 0.02051419163189854,
+          "relative_l2": 0.1503568754468675,
+          "cosine": 0.98885233119248,
+          "max_abs": 0.00018767546862363815
+        },
+        "criteria": {
+          "loss_absolute_or_relative_max": 0.001,
+          "gradient_relative_l2_max": 0.02,
+          "gradient_cosine_min": 0.999
+        },
+        "loss_within_tolerance": true,
+        "gradient_within_tolerance": false,
+        "within_registered_tolerances": false,
+        "scope": "paired finite-run numerical closeness; not bitwise equality or a general proof"
+      },
+      "speedup_reference_over_staged": 2.6327923414975554
+    }
+  ],
+  "aggregate": {
+    "loss_targets_per_branch": 68755,
+    "reference_seconds": 109.05642395399991,
+    "staged_seconds": 104.08293703399977,
+    "reference_targets_per_second": 630.4534616777909,
+    "staged_targets_per_second": 660.5789763363467,
+    "speedup_reference_over_staged": 1.047783883331189
+  },
+  "budget": {
+    "protocol": "qwen38_native_performance_optimizer_ledger_v1",
+    "prior_optimizer_target_accesses": 1231214,
+    "prior_diagnostic_target_accesses": 14564,
+    "trial_optimizer_targets_dispatched": 137510,
+    "trial_optimizer_targets_completed": 137510,
+    "total_optimizer_target_accesses": 1368724,
+    "total_diagnostic_target_accesses": 14564,
+    "trial_diagnostic_target_accesses": 0,
+    "failed_or_partial_dispatches_are_not_refunded": true,
+    "formal_model_progress_unchanged": true,
+    "optimizer_dispatches_by_branch": {
+      "reference": 68755,
+      "staged": 68755
+    },
+    "global_real_input_tokens_by_branch": {
+      "reference": {
+        "query": 85909,
+        "evidence": 84178
+      },
+      "staged": {
+        "query": 85909,
+        "evidence": 84178
+      }
+    }
+  },
+  "training_state_saved": false,
+  "trial_state_discarded": true,
+  "formal_checkpoint_unchanged": true,
+  "formal_training_resumed": false,
+  "receipt_archive_sha256": "2dea6e43a67d7cb150fca9cfdc417f98a7c2029023b54e089247b2877c674ebe",
+  "input_manifest": {
+    "bytes": 7952,
+    "sha256": "22f5089e73695432553ee3104b1e73048f382e6a2ef05873b56f9a04d12cf0c5"
+  },
+  "code": {
+    "scripts/native_qwen38/qwen38_native_ep4_trial.py": {
+      "bytes": 28008,
+      "sha256": "1759bb2a43b558577315957fde923dc84007c2799913365780d76a403ac58ab3"
+    },
+    "scripts/native_qwen38/qwen38_native_ep4_session.py": {
+      "bytes": 13061,
+      "sha256": "f9213c5a16c69f9bfa2bf9edbb36664abd50d1178b28178e9585dc6d4b9180bb"
+    },
+    "scripts/native_qwen38/qwen38_native_ep4_schedule.py": {
+      "bytes": 9214,
+      "sha256": "6e00d64f664e201f75485a95414348b68e897ab763516d8d2b27f4cb10c144af"
+    },
+    "scripts/native_qwen38/qwen38_native_train_batched.py": {
+      "bytes": 65936,
+      "sha256": "c201afff6b52e156c777e1f34cd05eae4d5f3e2583b32a13a86d3784cf56edfd"
+    },
+    "scripts/native_qwen38/qwen38_native_batched_schedule.py": {
+      "bytes": 18698,
+      "sha256": "262b68ffcc57c0eb3fab50f1886839e532efeb4e033b3f72dab837c9728398bb"
+    },
+    "scripts/native_qwen38/qwen38_native_frozen_session.py": {
+      "bytes": 10621,
+      "sha256": "0373b66255dbd7d6b876ba91090fe5af156b76f2cb24fb3e13c9ba5dd710e802"
+    },
+    "scripts/native_qwen38/qwen38_native_runtime_preflight.py": {
+      "bytes": 42134,
+      "sha256": "9e47920b432e4c7b7659bd0069b385227c3c3c50e319398407b37430856254c2"
+    },
+    "scripts/native_qwen38/qwen38_native_norm_probe.py": {
+      "bytes": 35053,
+      "sha256": "26eae826f181af5a0c92bba744511a1533a8127287b7fc4165bbce20c0fb25a6"
+    },
+    "scripts/native_qwen38/qwen38_native_dispatch.py": {
+      "bytes": 5768,
+      "sha256": "81eee204e7466817706bcd49710439a1ffa99d916763561a94007c48188d1e7d"
+    },
+    "scripts/native_qwen38/qwen38_native_router.py": {
+      "bytes": 3261,
+      "sha256": "90086da11a565dab1157a6f8719db7a127f6297d930beed1ef5e05d0d0d5faea"
+    },
+    "scripts/native_qwen38/qwen38_native_bounded_checks.py": {
+      "bytes": 8125,
+      "sha256": "d2cdee8f4daed3690174d24528f5bb4298d7b5bba6178298bc64f751271d8d58"
+    },
+    "src/delta_ngram/qwen38_ep4_batching.py": {
+      "bytes": 7995,
+      "sha256": "f1562220669073ffdea6ab54b28e2c88f8597189232a22e86bf656ce2152439e"
+    },
+    "src/delta_ngram/qwen38_train_batching.py": {
+      "bytes": 11589,
+      "sha256": "a4b5125828047429012208e3a9245be929438503448df2a54d8a494c9c4116c1"
+    },
+    "src/delta_ngram/qwen38_train_data.py": {
+      "bytes": 13784,
+      "sha256": "159d2f743dfd95585875db1d9e017a080dc41849cbb533a12f913743f79c167e"
+    },
+    "src/delta_ngram/qwen38_training.py": {
+      "bytes": 28736,
+      "sha256": "6ac8303a87f15bb3d6d7ab100097b95d3906f0a988d21f7c506bd6284db22bad"
+    },
+    "src/delta_ngram/qwen38_native.py": {
+      "bytes": 11405,
+      "sha256": "c98eabd958f49ff1143743b6cfab75c134c790abd4b0f7f34dcbaf8acfd0d33a"
+    },
+    "src/delta_ngram/qwen38_adapter.py": {
+      "bytes": 15099,
+      "sha256": "ebef7c6353da1b5cc2e9cfd0c8874242f11af821cc39cc5c49352cf2fefb00a6"
+    },
+    "src/delta_ngram/qwen38_precision.py": {
+      "bytes": 15427,
+      "sha256": "6a2a1a01dd23649fc15c31b9782f6bc5d7a9c8cd23608f675830595939c69c80"
+    },
+    "src/delta_ngram/qwen38_writer.py": {
+      "bytes": 9056,
+      "sha256": "6930bc0105fde8052543f39a71070ae45183e4dcba5897cedeb5e75ff27c1b26"
+    },
+    "src/delta_ngram/qwen38_probe.py": {
+      "bytes": 13910,
+      "sha256": "55b32a1bfffbc52808a58055fc078a4cbf957d5e5776a86eee125c600e3d6bfe"
+    },
+    "src/delta_ngram/alpha_memory.py": {
+      "bytes": 25167,
+      "sha256": "59c136462c3cb8355a43083cde634a31a8bb2c320fc65e9c7a6a0438a71a7f26"
+    },
+    "src/delta_ngram/batching.py": {
+      "bytes": 11405,
+      "sha256": "1ae96443d8404b95bdd3dea367fb9498c5410ae6f211ea1a07de4b872e0a8f16"
+    },
+    "src/delta_ngram/state.py": {
+      "bytes": 8278,
+      "sha256": "45a3fb7fffebd85f57305017723c3226f507f9e2f227a419d3e627f2b2e70278"
+    },
+    "src/delta_ngram/operators.py": {
+      "bytes": 10513,
+      "sha256": "051cc2143f0479295037d21aa5282891df05d1214b5282b5f77464f1f8c0b689"
+    },
+    "src/delta_ngram/raw_corpora.py": {
+      "bytes": 3608,
+      "sha256": "319d9b3a6c6c53eee21c0d748abab7aec61ea8aa401b6331d109677956538f79"
+    },
+    "src/delta_ngram/data/raw_text.py": {
+      "bytes": 24463,
+      "sha256": "6b02c1d47c770f45ea7ac087419e4d3c8813057d213ee254b305150103a209fc"
+    },
+    "src/delta_ngram/data/event_streams.py": {
+      "bytes": 24077,
+      "sha256": "74ff0bb186f5f9d2076bb0622b707ddfae0113bf4a96ac3fbf83d70b41ee9cb4"
+    },
+    "scripts/native_qwen38/qwen38_native_staged_trial.py": {
+      "bytes": 39287,
+      "sha256": "12a36b629133a6dbceb689e3aeb6abbeb0ee66977904cb17e2a904c5c090cb02"
+    },
+    "scripts/native_qwen38/qwen38_native_staged_schedule.py": {
+      "bytes": 11904,
+      "sha256": "a67a38dbb7196391b896331cbfe406bc2bb7c70d51895dd1d9151892e8696a9d"
+    },
+    "src/delta_ngram/qwen38_staged_batching.py": {
+      "bytes": 7833,
+      "sha256": "fb7e2a9a00db33ad76c868b71924366890a1bc61d48dd09f27d71260210651fa"
+    }
+  },
+  "validation": {
+    "CPU_tests_passed": 8,
+    "gradient_thresholds_relL2": 0.02,
+    "gradient_thresholds_cosine": 0.999,
+    "thresholds_relaxed": false
+  }
+}

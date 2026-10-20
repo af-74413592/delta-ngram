@@ -4,6 +4,41 @@ This directory holds the GPU runtime and diagnostics for the separately
 registered Qwen3.8 experiment. Reusable writer and memory code lives in
 `src/delta_ngram`; the M1 command-line runner retains its own backend.
 
+## Current alternating training
+
+`qwen38_native_train_staged_alternating.py --restart-from-initial --execute`
+starts both fixed-alpha arms from the same seed17 initial writer and calibrated
+target scales, with independent AdamW, sampler, RNG and model-token counters.
+The supplied historical checkpoint provides calibration and corpus identity
+only in this mode. Without a migration flag, the runner resumes its exact
+joint checkpoint and saved schedule cursor.
+
+The current topology is TP1/PP1/EP4/ETP1/DP4/CP1. Each optimizer group contains
+12 complete trajectories, three assigned to each rank. The four phases collect
+base-only H in batches of up to 12, construct causal writer histories, read
+independent snapshots in batches of up to four, then apply the complete writer
+VJP and one DP SUM before clipping and AdamW.
+
+Each completed group atomically saves both arms in `joint-latest.pt`. Each
+arm's 20M, 40M and later milestones use the last whole group at or below the
+threshold; the unscheduled next group is retained for its next stage. The
+runner archives the checkpoint, evaluates the frozen native-tokenizer DEV64
+plan, then switches arms. Evaluation failures preserve the pending node for
+recovery. The shared 100M optimizer-access cap includes previous consumption;
+DEV64 accesses have their own durable ledger and do not update training state.
+
+`qwen38_native_dev64_prepare.py` derives the fixed 64 families from their frozen
+UTF-8 originals. `qwen38_native_dev64_eval.py` runs the registered continuation
+and direction controls at stage boundaries, with grad-enabled native query
+forwards and no backward. The native plan has 53,593 later-article targets;
+each complete evaluation charges 2,197,313 target accesses.
+
+The user explicitly adopted the new schedule without further numerical launch
+validation. The previous paired gradient thresholds failed and remain failed;
+neither numerical equivalence nor harmless gradient noise is claimed.
+See the [adoption record](../../docs/experiments/qwen38_native_20261020/qwen38_native_staged_adoption_20261020.json)
+and [results](../../docs/experiments/qwen38_native_20261020/qwen38_native_staged_schedule_20261020.md).
+
 ## Code boundaries
 
 | Location | Responsibility |
@@ -26,8 +61,9 @@ credential files, and full logs must not be committed.
 ## Runtime contract
 
 The native model is `Qwen/Qwen3.8-Flash-Next`, revision
-`de4b8e4d43b917e7706784d8bb445c9af86a3540`. The launch uses four H200 GPUs
-with TP=2, PP=2, EP=2, ETP=1, CP=1, and DP=1. The reader and native base
+`de4b8e4d43b917e7706784d8bb445c9af86a3540`. The initial preflight used four H200 GPUs
+with TP=2, PP=2, EP=2, ETP=1, CP=1, and DP=1; current training uses the EP4
+topology above. The reader and native base
 table stay frozen. The base table is host-resident; its values in this
 checkpoint are BF16. The initial gradient baseline uses the eager PLE path.
 
