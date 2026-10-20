@@ -2,7 +2,7 @@
 
 2026-10-20。先读 M1 总报告，再按下面的主题展开。所有图都嵌在 Markdown 中。
 
-**既有实验备份已通过 B2 独立回读：主体 1,733 个对象，补充包 20 个对象，合计 1,753 个对象、25,120,671,034 字节。** 新增的 DEV64 full-context 原始权重参照及 CPU 分析已完成，增量 B2 归档仍待验收；它不在这两组已封存备份中。
+**三组备份均已通过 B2 独立回读：主体 1,733 个对象、补充包 20 个对象、DEV64 context 增量包 8 个对象，合计 1,761 个对象、25,154,685,999 字节。** 新增的完整源文章上下文参照、CPU 分析与增量代码已归档；三组对象分别核验，原有两组封存内容保持原身份。
 
 ## 一、已执行实验的评估结果
 
@@ -31,13 +31,14 @@ P1/P2 文档保留其发表时的状态描述，后续 M1/DEV64 的完成情况�
 ## 三、数据、复算与恢复
 
 - [机器可读归档索引](archive_manifest.json)：权重身份、数据对象、代码版本、复算边界。
-- [下载与恢复说明](restore.md)：分开下载主体与补充包、固定 SHA 校验、原路径和环境恢复。
+- [下载与恢复说明](restore.md)：分开下载三组归档、固定 SHA 校验、原路径和环境恢复，以及完整 Git bundle 加增量 bundle 的代码恢复。
 - [独立复算收据](reproduction_receipt.json)：分析包内表格与汇总重算结果。
 - [本地代码检查](code_validation_20261020.json)：完整测试 **862 项通过**，M1 三个核心实现文件保持原字节。
 - [主体 B2 回读收据](backup_receipts/core_restore_verification.json)：1,733 个对象、23,885,567,983 字节全部匹配。
 - [补充 B2 回读收据](backup_receipts/supplement_restore_verification.json)：20 个对象、1,235,103,051 字节全部匹配；[封口](backup_receipts/supplement_COMPLETE.json)、[成员清单](backup_receipts/supplement_member_manifest.jsonl)与 [SHA256 清单](backup_receipts/supplement_sha256.txt)保留封存时原件。最终回读收据在封存后产生，保存于 Git，不属于本次 B2 补充包。
+- [Context 增量 B2 回读收据](backup_receipts/context_restore_verification.json)：8 个对象、34,014,965 字节全部匹配，恢复 inode 独立；[封口](backup_receipts/context_COMPLETE.json)、[成员清单](backup_receipts/context_member_manifest.jsonl)与 [SHA256 清单](backup_receipts/context_sha256.txt)保留封存时原件。另有 [ZIP 解包后 CPU 复算收据](context_data/context_addon_reproduction.json)和[完整／增量 Git 联合恢复收据](backup_receipts/context_git_delta_restore_verification.json)。云端回读收据与本轮收尾说明由封存后的 Git 提交保存。
 - [冻结登记与执行记录](registration/README.md)：100M/65M 身份、21 点追加登记、运行结束记录。
-- [Context 参照主表](context_data/context_recovery_primary100m.csv)、[21 点附加表](context_data/context_recovery_curve.csv)、[汇总与校验](context_data/context_recovery_summary.json)：新增结果已完整，增量 B2 收据尚待补齐。
+- [Context 参照主表](context_data/context_recovery_primary100m.csv)、[21 点附加表](context_data/context_recovery_curve.csv)、[汇总与校验](context_data/context_recovery_summary.json)：新增结果、CPU 复算和增量 B2 回读均已验收。
 - [历史启动脚本归档](../../../scripts/archive/m1_20261020/README.md)：原样脚本与来源 SHA；不是新启动命令。
 
 ## 尚无结果的项目

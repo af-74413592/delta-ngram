@@ -4,9 +4,9 @@
 
 效果结论和统计范围见[正式报告](report.md)。恢复文件不会自动启动训练或 FINAL 评测；M1 的原 100M 预算已经到达完整轨迹允许的终点。
 
-**Core 与 supplement 均已通过 B2 全量独立回读，合计 1,753 文件、25,120,671,034 bytes。** 新增的 DEV64 full-context 原始权重参照及 CPU 分析已完成，增量 B2 归档仍待验收，不包含在这两份封存对象集中；新增结果见[独立报告](context_reference.md)。
+**Core、supplement 与 DEV64 context 增量包均已通过 B2 全量独立回读，合计 1,761 文件、25,154,685,999 bytes。** 三组对象分别封存、下载与核验；新增完整源文章上下文参照及 CPU 分析见[独立报告](context_reference.md)。
 
-## 1. 归档分为两部分
+## 1. 归档分为三部分
 
 ### 1.1 Core：GPU 实例上的训练、数据与环境材料
 
@@ -50,6 +50,24 @@ Base 依赖仅从原机器已有的指定 revision 缓存解析并硬链接，�
 
 本说明和最终回读收据晚于上述 `fcd0564` 代码快照，由后续 Git 提交保存。B2 包内的 `RESTORE.md` 保留封存时版本，本仓库说明补充了独立下载、固定 SHA 预检和成功回读记录。运行本次 M1 需要的历史提交已在该 bundle 中核实存在。
 
+### 1.3 Context 增量：新增参照结果、CPU 分析与增量代码
+
+本次新增材料封存在 `/workspace/delta-ngram-dev64-context-backup-20261020`，B2 前缀为 `cl-research/delta-ngram/20261020-dev64-context/`，同属 bucket `clclcl`，但位于 Core 前缀之外。共 **8 个对象、34,014,965 bytes**，其中 5 个 payload、34,012,418 bytes，另加 3 个封口文件。它复用旧 Core 的 21 点 DEV64 结果、输入与模型，以及 supplement 的完整 Git bundle。
+
+| 对象 | 固定身份或用途 |
+|---|---|
+| `m1_dev64_context_addon_20261020.zip` | 原始结果、CPU 分析、图表、操作源码及报告；33,734,735 bytes；SHA256 `68ccdfac0718f6c2fed6d60c525bcaf25b2c03aadb21068a2ce5334f749ff2b9` |
+| `dev64_context_delta_20261020.bundle` | 增量 Git；267,449 bytes；SHA256 `05375728e3f78094d048d01ff322a1c8a6b07d8f0159f99bdb10876167b38459` |
+| `RESTORE.md` | 封存时的恢复说明；[Git 原件](backup_receipts/context_RESTORE.md) |
+| `metadata/package_receipt.json` | ZIP 封包身份回执 |
+| `metadata/verify_context_backup_20261020.py` | 8 对象的精确集合、大小、SHA256、文件稳定性核验 |
+
+在 2026-10-20 06:42:15.622648 UTC，独立目录 `/workspace/delta-ngram-dev64-context-restorecheck2-20261020` 的全部 8 对象通过逐文件核验，恢复 inode 与原 stage 全部独立，无 symlink 或未完成文件。[回读收据](backup_receipts/context_restore_verification.json)的 SHA256 为 `f74c72663c7e0275fe8ee424dee4c7061b5c1215fb2af68612722cee9d1e4b19`。封存原件为 [COMPLETE](backup_receipts/context_COMPLETE.json)、[成员清单](backup_receipts/context_member_manifest.jsonl)、[SHA256 清单](backup_receipts/context_sha256.txt)及[外部封存回执](backup_receipts/context_finalization_receipt.json)。
+
+本次第一轮 UI Restore 显示完成后，目标名称出现在 `/workspace` 列表中，但容器内 `lstat`、`ls -ld`、`stat` 返回 `ENOENT`，因此未执行验证器，也未写成功收据。保留该路径后，第二轮先在容器内新建另一个空目录并确认可读，再执行 UI Restore，随后通过全部核验。**首轮可见性问题的根因未确认。** 后续采用 UI Restore 时，应先在容器内创建并检查空目标目录；以文件验证收据判定恢复成功。
+
+ZIP 的[独立解包 CPU 复算](context_data/context_addon_reproduction.json)和[完整／增量 Git 联合恢复](backup_receipts/context_git_delta_restore_verification.json)均已通过。最终云端回读收据和本轮收尾文档在封存后产生，由后续 Git 提交保存，不属于封存 ZIP 或增量 bundle。包内报告的待验收表述，以及 COMPLETE 中的 `b2_upload_verified=false`、`b2_restore_verified=false` 均保留封存时点。
+
 ## 2. 关键材料覆盖核对
 
 以下检查基于 Core 已封清单，并与实际 M1 预检、训练记录及完整 DEV64 原始结果交叉核对：
@@ -73,31 +91,35 @@ Core 的 24 条排除项全部为源码目录下的 `.git` 或缓存目录，没
 
 ## 3. 分别下载并校验
 
-以下命令适用于已安装 Python 3.11+ 和 rclone 的 Linux 恢复环境。将 `existingRemote` 替换为已配置、可访问该 B2 bucket 的 rclone remote 名称；不需要在命令中填写凭据。将 `CORE` 和 `SUPPLEMENT` 设置为两份下载结果的根目录，两个目录必须为空、互相独立且不相互嵌套。
+以下命令适用于已安装 Python 3.11+ 和 rclone 的 Linux 恢复环境。将 `existingRemote` 替换为已配置、可访问该 B2 bucket 的 rclone remote 名称；不需要在命令中填写凭据。将 `CORE`、`SUPPLEMENT`、`ADDON` 设置为三份下载结果的根目录，三个目录必须为空、互相独立且不相互嵌套。
 
 ```bash
 set -euo pipefail
 export CORE=/workspace/restored-core-20261020
 export SUPPLEMENT=/workspace/restored-supplement-20261020
+export ADDON=/workspace/restored-dev64-context-20261020
 
-python - "$CORE" "$SUPPLEMENT" <<'PY'
+python - "$CORE" "$SUPPLEMENT" "$ADDON" <<'PY'
 import os, sys
+from itertools import combinations
 from pathlib import Path
 
 requested = [Path(value) for value in sys.argv[1:]]
 if any(path.is_symlink() for path in requested):
     raise SystemExit("Restore destinations must not be symlinks.")
-core, supplement = [path.resolve() for path in requested]
-if core == supplement or core.is_relative_to(supplement) or supplement.is_relative_to(core):
-    raise SystemExit("Core and supplement destinations must be separate, non-nested directories.")
-for path in (core, supplement):
+destinations = [path.resolve() for path in requested]
+for left, right in combinations(destinations, 2):
+    if left == right or left.is_relative_to(right) or right.is_relative_to(left):
+        raise SystemExit("Restore destinations must be separate, non-nested directories.")
+for path in destinations:
     if path.exists() and (not path.is_dir() or any(path.iterdir())):
         raise SystemExit(f"Restore destination must be empty: {path}")
-for path in (core, supplement):
+for path in destinations:
     path.mkdir(parents=True, exist_ok=True)
-if os.path.samefile(core, supplement):
-    raise SystemExit("Restore destinations resolve to the same directory.")
-print("Two empty, independent restore destinations are ready.")
+for left, right in combinations(destinations, 2):
+    if os.path.samefile(left, right):
+        raise SystemExit("Restore destinations resolve to the same directory.")
+print("Three empty, independent restore destinations are ready.")
 PY
 
 rclone copy existingRemote:clclcl/cl-research/delta-ngram/20261020-rtx4090/ \
@@ -233,6 +255,47 @@ print("P2 Base: 7 files and manifest SHA256 verified.")
 PY
 ```
 
+### 3.4 Context 增量：下载、固定封口与验证器身份
+
+`ADDON` 已由本节开头的检查创建为空目录。单独下载新增前缀：
+
+```bash
+rclone copy existingRemote:clclcl/cl-research/delta-ngram/20261020-dev64-context/ "$ADDON"
+```
+
+先核对 3 个封口文件及验证脚本的固定 SHA256，再执行包内验证器。预期值来自独立封存回执，不能从待测文件自身计算后当作预期值使用：
+
+```bash
+python - "$ADDON" <<'PY'
+import hashlib, sys
+from pathlib import Path
+
+root = Path(sys.argv[1]).resolve()
+pins = {
+    "metadata/COMPLETE.json": "4def3d428d2cd7372ae3a814b008a3a903f4dd1d34ae64472bbbc082c13d4c30",
+    "metadata/member_manifest.jsonl": "fd31f96a38a7fa46633bff9c5f1be35ac18fd23f55631bc76cbc4aa4ccc3c00b",
+    "metadata/sha256.txt": "a4449c90458595d390bf303fefb598c2a62fced85d6ef530d7f4a2ccbff6dbd9",
+    "metadata/verify_context_backup_20261020.py": "495da3ca1fc7b809c70951b00d7dc3a587d9e7049f14d1bafe0db96f0e189960",
+}
+for name, expected in pins.items():
+    path = root / name
+    if path.is_symlink() or not path.resolve().is_relative_to(root):
+        raise SystemExit(f"Unexpected verification path: {name}")
+    if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+        raise SystemExit(f"SHA256 mismatch: {name}")
+print("Context seals and verifier SHA256 verified.")
+PY
+
+python3 "$ADDON/metadata/verify_context_backup_20261020.py" \
+  --root "$ADDON" \
+  --expected-complete-sha256 4def3d428d2cd7372ae3a814b008a3a903f4dd1d34ae64472bbbc082c13d4c30 \
+  --receipt /workspace/context_addon_recovery_receipt.json
+```
+
+新收据必须放在 `ADDON` 目录外，以免改变精确文件集合。若原 stage 仍可访问，可追加 `--source-stage /workspace/delta-ngram-dev64-context-backup-20261020` 检查 inode 独立性。正常结果为 8 文件、34,014,965 bytes 全部通过。
+
+CPU 复算时，将 ZIP 解到新的独立目录并核对其中 `manifest.json` 的成员 SHA256；包内 `README.md` 给出完整命令。旧输入分别位于 Core `runs/m1_dev64_curve_20261020/` 与 `operations/multidomain/m1_dev64_curve_inventory_20261020.json`。详见[context 报告第 6 节](context_reference.md#6-完整性运行时间与复算)。
+
 ## 4. 恢复到原执行路径
 
 保留原目录关系可复用已冻结配置与原文件身份：
@@ -318,6 +381,38 @@ git -C /workspace/delta-ngram-evaluation-20261019 checkout --detach 167d24783161
 ```
 
 其他两份仓库同理使用表中提交。源码字节可继续与 Core 清单核对；运行登记和分析脚本的来源说明见[冻结登记](registration/README.md)与[归档脚本清单](../../../scripts/archive/m1_20261020/provenance_manifest.json)。
+
+### 用完整 bundle 加增量 bundle 恢复 context 代码
+
+Context 的增量 bundle 依赖完整 bundle 中的 `fcd056414fd148425940d76c845b39e0ec14e381`，不能单独克隆。在前面完成三组归档核验后，创建一个新的代码目录：
+
+```bash
+export CODE_BUNDLE="$SUPPLEMENT/code/delta_ngram_code_fcd0564_20261020.bundle"
+export CONTEXT_CODE=/workspace/restored-delta-ngram-context-20261020
+
+python - "$CODE_BUNDLE" "$ADDON/dev64_context_delta_20261020.bundle" "$CONTEXT_CODE" <<'PY'
+import hashlib, sys
+from pathlib import Path
+
+for filename, expected in zip(sys.argv[1:3], (
+    "bf5f2728b311938ec9830ebc980c3f36bb3db38fc5ac77827709dde1373ec550",
+    "05375728e3f78094d048d01ff322a1c8a6b07d8f0159f99bdb10876167b38459",
+)):
+    assert hashlib.sha256(Path(filename).read_bytes()).hexdigest() == expected, filename
+target = Path(sys.argv[3])
+assert not target.exists() and not target.is_symlink(), target
+print("Both bundle hashes verified; new code destination is unused.")
+PY
+
+git clone "$CODE_BUNDLE" "$CONTEXT_CODE"
+git -C "$CONTEXT_CODE" bundle verify "$ADDON/dev64_context_delta_20261020.bundle"
+git -C "$CONTEXT_CODE" fetch "$ADDON/dev64_context_delta_20261020.bundle" HEAD
+git -C "$CONTEXT_CODE" checkout --detach FETCH_HEAD
+test "$(git -C "$CONTEXT_CODE" rev-parse HEAD)" = a5e284febf0b4019379cc1a813d5dac8fef554d4
+test -z "$(git -C "$CONTEXT_CODE" status --porcelain)"
+```
+
+[联合恢复收据](backup_receipts/context_git_delta_restore_verification.json)已验证上述基准与终点、279 个 tree 条目和 38 个变更文件的规范 blob 内容，恢复工作树干净。该终点包含新增推理、分析与报告；后续云端回读收据和本轮收尾文档以最新 Git 提交为准，不在已封存增量 bundle 中。
 
 ## 5. 环境与恢复边界
 

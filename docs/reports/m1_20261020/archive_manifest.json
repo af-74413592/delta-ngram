@@ -9,7 +9,7 @@
     "failed_dev64_checkpoints": 0,
     "final_evaluation_run": false,
     "native_prototype_included_in_results": false,
-    "dev64_full_context_reference_status": "complete_incremental_archive_pending"
+    "dev64_full_context_reference_status": "complete_archive_verified"
   },
   "analysis_bundle": {
     "filename": "m1_analysis_bundle_20261020.zip",
@@ -26,9 +26,12 @@
   },
   "object_storage": {
     "status": "verified",
-    "verification_scope": "Existing sealed core and supplement only; excludes the completed DEV64 full-context reference whose incremental archive is pending.",
+    "verification_scope": "Three independently sealed and restored groups: core, supplement, and the separate DEV64 context increment.",
     "core_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/",
     "supplement_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/",
+    "context_addon_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-dev64-context/",
+    "context_addon_uri": "b2://clclcl/cl-research/delta-ngram/20261020-dev64-context/m1_dev64_context_addon_20261020.zip",
+    "context_code_delta_uri": "b2://clclcl/cl-research/delta-ngram/20261020-dev64-context/dev64_context_delta_20261020.bundle",
     "analysis_bundle_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/analysis/m1_analysis_bundle_20261020.zip",
     "full_data_manifest_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/metadata/member_manifest.jsonl",
     "weights_manifest_uri": "b2://clclcl/cl-research/delta-ngram/20261020-rtx4090/supplement/metadata/weights_manifest.json",
@@ -37,10 +40,30 @@
     "verification_receipt_uri_scope": "Core restore verification; the later supplement restore receipt is saved in Git and is not a member of its own sealed B2 package.",
     "supplement_verification_receipt": "backup_receipts/supplement_restore_verification.json",
     "supplement_verification_receipt_sha256": "6a62d724fc22910ca140d3361ab632ce1af228c9cf61ac1ec9a08b97e5da375e",
-    "verified_objects_total": 1753,
-    "verified_bytes_total": 25120671034,
-    "uploaded_code_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
-    "note": "Core and supplement were independently restored from B2 with exact object sets, sizes, SHA256 and independent inodes verified. Later report updates and the supplement restore receipt are saved in subsequent Git commits; sealed B2 members remain unchanged."
+    "context_verification_receipt": "backup_receipts/context_restore_verification.json",
+    "context_verification_receipt_sha256": "f74c72663c7e0275fe8ee424dee4c7061b5c1215fb2af68612722cee9d1e4b19",
+    "verified_objects_total": 1761,
+    "verified_bytes_total": 25154685999,
+    "uploaded_code_commit": "a5e284febf0b4019379cc1a813d5dac8fef554d4",
+    "uploaded_code_commit_recovery": "Full supplement bundle at fcd056414fd148425940d76c845b39e0ec14e381 plus the context delta bundle.",
+    "note": "All three groups were independently restored from B2 with exact object sets, sizes, SHA256 and independent inodes verified. Post-seal cloud receipts and closure documentation are saved in subsequent Git commits; sealed members and historical false flags remain unchanged."
+  },
+  "context_addon": {
+    "filename": "m1_dev64_context_addon_20261020.zip",
+    "bytes": 33734735,
+    "sha256": "68ccdfac0718f6c2fed6d60c525bcaf25b2c03aadb21068a2ce5334f749ff2b9",
+    "zip_members": 36,
+    "manifest_payload_files": 34,
+    "manifest_payload_bytes": 38704331,
+    "manifest_sha256": "0069deaeeb3387ba35b23edb28ffa8e528df9d649d9c2c6fe250ddbceaba40ef",
+    "report": "context_reference.md",
+    "raw_result_member": "raw/context.json",
+    "raw_result_sha256": "f522f22d5678ab8d6898e7acd1e032ed4777fcd5a15d1434979e26cc070c10f2",
+    "derived_data_root": "analysis/",
+    "portable_reproduction_receipt": "context_data/context_addon_reproduction.json",
+    "portable_reproduction_receipt_sha256": "625b7fcb335ea5ccdfb6b554d0fd2aabe6085b79e194685e4891e9291cf4ff36",
+    "external_inputs": "Reuses the 21 original DEV64 results and checkpoint inventory in core; inference additionally requires the frozen source data and base-model dependencies.",
+    "seal_boundary": "ZIP reports preserve their pre-upload archive-pending status. Later cloud receipts and closure documentation are in Git, not in the sealed ZIP or code delta."
   },
   "source_report": {
     "archive_member": "delta-ngram-runs/m1_analysis_20261020/M1_analysis_20261020.md",
@@ -202,7 +225,9 @@
     "new_dev64_statistics": "self-contained; numpy required, matplotlib optional",
     "new_dev64_address_capacity": "requires omitted frozen source texts and tokenizer; CPU torch/transformers",
     "writer_parameter_displacement": "requires omitted weights, PyTorch and original path adjustment",
-    "new_dev64_inference": "not self-contained; source articles and model weights intentionally omitted"
+    "new_dev64_inference": "not self-contained; source articles and model weights intentionally omitted",
+    "dev64_context_statistics": "Separate verified context increment plus the 21 old DEV64 results and checkpoint inventory from core; CPU Python and numpy.",
+    "dev64_context_inference": "Separate context code increment plus the frozen source data and base model from core; the sealed outputs can be analyzed without rerunning inference."
   },
   "core_restore_verification": {
     "receipt": "backup_receipts/core_restore_verification.json",
@@ -241,12 +266,54 @@
       }
     }
   },
+  "context_restore_verification": {
+    "receipt": "backup_receipts/context_restore_verification.json",
+    "receipt_sha256": "f74c72663c7e0275fe8ee424dee4c7061b5c1215fb2af68612722cee9d1e4b19",
+    "verified_at_utc": "2026-10-20T06:42:15.622648+00:00",
+    "restore_root": "/workspace/delta-ngram-dev64-context-restorecheck2-20261020",
+    "files": 8,
+    "bytes": 34014965,
+    "all_sha256_matched": true,
+    "object_set_exact": true,
+    "all_restored_inodes_distinct": true,
+    "files_stable_during_verification": true,
+    "no_symlinks_or_partial_files": true,
+    "receipt_storage": "Git; generated after sealing and not contained in the B2 increment it verifies.",
+    "first_attempt_status": "Not verified: UI completion was followed by container-side ENOENT. A second restore into a pre-created empty directory passed. Root cause remains unconfirmed; details are in the receipt.",
+    "verifier_sha256": "495da3ca1fc7b809c70951b00d7dc3a587d9e7049f14d1bafe0db96f0e189960",
+    "seals": {
+      "complete": {
+        "path": "backup_receipts/context_COMPLETE.json",
+        "sha256": "4def3d428d2cd7372ae3a814b008a3a903f4dd1d34ae64472bbbc082c13d4c30"
+      },
+      "member_manifest": {
+        "path": "backup_receipts/context_member_manifest.jsonl",
+        "sha256": "fd31f96a38a7fa46633bff9c5f1be35ac18fd23f55631bc76cbc4aa4ccc3c00b"
+      },
+      "sha256_list": {
+        "path": "backup_receipts/context_sha256.txt",
+        "sha256": "a4449c90458595d390bf303fefb598c2a62fced85d6ef530d7f4a2ccbff6dbd9"
+      },
+      "external_finalization_receipt": {
+        "path": "backup_receipts/context_finalization_receipt.json",
+        "sha256": "4fb2ac1f86401027294297c404b198f2333e4c8a96c9e62c7506830f9ac483df"
+      }
+    }
+  },
   "code_backup": {
     "repository": "https://github.com/af-74413592/delta-ngram",
     "branch": "codex/raw-text-training",
-    "verified_remote_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
+    "verified_remote_commit": "a5e284febf0b4019379cc1a813d5dac8fef554d4",
     "bundle_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
     "bundle_sha256": "bf5f2728b311938ec9830ebc980c3f36bb3db38fc5ac77827709dde1373ec550",
-    "local_restore_receipt": "backup_receipts/code_bundle_restore_verification.json"
+    "local_restore_receipt": "backup_receipts/code_bundle_restore_verification.json",
+    "context_delta_bundle": "dev64_context_delta_20261020.bundle",
+    "context_delta_bundle_bytes": 267449,
+    "context_delta_bundle_sha256": "05375728e3f78094d048d01ff322a1c8a6b07d8f0159f99bdb10876167b38459",
+    "context_delta_prerequisite_commit": "fcd056414fd148425940d76c845b39e0ec14e381",
+    "context_delta_tip": "a5e284febf0b4019379cc1a813d5dac8fef554d4",
+    "context_delta_restore_receipt": "backup_receipts/context_git_delta_restore_verification.json",
+    "context_delta_restore_receipt_sha256": "bbbc6292cd62f4ae58c060c267eee9e2d1216a9c84e4bbf3275af7e9f96719e7",
+    "post_seal_documentation": "Subsequent Git commits preserve cloud restore receipts and final documentation; those commits are outside the sealed bundle snapshots."
   }
 }

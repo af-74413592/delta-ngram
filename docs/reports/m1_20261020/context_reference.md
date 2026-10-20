@@ -6,7 +6,7 @@
 
 这是**预测损失改善量的比例**，不是准确率、事实召回率，也不是“存下了多少百分比的信息”。完整源文章上下文是本次测到的参照，不是理论上界。100M 主、65M 次的身份保持不变。
 
-本项是已封存 M1 分析之外的独立增量评测。完整结果和 CPU 分析已通过校验；**本项增量 B2 上传及独立回读仍待完成**。既有 Core 与 supplement 的验收状态见[归档索引](archive_manifest.json)，其原对象及旧分析 ZIP 没有改写。
+本项是已封存 M1 分析之外的独立增量评测。完整结果、CPU 分析、ZIP 解包复算及增量代码恢复均已通过校验；**本项 B2 增量归档的 8 个对象、34,014,965 字节已完成独立回读**。三组归档的身份与收据见[归档索引](archive_manifest.json)，Core、supplement 原对象及旧分析 ZIP 没有改写。
 
 ![100M 的绝对 NLL 收益与完整上下文收益比例](figures/dev64_context_reference_100m.png)
 
@@ -115,7 +115,7 @@ elapsed 是本次单进程评测记录的耗时，含模型加载、raw empty �
 | `raw/preflight.json` | `b4fdac956cab2651f2ddeb590f0d1f480304904e134157dfbd56d1c884e0a7bc` |
 | 作为共同基线来源的旧 100M DEV64 JSON | `7051e93ad164a90e26623a852b2679e1d9d619809cd14f5aabc69635402c9f0c` |
 
-数据索引采用独立增量包的 `raw/`、`analysis/` 布局；**本项增量 B2 归档仍待验收**，最终对象位置与收据以[归档索引](archive_manifest.json)为准。
+数据索引采用独立增量 ZIP 的 `raw/`、`analysis/` 布局。B2 前缀为 `b2://clclcl/cl-research/delta-ngram/20261020-dev64-context/`，ZIP 文件为 `m1_dev64_context_addon_20261020.zip`，33,734,735 bytes，SHA256 `68ccdfac0718f6c2fed6d60c525bcaf25b2c03aadb21068a2ce5334f749ff2b9`。该前缀位于旧 Core 前缀之外；完整对象位置见[归档索引](archive_manifest.json)，下载与固定 SHA 预检见[恢复说明](restore.md)。
 
 | 文件 | 内容 |
 |---|---|
@@ -143,6 +143,12 @@ python "$INCREMENT/delta-ngram/scripts/analyze_dev64_context_recovery_20261020.p
 该脚本只使用 CPU、Python 标准库和 NumPy，不加载模型，也不重跑 GPU 推理。[统计测试](../../../tests/test_dev64_context_recovery_analysis.py)的 7 项检查全部通过，覆盖事件等权均值之比、配对抽样、非正分母处理和不裁剪比例。
 
 独立复核覆盖全部 210 行的均值与比例，以及主 100M 十行的完整 10,000 次配对区间；此外对全部 210 行各抽查了 4 个 draw。它没有对每个附加检查点的所有 draw 再独立重算一遍。
+
+封包后，另在全新目录解开实际 ZIP，并使用包内脚本、包内新增原始结果及逐 SHA 匹配的旧 21 点输入完成 CPU 复算。三个 CSV 的 13,660 行、全部 4,940,210 个 NPZ 数组元素，以及汇总科学字段均与封包结果一致；[解包复算收据](context_data/context_addon_reproduction.json)记录了完整核对范围。它验证打包后可复算，与上一段独立实现的统计复核分开报告。
+
+[B2 回读收据](backup_receipts/context_restore_verification.json)记录：2026-10-20 06:42:15.622648 UTC，独立目录 `/workspace/delta-ngram-dev64-context-restorecheck2-20261020` 中的 8 个对象，逐文件 SHA256、字节数、精确文件集合与独立 inode 全部通过。收据 SHA256 为 `f74c72663c7e0275fe8ee424dee4c7061b5c1215fb2af68612722cee9d1e4b19`。
+
+新增代码通过 supplement 中的完整 bundle 加本次 `dev64_context_delta_20261020.bundle` 恢复：基准为 `fcd056414fd148425940d76c845b39e0ec14e381`，增量终点为 `a5e284febf0b4019379cc1a813d5dac8fef554d4`。[联合恢复收据](backup_receipts/context_git_delta_restore_verification.json)已核对终点、279 个 tree 条目及 38 个变更文件的规范 blob 内容。云端回读收据和本轮收尾文档晚于封存，由后续 Git 提交保存；ZIP 内报告仍保留封存时的“归档待验收”表述，封口中的历史 `false` 字段也不回写。
 
 ## 7. 结论边界
 

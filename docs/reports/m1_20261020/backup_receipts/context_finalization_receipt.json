@@ -1,0 +1,28 @@
+{
+  "all_payload_sha256_verified": true,
+  "b2_upload_performed": false,
+  "complete": true,
+  "object_storage_prefix": "b2://clclcl/cl-research/delta-ngram/20261020-dev64-context/",
+  "old_stages_modified": false,
+  "payload_bytes": 34012418,
+  "payload_files": 5,
+  "remote_root": "/workspace/delta-ngram-dev64-context-backup-20261020",
+  "seals": {
+    "metadata/COMPLETE.json": {
+      "sha256": "4def3d428d2cd7372ae3a814b008a3a903f4dd1d34ae64472bbbc082c13d4c30",
+      "size_bytes": 1208
+    },
+    "metadata/member_manifest.jsonl": {
+      "sha256": "fd31f96a38a7fa46633bff9c5f1be35ac18fd23f55631bc76cbc4aa4ccc3c00b",
+      "size_bytes": 756
+    },
+    "metadata/sha256.txt": {
+      "sha256": "a4449c90458595d390bf303fefb598c2a62fced85d6ef530d7f4a2ccbff6dbd9",
+      "size_bytes": 583
+    }
+  },
+  "shutdown_performed": false,
+  "total_bytes": 34014965,
+  "total_objects": 8,
+  "transfer_plan_sha256": "e3e36e9146eab1808b1d5beedee290ae6d8b1976dae41b45926de03704a691a9"
+}
