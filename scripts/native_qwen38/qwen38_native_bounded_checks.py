@@ -73,7 +73,11 @@ def evaluate_end_to_end(analytic, pairs, baseline_exact):
 class BoundedStability:
     """Per-arm state; only completed steps enter the five-gradient reference."""
 
-    def __init__(self):
+    def __init__(self, *, hard_stop_gradient_spikes=True, hard_stop_beta_saturation=True):
+        if type(hard_stop_gradient_spikes) is not bool or type(hard_stop_beta_saturation) is not bool:
+            raise ValueError("stability stop policies must be explicit booleans")
+        self.hard_stop_gradient_spikes = hard_stop_gradient_spikes
+        self.hard_stop_beta_saturation = hard_stop_beta_saturation
         self.completed_gradients = deque(maxlen=5)
         self.completed_steps = 0
         self.gradient_spike_streak = 0
@@ -101,10 +105,17 @@ class BoundedStability:
         fraction = beta_saturated / beta_events
         saturated = fraction > .01
         self.beta_saturation_streak = self.beta_saturation_streak + 1 if saturated else 0
+        monitor_flags = []
         if self.gradient_spike_streak >= 2:
-            reasons.append("raw_gradient_exceeds_ten_times_previous_five_median_twice")
+            flag = "raw_gradient_exceeds_ten_times_previous_five_median_twice"
+            monitor_flags.append(flag)
+            if self.hard_stop_gradient_spikes:
+                reasons.append(flag)
         if self.beta_saturation_streak >= 2:
-            reasons.append("beta_saturated_fraction_exceeds_one_percent_twice")
+            flag = "beta_saturated_fraction_exceeds_one_percent_twice"
+            monitor_flags.append(flag)
+            if self.hard_stop_beta_saturation:
+                reasons.append(flag)
         self.last_observation = {
             "step": self.completed_steps + 1,
             "raw_gradient_l2": gradient if math.isfinite(gradient) else None,
@@ -113,6 +124,9 @@ class BoundedStability:
             "beta_saturated": beta_saturated, "beta_events": beta_events,
             "beta_saturated_fraction": fraction,
             "beta_saturation_streak": self.beta_saturation_streak,
+            "monitor_flags": monitor_flags,
+            "hard_stop_gradient_spikes": self.hard_stop_gradient_spikes,
+            "hard_stop_beta_saturation": self.hard_stop_beta_saturation,
             "stop_reasons": reasons.copy(),
         }
         self._pending, self._pending_reasons = gradient, reasons.copy()

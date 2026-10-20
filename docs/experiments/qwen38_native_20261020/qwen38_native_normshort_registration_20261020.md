@@ -1,8 +1,12 @@
-# Qwen3.8 固定 RMSNorm 的主训练准备登记
+# Qwen3.8 固定 RMSNorm 主训练决策与准备记录
 
-2026-10-20。**用户已取消独立的两α八步小样本短测，要求必要检查后进入主训练。**本入口现在仅做 `--prepare-only`：最终路径为sorted router、HC eager及split PLE，RMSNorm eps=1e-6、无log(RMS)、ρ=.01保持。每次完整准备最多3,328目标，不创建优化器，也不运行旧step0/4/8 probe。主训练需独立的主数据与预算注册；准备通过不自动授权旧短测。
+2026-10-20。**最新用户指令：“不用检查了，开跑把，已经很久了”。据此取消准备04及剩余准备检查，直接进入主训练；独立两α八步小样本短测也已取消。**最终路径保持sorted router、HC eager及split PLE，RMSNorm eps=1e-6、无log(RMS)、ρ=.01。完整writer固定cotangent FD、端到端方向检查尚未完成，不能记作通过；主训练依据这次明确授权推进，并保留数值、reader冻结与预算监控。
 
-仓库[JSON](qwen38_native_normshort_registration_20261020.json)仍保留历史schema及兼容字段，本次说明更新不修改该JSON。实际候选必须绑定当前代码、父账本和准备合同，状态为 `PREPARATION_FROZEN_CONDITIONAL`，`execution_scope=preparation_only_for_main_training`。成功后写 `PREPARATION_COMPLETE_MAIN_TRAINING_PENDING`，optimizer授权仍为false。旧37,632阶段、1,024检查及48,100累计计划已逐字归档于[取消阶段快照](archive/bounded_eight_step_canceled_20261020/qwen38_native_normshort_registration_20261020.md)，[manifest](archive/bounded_eight_step_canceled_20261020/archive_manifest.json)保存原始bytes/SHA；更早的[四臂草案](archive/four_arm_draft_20261020/qwen38_native_normshort_registration_20261020.md)也保留。旧八步阶段未执行优化。
+**最新重启决策：**用户进一步明确“重启训练吧，这两个太严格了”“可以重训”。09:48 UTC启动的首轮主训练（PID32914）已按用户要求停止，共完成2次更新、对应34,816目标；实际dispatch计费54,784，其中19,968为停止时在途目标，仍保留消费。诊断父账本为14,564，与writer训练目标分账记录。新运行 native_main_training_02 已于 10:19 UTC 启动（PID36991），从相同seed17初始状态重新训练；梯度突增与β饱和仅记录、不作硬停止条件，每个完整optimizer组保存latest checkpoint。其他非有限数值、reader冻结和预算保护保留。
+
+首轮历史入口SHA为 `ec5361e8187937798cfd70d269f55a7fe0a5bfbe3729ef6e0e16e9467d4f03b8`，注册SHA为 `360236895ee7b77418f9ad463aff08ee06c04fe8a628ffb46cc729be4bc47034`；它们不代表重启配置。新代码、注册、进程和实际更新另以新运行回执记录。重启不退还旧消费，也不从第2步checkpoint继续。
+
+仓库[JSON](qwen38_native_normshort_registration_20261020.json)及下文准备合同保留历史，不是新的启动门槛；本次说明更新不修改该JSON。主训练由[独立入口](../../../scripts/native_qwen38/qwen38_native_train.py)及其实际数据、代码、预算和用户授权注册管理，不等待 `PREPARATION_COMPLETE`。旧37,632阶段、1,024检查及48,100累计计划已逐字归档于[取消阶段快照](archive/bounded_eight_step_canceled_20261020/qwen38_native_normshort_registration_20261020.md)，[manifest](archive/bounded_eight_step_canceled_20261020/archive_manifest.json)保存原始bytes/SHA；更早的[四臂草案](archive/four_arm_draft_20261020/qwen38_native_normshort_registration_20261020.md)也保留。旧八步阶段未执行优化。
 
 ## 1. 固定模型、writer 与输入处理
 
@@ -42,9 +46,9 @@
 
 这些frame只用于准备和梯度验收。普通来源仅一个从空状态开始的写块，不能独立区分衰减效应；事件完整多块历史保留衰减和BPTT链。主训练的8/16-block及完整事件采样由独立主训练注册规定。
 
-## 5. 仅准备模式与实际预算
+## 5. 已结束准备尝试与实际预算
 
-`--prepare-only`是当前执行的必需参数。它先重算H/scale，再做初扰、真实reader anchor、完整writer adjoint及端到端方向检查；全部通过后保存准备回执并退出，退出位置在旧probe H采集与优化器构造之前。主训练不沿用“12家族×128 targets×8步”的短测调度。
+以下是已取消继续执行的准备计划，供审计追溯：`--prepare-only`原拟重算H/scale，做初扰、实际reader anchor、writer adjoint及端到端方向检查，完整一次最多3,328目标。最新指令下不再运行准备04，也不将该模式作为主训练前置。主训练不沿用“12家族×128 targets×8步”的短测调度。
 
 | 项目 | 计算 | 目标访问 |
 |---|---:|---:|
@@ -52,10 +56,12 @@
 | 初扰 empty一次 | 6×128 | 768 |
 | 新准备检查 | 8×128，详见§7 | **1,024** |
 | **单次完整准备上限** | 2,304+1,024 | **3,328** |
-| 新一轮准备前已消费 | 9,444+准备02的2,560 | **12,004** |
-| **准备03全部完成时累计上限** | 12,004+3,328 | **15,332** |
+| 准备02实际消费 | 2,304+128+128 | **2,560** |
+| 准备03实际消费 | 2,304+128+128 | **2,560** |
+| **主训练前既有诊断累计** | 9,444+2,560+2,560 | **14,564** |
+| 准备04 | 最新用户指令取消，未执行 | **0** |
 
-取消八步阶段后的第一次完整准备原上限为 **9,444+3,328=12,772**。实际准备02只消费2,560后停止：初扰2,304、native empty比较128、实际backward anchor128；停止发生在split lookup adjoint gate，匹配评估、writer FD及端到端FD尚未执行。父账本因此增至12,004；准备03重新登记3,328额度后，累计最多15,332。两次启动均未执行optimizer更新。每次失败与重复目标保留消费，不按成功次数或unique token计数。
+取消八步阶段后的第一次完整准备原上限为 **9,444+3,328=12,772**。准备02和03各消费2,560后在split lookup adjoint gate停止，均未进入匹配评估、writer FD及端到端FD，optimizer更新均为0。准备01在CE前失败，消费0。父账本现为14,564；准备03原累计上限15,332及准备04拟上限17,892均未全部消费，取消后不算作实际访问。每次失败与重复目标保留消费，不按成功次数或unique token计数。
 
 较早的9,444构成为reader preflight33、norm FD440、TP结构11、原模式审计4,608、HC eager books768、模块定位768及sorted-router A/B审计2,816。新父账本保守把全部既有诊断同时计入75,000阶段上限及100,000全局诊断上限。H/scale和CPU参考无CE；准备阶段writer optimizer targets为0。全部原生主训练仍受累计100M writer loss-token上限约束，具体分配另行冻结。
 
@@ -65,29 +71,30 @@
 
 旧step0/4/8 probe、八步gain与对应bootstrap均随独立短测一起取消，不进入本次准备调度。主训练继续保留loss/梯度/β/状态/reader冻结与预算的稳定性监控；主数据采样、优化步数、检查点与probe cadence须由主训练注册明确，不能把旧八步字段静默当作主训练合同。当前不声称独立DEV64/FINAL收益。
 
-## 7. 所选数值路径、必需检查与停止规则
+## 7. 所选数值路径、未完成检查与运行监控
 
 A的来源已定位到原生router按grad模式改变top-k排序；固定 `sorted=True` 保留训练模式的顺序。books审计中，native/split两条PLE路径的初始writer与零Δ四种情况，grad/no-grad、grad-repeat的logits/loss全部逐位一致；两次实际backward的训练前向也与评估前向一致。此结论限于该固定样本与状态，不替代新准备流程的实际anchor比较。HC eager与compiled各自模式parity通过，但两者数值不相同；最终仍采用预先选定的HC eager，不按loss优劣选路径。
 
 B使用native base BF16 TE key/value投影加独立FP32 Δ投影，norm/gate/conv以FP32执行，最后转BF16；所有条件共用此路径，`PLE_FUSED_KERNEL=0`。books实际writer观测中，投影相加后约99.99%的非零请求仍可见，cosine>.99999997；最终BF16转换仍有明显误差：有效/请求作用cosine约.36357、沿请求方向幅度比.9925、能量比7.45、relative-L2约2.543，约15.2%的非零请求坐标产生变化。沿方向幅度接近1不代表完整方向保留；不宣称量化问题全部解决或端到端loss光滑，也不新增100%转换保真门槛。
 
-ρ保持.01，.1是已允许但未选择的fallback，不自动切换。上述审计复用历史H/scale，仅用于dispatch与量化观察；新准备流程必须在最终runtime下重新采集相同12个训练家族的base-only H，计算raw-target统计和共同scale，不能复用历史向量。新empty baseline也需重算并与native baseline量化比较。
+ρ保持.01，.1是已允许但未选择的fallback，不自动切换。上述books审计复用的历史H/scale仅用于dispatch与量化观察；主训练使用所选runtime下采集的base-only H和共同scale，以实际注册绑定其身份，不能沿用旧compiled向量。准备尝试中新empty与native baseline的比较保留，不因取消后续检查而抹去。
 
-优化前仍需完整writer固定真实cotangent adjoint、已通过的PLE FP64参考、一个预登记端到端方向检查及主评测/实际训练前向比较。旧SP结构证明仅沿不变的mapping源码和拓扑复用；现有anchor同时采集实际FP32 dense-Δ cotangent，以独立index-add核对稀疏lookup adjoint及两TP原始梯度逐位相等，不新增CE调用。reader边界使用materialized有效Δ，完整history写入与lazy衰减图保留。
+此前准备合同要求完整writer固定真实cotangent adjoint及一个端到端方向检查；这两项现按用户明确指令跳过，状态保持未完成。已通过的PLE FP64参考、books前向模式审计与本次实际lookup adjoint仍保留各自范围，不替代未完成项。旧SP结构证明仅沿不变的mapping源码和拓扑复用。reader边界使用materialized有效Δ，完整history写入与lazy衰减图保留。
 
-新增1,024目标的精确构成为：native empty比较128、实际reader backward anchor128、匹配的grad-enabled/no-backward前向128、两个步长各正负一次共512、逐位baseline重复128。split empty复用初扰额度；固定cotangent writer检查、H/scale校准及局部量化统计不新增CE。端到端方向固定为seed20261020的Rademacher，覆盖有效materialized memory坐标、RMS=1，绝对步长为2⁻¹⁴与2⁻¹³；两条中心差分与解析方向导数须满足rtol=.20、atol=.001，差分互相一致到20%，|解析值|<.01判未定。全部前向保持相同grad-enabled/leaf边界并重放RNG，baseline须逐位一致；失败或未定即在STEP001前停止，不搜索新步长或容差。
+未执行完的1,024检查额度原构成为：native empty128、实际backward anchor128、匹配评估128、两步长各正负一次共512、baseline重复128。原端到端合同为seed20261020的Rademacher、有效materialized memory坐标RMS=1、h=2⁻¹⁴/2⁻¹³、rtol=.20/atol=.001、两斜率互差≤20%、|解析值|<.01判未定、同RNG及逐位baseline。这里保存的是被跳过检查的原合同，不是通过证据，也不授权继续运行或调参重试。
 
-[运行器](../../../scripts/native_qwen38/qwen38_native_paired_norm_probe.py)提供零CE、零optimizer的 `--validate-preparation --prepare-only`，随后 `--execute --prepare-only` 只加载一次模型。代码复核、44项相关CPU测试及materialized两块history VJP检查已通过；这些不代表GPU准备检查或主训练完成。
+[历史准备入口](../../../scripts/native_qwen38/qwen38_native_paired_norm_probe.py)与44项相关CPU测试、materialized两块history VJP结果保留。准备入口不再调度；CPU通过不代表被跳过的GPU检查或主训练完成。实际主训练状态以其新回执为准。
 
-主训练继续保留以下监控原则；旧短测step编号须由主训练合同的实际检查点替换后生效：
+主训练监控按最新用户要求调整如下；旧短测step编号不再执行：
 
 - 非有限loss、gradient或memory state，reader参数变化，任何预算越界：立即停。
-- 每optimizer step的未裁剪writer梯度L2范数，大于此前5个完整step中位数的10倍，连续2步：停；前5步尚无足够历史，非有限检查始终有效。
-- 每step所有有效写事件中β<.001或β>.999的比例>.01，连续2步：停。
+- 每optimizer step的未裁剪writer梯度L2范数，以及超过此前5个完整step中位数10倍的连续次数：只记录和告警，不因该阈值停止。前5步历史不足时照常记录；非有限检查仍有效。
+- 每step有效写事件中β<.001或β>.999的比例及其超过.01的连续次数：只记录和告警，不因该阈值停止。
 - 固定probe总体平均NLL较初始基线恶化>.1 nat/token时停止并诊断；主训练单独登记样本和cadence，旧step4/8不再自动执行。
 - 不要求每batch单调下降；主训练额度和延长依据必须在其注册内明确。
+- 每个完整optimizer组保存latest checkpoint，减少中断时已完成更新的丢失；此次用户明确选择从seed17重新训练。
 
-本次准备只保留初扰2,304和检查1,024，单次上限3,328、optimizer0。失败保留消费；重试需更新父账本及代码/候选身份，不自动改ρ、步长、容差或执行八步短测。
+剩余准备调用已取消；重启继承14,564诊断父账本及54,784既有writer目标，按实际dispatch继续计数，不归零。主训练注册明确重启授权、仅监控的两个指标和未完成检查，不把“跳过”改写成“通过”。
 
 ## 8. 当前证据与限制
 
@@ -99,4 +106,10 @@ split的两TP量化统计已记录，最终BF16转换的方向误差仍须随实
 
 准备01在CE前因回执字段读取错误停止：runner把历史observation的identity当作preflight schema，读取不存在的 `adapter_sha256`；其实际字段为 `adapter_source_sha256`。历史 `writer_source_sha256`也已不同于接受TP证明时的native源码，不能仅改字段名后沿用。修复改从接受TP结构检查的外层session回执读取adapter/native pins，核对注册SHA、外层result与内层结构回执逐项相等、模型验证身份及当前代码；该检查现在在CPU校验阶段完成。接受的TP外层SHA为 `b8513a1c58d43accce10d0bbdfef3e0a0b7a2fc4ae83e9db9020c600cbeb6a8d`。准备01新增CE和optimizer均为0，未绕过原证明。
 
-准备02在实际split lookup adjoint gate停止，消耗2,560 CE、optimizer0。原实现先检查后保存，缺少失败细节；准备03已将两TP的local误差、TP差值max-abs/relative-L2/cosine及原始失败tensor保存移到gate之前。CUDA重复索引累加顺序只是待核实的可能原因，不能在证据缺失时认定或放宽容差。当前父账本为12,004；准备03的结果及主训练状态待独立回执，完整记录见[启动登记§9](qwen38_native_launch_registration_20261020.md#9-基础设施验收检查点)。
+准备02在实际split lookup adjoint gate停止，消耗2,560 CE、optimizer0；原实现先检查后保存，缺少失败细节。准备03在gate前保存了两TP统计：两个manual adjoint的最大误差都为0；TP原始梯度max-abs差4.656612873e-10、relative-L2差2.036203e-10、cosine=1，235个坐标不逐位相等。因此触发的是额外的TP逐位一致条件，不能据此称lookup伴随断裂；微小差异的具体kernel来源尚未证明。主训练的副本处理沿既定rtol=1e-6/atol=1e-7比较并使用一份规范副本，不将TP副本求和。准备03同样消费2,560、optimizer0。
+
+最新用户要求取消准备04、跳过剩余writer FD/E2E后，首轮主训练已经执行2次更新；随后用户明确要求将梯度突增和β饱和改为仅监控，并从seed17重训。首轮已停止，新运行 native_main_training_02 已于 10:19 UTC 启动（PID36991），不追加准备检查；当前既有消费为诊断14,564、writer目标54,784。完整历史见[启动登记§9](qwen38_native_launch_registration_20261020.md#9-基础设施验收检查点)，新运行实际进程和结果以其独立回执记录。
+
+## 本次重启冻结
+
+主入口 SHA `f237a3045d74a1c28c2b46f27fa2fa88a0966ed0543bd83a2020febc8a9d05f8`；监控 helper SHA `d2cdee8f4daed3690174d24528f5bb4298d7b5bba6178298bc64f751271d8d58`。实际[重启登记](qwen38_native_main_training_restart_20261020.json) SHA `25579bcbe5498ff869c1736f162a303cd1b341f8ccb4f4f36b0fb8ebbfeb7c58`。旧消费计入每臂2M额度，因此本次 α=1 最多1,945,216、α=.99最多2,000,000目标；实际完整轨迹端点可能略低。启动进程不等于已经完成更新，进度以运行中的 progress.json 为准。

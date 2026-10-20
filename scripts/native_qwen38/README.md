@@ -80,7 +80,10 @@ checked against the existing FP32 tolerance before selecting TP0's copy;
 replica gradients are not added together. The main process has been
 dispatched with the explicit authorization and immutable source hashes.
 Checkpoints include writer, optimizer, sampler and per-rank RNG states;
-a resume command is not yet implemented.
+a resume command is not yet implemented. Each completed optimizer group
+atomically saves the latest checkpoint. At the user's request, gradient
+spikes and gate saturation are monitoring signals only; neither stops
+training. Gradient clipping remains 1.0.
 
 CPU tests cover row ownership, valid native row zero, prefix masking,
 full-trajectory gradient propagation, and frozen-data identity. These tests

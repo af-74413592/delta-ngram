@@ -17,6 +17,7 @@ import math
 import os
 from pathlib import Path
 import random
+import shutil
 import sys
 import time
 
@@ -58,8 +59,11 @@ def training_contract():
                       "eps": 1e-8, "weight_decay": 0., "gradient_clip": 1.},
         "checkpoint_nominal_targets": [0, 500000, 1000000, 2000000],
         "checkpoint_boundary": "first_completed_group_crossing_threshold; final_at_or_below_cap",
-        "stops": {"gradient": "two_consecutive_gt10x_previous5_completed_median",
-                  "beta": "two_consecutive_saturated_fraction_gt0.01",
+        "latest_checkpoint": "atomic_overwrite_after_every_completed_optimizer_group",
+        "restart_budget": "per_arm_2M_cap_includes_all_previous_dispatched_targets",
+        "restart_model": "same_initial_writer_seed17; previous_spend_is_not_model_training_progress",
+        "stops": {"gradient": "monitor_only_two_consecutive_gt10x_previous5_completed_median",
+                  "beta": "monitor_only_two_consecutive_saturated_fraction_gt0.01",
                   "beta_saturated": "beta_lt0.001_or_gt0.999",
                   "nonfinite": "immediate", "zero_gradient": "stop_before_optimizer",
                   "wall_time": "config_run_max_wall_seconds"},
@@ -89,13 +93,20 @@ def code_manifest(delta_repo):
 class OptimizationLedger:
     """Charge actual CE dispatches before execution, including failed groups."""
 
-    def __init__(self, *, prior_optimizer, prior_diagnostic):
+    def __init__(self, *, prior_optimizer, prior_diagnostic, prior_by_arm=None):
         require(type(prior_optimizer) is int and 0 <= prior_optimizer <= 100000000,
                 "invalid prior optimizer target count")
         require(type(prior_diagnostic) is int and prior_diagnostic >= 0,
                 "invalid prior diagnostic target count")
         self.prior_optimizer = prior_optimizer
         self.prior_diagnostic = prior_diagnostic
+        self.prior_by_arm = ({name: 0 for name, _ in ARMS}
+                             if prior_by_arm is None else dict(prior_by_arm))
+        require(set(self.prior_by_arm) == {name for name, _ in ARMS}
+                and all(type(value) is int and 0 <= value <= 2000000
+                        for value in self.prior_by_arm.values())
+                and sum(self.prior_by_arm.values()) <= prior_optimizer,
+                "invalid prior per-arm target accounting")
         self.dispatched = {name: 0 for name, _ in ARMS}
         self.completed = {name: 0 for name, _ in ARMS}
         self.evidence_inputs = 0
@@ -104,7 +115,7 @@ class OptimizationLedger:
     def reserve_query(self, arm, targets, inputs):
         require(arm in self.dispatched and type(targets) is int and targets > 0,
                 "invalid optimizer query reservation")
-        require(self.dispatched[arm] + targets <= 2000000,
+        require(self.prior_by_arm[arm] + self.dispatched[arm] + targets <= 2000000,
                 "per-arm optimizer target cap exceeded")
         require(self.prior_optimizer + sum(self.dispatched.values()) + targets <= 100000000,
                 "shared optimizer target cap exceeded")
@@ -121,8 +132,11 @@ class OptimizationLedger:
             "protocol": "qwen38_main_optimization_ledger_v1",
             "prior_optimizer_target_accesses": self.prior_optimizer,
             "prior_diagnostic_target_accesses": self.prior_diagnostic,
+            "prior_optimizer_targets_by_arm": dict(self.prior_by_arm),
             "optimizer_targets_dispatched_by_arm": dict(self.dispatched),
             "optimizer_targets_in_completed_groups_by_arm": dict(self.completed),
+            "cumulative_optimizer_targets_by_arm": {
+                name: self.prior_by_arm[name] + self.dispatched[name] for name, _ in ARMS},
             "total_optimizer_target_accesses": self.prior_optimizer + sum(self.dispatched.values()),
             "total_diagnostic_target_accesses": self.prior_diagnostic,
             "new_diagnostic_target_accesses": 0, "query_input_tokens": self.query_inputs,
@@ -255,10 +269,16 @@ def validate_inputs(options):
             "invalid prepared per-head scale vector")
     prior = registration["budgets"]
     budget = preparation["budget"]
-    require(prior["prior_optimizer_target_accesses"] == budget["global_writer_optimizer_target_accesses"]
+    prior_by_arm = prior.get("prior_optimizer_targets_by_arm", {name: 0 for name, _ in ARMS})
+    OptimizationLedger(prior_optimizer=prior["prior_optimizer_target_accesses"],
+                       prior_diagnostic=prior["prior_diagnostic_target_accesses"],
+                       prior_by_arm=prior_by_arm)
+    require(prior["prior_optimizer_target_accesses"]
+            == budget["global_writer_optimizer_target_accesses"] + sum(prior_by_arm.values())
             and prior["prior_diagnostic_target_accesses"] == budget["global_diagnostic_target_accesses"],
-            "main budget does not continue the completed preparation ledger")
-    require(prior["prior_optimizer_target_accesses"] + 4000000 <= 100000000,
+            "main budget does not continue preparation and prior per-arm consumption")
+    require(prior["prior_optimizer_target_accesses"]
+            + sum(2000000 - value for value in prior_by_arm.values()) <= 100000000,
             "both registered arms do not fit the shared optimizer budget")
     config = yaml.safe_load(options.config.read_text(encoding="utf-8"))
     require(config["seed"] == 17 and config["writer"]["hidden_dim"] == 256
@@ -318,8 +338,9 @@ def execute(options, validated):
         started = time.monotonic()
         prior = registration["budgets"]
         ledger = OptimizationLedger(prior_optimizer=prior["prior_optimizer_target_accesses"],
-                                    prior_diagnostic=prior["prior_diagnostic_target_accesses"])
-        checkpoints, summaries = [], []
+                                    prior_diagnostic=prior["prior_diagnostic_target_accesses"],
+                                    prior_by_arm=prior.get("prior_optimizer_targets_by_arm"))
+        checkpoints, summaries, latest_checkpoints = [], [], {}
 
         def gathered(value):
             values = [None] * dist.get_world_size()
@@ -421,24 +442,43 @@ def execute(options, validated):
                 return first_agree(tensor_state_hash(writer.state_dict()) if first else None,
                                    "writer parameters/buffers differ across TP replicas")
 
+            def archive_latest(name, step, targets, labels):
+                if rank != 0:
+                    return
+                source = options.output / f"{name}-latest.pt"
+                suffix = "-".join(str(value) for value in labels)
+                path = options.output / f"{name}-step-{step:05d}-targets-{targets:010d}-nominal-{suffix}.pt"
+                require(not path.exists(), "archived checkpoint already exists")
+                temporary = path.with_suffix(".pt.partial")
+                shutil.copyfile(source, temporary)
+                os.replace(temporary, path)
+                checkpoints.append({**latest_checkpoints[name], "path": path.name,
+                                    "kind": "milestone_archive", "nominal_targets": labels})
+                write_json(options.output / "checkpoints.json", checkpoints)
+
             def checkpoint(writer, optimizer, sampler, stability, name, alpha, step, targets, labels):
                 signature = writer_hash(writer)
                 rng = gathered(rng_state())
                 if rank == 0:
-                    path = options.output / f"{name}-step-{step:05d}-targets-{targets:010d}.pt"
-                    require(not path.exists(), "checkpoint path already exists")
+                    path = options.output / f"{name}-latest.pt"
                     temporary = path.with_suffix(".pt.partial")
                     torch.save({
                         "protocol": "qwen38_native_main_checkpoint_v1", "arm": name, "alpha": alpha,
                         "optimizer_step": step, "completed_loss_targets": targets,
-                        "nominal_checkpoint_targets": labels, "writer_sha256": signature,
+                        "prior_dispatched_loss_targets": ledger.prior_by_arm[name],
+                        "cumulative_budget_loss_targets": ledger.prior_by_arm[name] + targets,
+                        "current_run_loss_target_cap": 2000000 - ledger.prior_by_arm[name],
+                        "nominal_milestones_are_in_checkpoint_manifest": True,
+                        "writer_sha256": signature,
                         "writer": {key: value.detach().cpu() for key, value in writer.state_dict().items()},
                         "optimizer": optimizer.state_dict(), "sampler": sampler.state_dict(),
                         "rng_by_rank": rng, "stability": {
                             "completed_gradients": list(stability.completed_gradients),
                             "completed_steps": stability.completed_steps,
                             "gradient_spike_streak": stability.gradient_spike_streak,
-                            "beta_saturation_streak": stability.beta_saturation_streak},
+                            "beta_saturation_streak": stability.beta_saturation_streak,
+                            "hard_stop_gradient_spikes": stability.hard_stop_gradient_spikes,
+                            "hard_stop_beta_saturation": stability.hard_stop_beta_saturation},
                         "budget": ledger.report(), "runtime_identity_sha256": runtime_hash,
                         "registration_sha256": digest(marker), "code_manifest_sha256": canonical_hash(codes),
                         "data_identity": data.identity, "trajectory_boundary": True,
@@ -446,9 +486,17 @@ def execute(options, validated):
                         "resume_cli_supported": False,
                     }, temporary)
                     os.replace(temporary, path)
-                    checkpoints.append({"path": path.name, "arm": name, "step": step,
-                                        "actual_loss_targets": targets, "nominal_targets": labels,
-                                        "writer_sha256": signature, **file_info(path)})
+                    record = {"path": path.name, "kind": "latest", "arm": name, "step": step,
+                              "actual_loss_targets": targets,
+                              "prior_dispatched_loss_targets": ledger.prior_by_arm[name],
+                              "cumulative_budget_loss_targets": ledger.prior_by_arm[name] + targets,
+                              "nominal_targets": [],
+                              "writer_sha256": signature, **file_info(path)}
+                    latest_checkpoints[name] = record
+                    checkpoints[:] = [item for item in checkpoints if item["path"] != path.name]
+                    checkpoints.append(record)
+                    if labels:
+                        archive_latest(name, step, targets, labels)
                     write_json(options.output / "checkpoints.json", checkpoints)
                 dist.barrier()
 
@@ -461,7 +509,8 @@ def execute(options, validated):
                 torch.cuda.manual_seed_all(17)
                 get_cuda_rng_tracker().set_states(copy.deepcopy(initial_tp_rng))
                 sampler = data.sampler(seed=17)
-                stability = BoundedStability()
+                stability = BoundedStability(
+                    hard_stop_gradient_spikes=False, hard_stop_beta_saturation=False)
                 writer = alpha = optimizer = None
                 if first:
                     writer, alpha = make_qwen38_writer(alpha=alpha_value)
@@ -475,10 +524,11 @@ def execute(options, validated):
                         weight_decay=0., amsgrad=False, maximize=False, foreach=False,
                         capturable=False, differentiable=False, fused=False)
                 steps = targets = 0
+                arm_target_cap = 2000000 - ledger.prior_by_arm[name]
                 checkpoint(writer, optimizer, sampler, stability, name, alpha_value, 0, 0, [0])
-                while targets < 2000000:
+                while targets < arm_target_cap:
                     check_wall()
-                    group = sampler.next_batch(12, remaining_loss_tokens=2000000 - targets)
+                    group = sampler.next_batch(12, remaining_loss_tokens=arm_target_cap - targets)
                     if not group:
                         break
                     group_targets = sum(item.loss_tokens for item in group)
@@ -487,7 +537,7 @@ def execute(options, validated):
                                        "loss_tokens": item.loss_tokens, "start": item.start}
                                       for item in group]
                     agree(canonical_hash(group_identity), "sampler groups differ across ranks")
-                    require(targets + group_targets <= 2000000, "whole group exceeds arm cap")
+                    require(targets + group_targets <= arm_target_cap, "whole group exceeds remaining arm cap")
                     if first:
                         optimizer.zero_grad(set_to_none=True)
                     group_started = time.monotonic()
@@ -634,6 +684,9 @@ def execute(options, validated):
                         "current_allocated_bytes": torch.cuda.memory_allocated(device)})
                     row = {"event": "main_writer_group_complete", "arm": name, "step": steps,
                            "loss_target_tokens": group_targets, "cumulative_loss_targets": targets,
+                           "prior_dispatched_loss_targets": ledger.prior_by_arm[name],
+                           "cumulative_budget_loss_targets": ledger.prior_by_arm[name] + targets,
+                           "current_run_loss_target_cap": arm_target_cap,
                            "mean_nll": loss_sum / group_targets, "loss_sum": loss_sum,
                            "trajectories": trajectory_reports, "writer_sha256": signature,
                            "gradient": stats, "stability": stability.last_observation,
@@ -641,6 +694,8 @@ def execute(options, validated):
                            "CUDA_memory_by_rank": memory,
                            "seconds": time.monotonic() - group_started}
                     save_ledger()
+                    labels = checkpoint_thresholds(previous, targets)
+                    checkpoint(writer, optimizer, sampler, stability, name, alpha_value, steps, targets, labels)
                     if rank == 0:
                         with (options.output / "training.jsonl").open("a", encoding="utf-8") as stream:
                             stream.write(json.dumps(row, allow_nan=False, sort_keys=True) + "\n")
@@ -650,14 +705,15 @@ def execute(options, validated):
                             "last_group": row, "updated_at_utc": datetime.now(timezone.utc).isoformat()})
                         print(json.dumps({key: row[key] for key in (
                             "event", "arm", "step", "cumulative_loss_targets", "mean_nll", "seconds")}), flush=True)
-                    labels = checkpoint_thresholds(previous, targets)
-                    if labels:
-                        checkpoint(writer, optimizer, sampler, stability, name, alpha_value, steps, targets, labels)
                 # This is the <=2M endpoint. Whole trajectories are never cut
                 # to make the displayed counter exactly equal the nominal cap.
-                checkpoint(writer, optimizer, sampler, stability, name, alpha_value, steps, targets, [2000000])
+                archive_latest(name, steps, targets, [2000000])
+                dist.barrier()
                 summaries.append({"arm": name, "alpha": alpha_value, "optimizer_steps": steps,
-                                  "actual_loss_targets": targets, "unused_target_budget": 2000000 - targets,
+                                  "actual_loss_targets": targets,
+                                  "prior_dispatched_loss_targets": ledger.prior_by_arm[name],
+                                  "cumulative_budget_loss_targets": ledger.prior_by_arm[name] + targets,
+                                  "unused_target_budget": arm_target_cap - targets,
                                   "sampler_status": getattr(sampler, "last_status", None)})
                 del writer, alpha, optimizer, sampler
             session.assert_frozen()
