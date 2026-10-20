@@ -231,11 +231,18 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
             "scope": "fixed continuation benefit and direction controls",
             "raw_text_long_context_control_included": False,
             "optimizer_steps": 0, "backward_calls": 0,
-            "query_execution": "grad-enabled native reader with detached FP32 memory leaf; no backward; discard graph immediately",
+            "query_execution": "torch.no_grad native reader; unchanged zero sentinel, batch sizes and padding; no backward",
             "evidence_and_writer_execution": "no_grad",
             "writer_and_alpha_state_unchanged": True, "training_rng_restored_on_exit": True,
             "topology": {"TP": 1, "PP": 1, "EP": 4, "ETP": 1, "DP": 4},
             "query_batch_limit": 4, "evidence_batch_limit": 12,
+            "memory_observation": {
+                "batch_log": "memory_batches.jsonl", "round_log": "memory_rounds.jsonl",
+                "units": "bytes", "ranks": "all four ranks recorded by rank0",
+                "batch_peak": "reset immediately before frame packing; measured after native results are released",
+                "round_peak": "maximum observed allocator peak, including writer work between native batches",
+                "allocator_cache_cleared": False,
+            },
             "code_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         }
         if rank == 0:
@@ -248,13 +255,56 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
         alpha.eval()
         session.assert_frozen()
         records = []
+        round_memory = None
 
-        def score(state, frames):
+        def memory_snapshot():
+            return {
+                "allocated_bytes": int(torch.cuda.memory_allocated(device)),
+                "reserved_bytes": int(torch.cuda.memory_reserved(device)),
+                "peak_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+                "peak_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+            }
+
+        def observe_round_peak(sample):
+            for key in ("peak_allocated_bytes", "peak_reserved_bytes"):
+                round_memory[key] = max(round_memory[key], sample[key])
+
+        def begin_batch():
+            torch.cuda.synchronize(device)
+            before = memory_snapshot()
+            observe_round_peak(before)
+            torch.cuda.reset_peak_memory_stats(device)
+            return {"before": before, "started": time.monotonic()}
+
+        def finish_batch(kind, started, *, batch_size, local_active_frames,
+                         condition=None, distance=None, permutation_seed=None):
+            torch.cuda.synchronize(device)
+            after = memory_snapshot()
+            observe_round_peak(after)
+            sample = {
+                "rank": rank, "pair_id": pair["id"], "before": started["before"],
+                "after_release": after, "seconds": time.monotonic() - started["started"],
+                "local_active_frames": local_active_frames,
+            }
+            samples = gather(sample)
+            if rank == 0:
+                with (output / "memory_batches.jsonl").open("a", encoding="utf-8") as stream:
+                    stream.write(json.dumps({
+                        "event": "native_dev64_batch_memory", "kind": kind,
+                        "round_index": round_index, "native_batch_size": batch_size,
+                        "native_call_index": execution["native_" + kind + "_calls"],
+                        "condition": condition, "unrelated_article_count": distance,
+                        "permutation_seed": permutation_seed,
+                        "evaluation_target_accesses": charged, "ranks": samples,
+                    }, sort_keys=True, allow_nan=False) + "\n")
+
+        def score(state, frames, *, condition, distance=None, permutation_seed=None):
             nonlocal charged
             losses = []
             # Every frame gets its own local packed namespace, even when four
             # different windows read the same immutable family snapshot.
             for start, size in batches(len(frames), 4):
+                memory_started = begin_batch()
                 active = frames[start:start + size]
                 mb = collate_staged_frames(active + [None] * (size - len(active)),
                                            kind="query", device=device)
@@ -263,16 +313,14 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                     [state.memory for _ in active] + [empty.memory] * (size - len(active)),
                     session.layout.row_capacity)
                 require(not packed.values.requires_grad, "evaluation memory acquired a writer graph")
-                if packed.values.numel():
-                    packed = packed.with_values(packed.values.detach().requires_grad_(True))
-                else:
+                if not packed.values.numel():
                     # Same zero sentinel as the staged training packer. This
-                    # keeps empty/inactive native forwards on its grad-enabled
-                    # dispatch without changing any PLE row value or count.
+                    # preserves empty/inactive numeric inputs without changing
+                    # any PLE row value, count, batch size or padded frame.
                     sentinel = SparseMemoryState(
                         torch.tensor([1], dtype=torch.long, device=device),
                         torch.zeros((1, session.layout.row_width), dtype=torch.float32,
-                                    device=device, requires_grad=True),
+                                    device=device),
                         torch.zeros(1, dtype=torch.float32, device=device))
                     packed = BatchMemoryState(sentinel, size, session.layout.row_capacity)
                 saved_versions = tuple(value._version for value in (packed.rows, packed.values, packed.counts))
@@ -294,17 +342,17 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                 # The caller's callback persisted the charge before this
                 # original native CE call; no separate loss implementation.
                 batch = mb["batch"]
-                with torch.enable_grad():
+                with torch.no_grad():
                     native_losses, capture = session.adapter.run_native(
                         lambda: session.models[0](**batch),
                         input_ids=batch["input_ids"], valid_mask=mb["valid_mask"],
                         owner_ids=mb["owner_ids"], mode="query", state=packed)
                 labels = batch["labels"]
                 require(isinstance(native_losses, torch.Tensor)
-                        and native_losses.shape == labels.shape and native_losses.requires_grad,
-                        "DEV64 native forward must retain the registered grad-enabled CE dispatch")
-                # Reading metrics never invokes backward or joins the detached
-                # reader leaf to the writer. Release every native graph now.
+                        and native_losses.shape == labels.shape,
+                        "DEV64 native forward must return aligned per-token CE")
+                # No autograd graph is built for evaluation. Retain only the
+                # detached per-token result long enough to extract scalar NLLs.
                 losses_detached = native_losses.detach()
                 del native_losses, capture
                 mask = labels.ne(-100)
@@ -320,12 +368,23 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                     "DEV64 native query mutated its packed memory")
                 require(packed.values.grad is None, "DEV64 query unexpectedly performed backward")
                 del losses_detached, lane_sums, packed, mb, batch
+                finish_batch("query", memory_started, batch_size=size,
+                             local_active_frames=len(active), condition=condition,
+                             distance=distance, permutation_seed=permutation_seed)
             return _score_summary(losses, frames)
 
         with torch.no_grad():
             # Fixed round-robin families keep independent memories across ranks.
             # All ranks still enter every native EP collective with matching B.
             for round_index in range(16):
+                torch.cuda.synchronize(device)
+                torch.cuda.reset_peak_memory_stats(device)
+                round_before = memory_snapshot()
+                round_memory = {
+                    "before": round_before, "started": time.monotonic(),
+                    "peak_allocated_bytes": round_before["peak_allocated_bytes"],
+                    "peak_reserved_bytes": round_before["peak_reserved_bytes"],
+                }
                 pair = pairs[4 * round_index + rank]
                 later_id = pair["later_source_id"]
                 query_frames = _frames(tokens[later_id], later_id, query=True)
@@ -340,6 +399,7 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                          for index, frame in enumerate(evidence_frames[source_id])]
                 evidence = {}
                 for start, size in batches(len(tasks), 12):
+                    memory_started = begin_batch()
                     active = tasks[start:start + size]
                     mb = collate_staged_frames([item[2] for item in active]
                                                + [None] * (size - len(active)),
@@ -352,8 +412,10 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                         require(block is not None, "DEV64 evidence crop dropped a real source block")
                         evidence[task[:2]] = block
                     del captured, cropped, mb
+                    finish_batch("evidence", memory_started, batch_size=size,
+                                 local_active_frames=len(active))
 
-                empty = score(session.layout.empty_state(1, device), query_frames)
+                empty = score(session.layout.empty_state(1, device), query_frames, condition="empty")
                 empty.update(actual_written_articles=0, actual_written_tokens=0,
                              actual_written_blocks=0, address_prefix_tokens=0,
                              evidence_encoder_prefix_tokens=0, write_source_ids=[])
@@ -392,7 +454,7 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                             require(totals[unit] == condition[mode + "_actual_written_" + unit],
                                     "DEV64 native write budget differs from its prepared plan")
                         materialized = materialize_staged_snapshot(state)
-                        original = score(materialized, query_frames)
+                        original = score(materialized, query_frames, condition=mode, distance=distance)
                         original.update({"actual_written_" + unit: totals[unit]
                                          for unit in ("articles", "tokens", "blocks")})
                         original.update(address_prefix_tokens=totals["address_prefix_tokens"],
@@ -402,7 +464,9 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                         seed_scores = {}
                         for permutation in permutations:
                             view = permute_state_for_read(materialized, permutation)
-                            seed_scores[str(permutation.seed)] = score(view, query_frames)
+                            seed_scores[str(permutation.seed)] = score(
+                                view, query_frames, condition=mode + "_perm",
+                                distance=distance, permutation_seed=permutation.seed)
                             del view
                         averaged = {
                             key: math.fsum(value[key] for value in seed_scores.values()) / len(SEEDS)
@@ -460,6 +524,23 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                         "families_complete": 4 * (round_index + 1), "evaluation_target_accesses": charged,
                     }, sort_keys=True), flush=True)
                 del evidence, evidence_frames, tasks, query_frames, arms, local_records
+                torch.cuda.synchronize(device)
+                round_after = memory_snapshot()
+                observe_round_peak(round_after)
+                memory_rows = gather({
+                    "rank": rank, "pair_id": pair["id"], "before": round_memory["before"],
+                    "after_release": round_after,
+                    "peak_allocated_bytes": round_memory["peak_allocated_bytes"],
+                    "peak_reserved_bytes": round_memory["peak_reserved_bytes"],
+                    "seconds": time.monotonic() - round_memory["started"],
+                })
+                if rank == 0:
+                    with (output / "memory_rounds.jsonl").open("a", encoding="utf-8") as stream:
+                        stream.write(json.dumps({
+                            "event": "native_dev64_round_memory", "round_index": round_index,
+                            "families_complete": 4 * (round_index + 1),
+                            "evaluation_target_accesses": charged, "ranks": memory_rows,
+                        }, sort_keys=True, allow_nan=False) + "\n")
 
         require(charged == expected_cost and len(records) == 64 * len(DISTANCES),
                 "DEV64 did not complete its exact frozen condition/target coverage")

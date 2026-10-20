@@ -29,9 +29,18 @@ DEV64 accesses have their own durable ledger and do not update training state.
 
 `qwen38_native_dev64_prepare.py` derives the fixed 64 families from their frozen
 UTF-8 originals. `qwen38_native_dev64_eval.py` runs the registered continuation
-and direction controls at stage boundaries, with grad-enabled native query
-forwards and no backward. The native plan has 53,593 later-article targets;
+and direction controls at stage boundaries using `torch.no_grad()`. Each native
+batch and family round logs all ranks' allocated, reserved and peak GPU memory.
+The native plan has 53,593 later-article targets;
 each complete evaluation charges 2,197,313 target accesses.
+
+`qwen38_native_migrate_eval_only.py` supports a documented evaluator repair at
+a pending evaluation boundary. It requires the evaluator to be the only changed
+file in the complete code manifest, preserves all training state and historical
+checkpoint fields, and writes a separate derived checkpoint plus provenance.
+Resume with the latest external budget ledger so interrupted evaluations are
+still charged. The training runner's exact code and native runtime checks remain
+enabled. See the [no-grad repair record](../../docs/experiments/qwen38_native_20261020/qwen38_native_eval_no_grad_repair_20261020.md).
 
 The user explicitly adopted the new schedule without further numerical launch
 validation. The previous paired gradient thresholds failed and remain failed;

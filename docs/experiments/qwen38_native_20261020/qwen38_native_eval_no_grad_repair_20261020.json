@@ -1,0 +1,315 @@
+{
+  "captured_utc": "2026-10-20T15:34:53.462951+00:00",
+  "equivalence_claimed": false,
+  "evaluation_progress": {
+    "arm": "alpha100_rmsnorm",
+    "evaluation_target_accesses": 1159767,
+    "expected_evaluation_target_accesses": 2197313,
+    "families_complete": 36,
+    "families_total": 64,
+    "milestone": 20000000,
+    "protocol": "qwen38_native_dev64_continuation_v1",
+    "seconds": 230.6655545850008,
+    "status": "evaluating"
+  },
+  "evaluator_sha256": "46a3cc47d20bd8f4dce103b7aee5654824c95da5375bac08e074f3997b3aead9",
+  "first_four_comparisons": {
+    "old05_vs_no_grad07": {
+      "families": 4,
+      "fixed_checkpoint_and_plan_match": true,
+      "new": {
+        "bytes": 374940,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_07/evaluations/stage-00-alpha100_rmsnorm-nominal-020000000-attempt-003/per_family_partial.json",
+        "sha256": "bd67488f43ff362433bddc98f85fda00d3af587312655bc18148706555cb1741"
+      },
+      "old": {
+        "bytes": 183550,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_05/evaluations/stage-00-alpha100_rmsnorm-nominal-020000000-attempt-001/per_family_partial.json",
+        "sha256": "4fdba992b42deee07146ee781b04d43b605e9921fe5553c77963b62c91acc755"
+      },
+      "rows": 20,
+      "same_H_and_delta_bytes_certified": false,
+      "scope": "four saved families, five lags, all conditions and every direction seed; aggregated scores only",
+      "score_cases": 220,
+      "structural_fields_equal": true,
+      "summary": {
+        "first_target_loss_sum": {
+          "compared": 220,
+          "exact_equal": 35,
+          "max_abs_difference": 6.6116943359375,
+          "rms_difference": 2.005961753384891
+        },
+        "first_target_nll": {
+          "compared": 220,
+          "exact_equal": 35,
+          "max_abs_difference": 0.017217953999837166,
+          "rms_difference": 0.00522385873277316
+        },
+        "loss_sum": {
+          "compared": 220,
+          "exact_equal": 24,
+          "max_abs_difference": 10.400585174560547,
+          "rms_difference": 3.323652359245229
+        },
+        "nll": {
+          "compared": 220,
+          "exact_equal": 24,
+          "max_abs_difference": 0.015814465351751794,
+          "rms_difference": 0.003938279831699504
+        }
+      }
+    },
+    "old05_vs_old06": {
+      "families": 4,
+      "fixed_checkpoint_and_plan_match": true,
+      "new": {
+        "bytes": 183516,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_06/evaluations/stage-00-alpha100_rmsnorm-nominal-020000000-attempt-002/per_family_partial.json",
+        "sha256": "a29d55523b319683a71565c4ee54ffe3d91b81965daf26d746cba45169edcabe"
+      },
+      "old": {
+        "bytes": 183550,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_05/evaluations/stage-00-alpha100_rmsnorm-nominal-020000000-attempt-001/per_family_partial.json",
+        "sha256": "4fdba992b42deee07146ee781b04d43b605e9921fe5553c77963b62c91acc755"
+      },
+      "rows": 20,
+      "same_H_and_delta_bytes_certified": false,
+      "scope": "four saved families, five lags, all conditions and every direction seed; aggregated scores only",
+      "score_cases": 220,
+      "structural_fields_equal": true,
+      "summary": {
+        "first_target_loss_sum": {
+          "compared": 220,
+          "exact_equal": 48,
+          "max_abs_difference": 8.181488037109375,
+          "rms_difference": 1.6160857214011612
+        },
+        "first_target_nll": {
+          "compared": 220,
+          "exact_equal": 48,
+          "max_abs_difference": 0.021305958429972405,
+          "rms_difference": 0.004208556566148868
+        },
+        "loss_sum": {
+          "compared": 220,
+          "exact_equal": 28,
+          "max_abs_difference": 11.358383178710938,
+          "rms_difference": 2.449039587317171
+        },
+        "nll": {
+          "compared": 220,
+          "exact_equal": 28,
+          "max_abs_difference": 0.013315806774573336,
+          "rms_difference": 0.0029843945101407244
+        }
+      }
+    },
+    "old06_vs_no_grad07": {
+      "families": 4,
+      "fixed_checkpoint_and_plan_match": true,
+      "new": {
+        "bytes": 374940,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_07/evaluations/stage-00-alpha100_rmsnorm-nominal-020000000-attempt-003/per_family_partial.json",
+        "sha256": "bd67488f43ff362433bddc98f85fda00d3af587312655bc18148706555cb1741"
+      },
+      "old": {
+        "bytes": 183516,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_06/evaluations/stage-00-alpha100_rmsnorm-nominal-020000000-attempt-002/per_family_partial.json",
+        "sha256": "a29d55523b319683a71565c4ee54ffe3d91b81965daf26d746cba45169edcabe"
+      },
+      "rows": 20,
+      "same_H_and_delta_bytes_certified": false,
+      "scope": "four saved families, five lags, all conditions and every direction seed; aggregated scores only",
+      "score_cases": 220,
+      "structural_fields_equal": true,
+      "summary": {
+        "first_target_loss_sum": {
+          "compared": 220,
+          "exact_equal": 33,
+          "max_abs_difference": 9.69927978515625,
+          "rms_difference": 1.960628148115221
+        },
+        "first_target_nll": {
+          "compared": 220,
+          "exact_equal": 33,
+          "max_abs_difference": 0.025258541107177734,
+          "rms_difference": 0.005105802469050057
+        },
+        "loss_sum": {
+          "compared": 220,
+          "exact_equal": 22,
+          "max_abs_difference": 14.641090393066406,
+          "rms_difference": 3.3569822168305046
+        },
+        "nll": {
+          "compared": 220,
+          "exact_equal": 22,
+          "max_abs_difference": 0.017164232582727257,
+          "rms_difference": 0.0039407130732951705
+        }
+      }
+    }
+  },
+  "latest_budget": {
+    "evaluation_target_accesses": 1660782,
+    "evidence_input_tokens": 0,
+    "failed_or_partial_queries_are_not_refunded": true,
+    "new_diagnostic_target_accesses": 0,
+    "new_evaluation_target_accesses": 1374100,
+    "optimizer_targets_completed_by_arm": {
+      "alpha099_rmsnorm": 0,
+      "alpha100_rmsnorm": 0
+    },
+    "optimizer_targets_dispatched": 0,
+    "optimizer_targets_dispatched_by_arm": {
+      "alpha099_rmsnorm": 0,
+      "alpha100_rmsnorm": 0
+    },
+    "optimizer_targets_in_completed_groups": 0,
+    "prior_diagnostic_target_accesses": 59620,
+    "prior_evaluation_target_accesses": 286682,
+    "prior_optimizer_target_accesses": 21450663,
+    "protocol": "qwen38_native_staged_alternating_ledger_v1",
+    "query_input_tokens": 0,
+    "shared_optimizer_target_cap": 100000000,
+    "total_diagnostic_target_accesses": 59620,
+    "total_evaluation_target_accesses": 1660782,
+    "total_optimizer_target_accesses": 21450663
+  },
+  "memory": {
+    "after_round_allocated_max_bytes": 71384116224,
+    "after_round_allocated_min_bytes": 71174369792,
+    "completed_rounds": 9,
+    "max_batch_peak_allocated_bytes": 76979400704,
+    "max_round_peak_allocated_bytes": 76979400704,
+    "max_round_peak_reserved_bytes": 78093746176,
+    "observed_native_batches": 480
+  },
+  "migration": {
+    "arms": {
+      "alpha099_rmsnorm": {
+        "completed_loss_targets": 0,
+        "optimizer_sha256": "e52f3acfb674e11a7c6bc48dde530e2bb04501e125ab62ef06062ffbd8fd714e",
+        "optimizer_step": 0,
+        "writer_sha256": "1e6ffa266a10f1b31d0cb8368e5c8ddfb8c25d0d0a1d6315a0bf1f64f50a27a0"
+      },
+      "alpha100_rmsnorm": {
+        "completed_loss_targets": 19981748,
+        "optimizer_sha256": "d431d0ffc7af93c516f0eab532b907edc8f7957e7dfa2077b5b9a07f20db7e54",
+        "optimizer_step": 834,
+        "writer_sha256": "3a7cb479ce8cb5e727c9e0a09b304011152f3789e2aba3072a2773a79b9698fa"
+      }
+    },
+    "authorization": "user requested no_grad DEV64 repair and continuation",
+    "changed_checkpoint_fields": [
+      "code_manifest_sha256",
+      "runtime_identity_sha256"
+    ],
+    "changed_code_files": [
+      "scripts/native_qwen38/qwen38_native_dev64_eval.py"
+    ],
+    "created_utc": "2026-10-20T15:26:26.665941+00:00",
+    "derived_checkpoint": {
+      "bytes": 65858381,
+      "path": "/workspace/delta-ngram-native-20261020/reports/native_eval_no_grad_migration_01/joint-eval-migrated.pt",
+      "sha256": "7be206e78c647971be649668a53857e5cb1e52db6458346268194f3435547a1c"
+    },
+    "historical_source_fields_retained": true,
+    "latest_external_budget": {
+      "evaluation_target_accesses": 286682,
+      "evidence_input_tokens": 0,
+      "failed_or_partial_queries_are_not_refunded": true,
+      "new_diagnostic_target_accesses": 0,
+      "new_evaluation_target_accesses": 143341,
+      "optimizer_targets_completed_by_arm": {
+        "alpha099_rmsnorm": 0,
+        "alpha100_rmsnorm": 0
+      },
+      "optimizer_targets_dispatched": 0,
+      "optimizer_targets_dispatched_by_arm": {
+        "alpha099_rmsnorm": 0,
+        "alpha100_rmsnorm": 0
+      },
+      "optimizer_targets_in_completed_groups": 0,
+      "prior_diagnostic_target_accesses": 59620,
+      "prior_evaluation_target_accesses": 143341,
+      "prior_optimizer_target_accesses": 21450663,
+      "protocol": "qwen38_native_staged_alternating_ledger_v1",
+      "query_input_tokens": 0,
+      "shared_optimizer_target_cap": 100000000,
+      "total_diagnostic_target_accesses": 59620,
+      "total_evaluation_target_accesses": 286682,
+      "total_optimizer_target_accesses": 21450663
+    },
+    "native_runtime_unchanged": true,
+    "new_code_manifest_sha256": "a7ad20d9536b50669c4118d1d52a977792a30b5884b29a22d7e34b3caaf3603b",
+    "new_evaluator": {
+      "bytes": 34676,
+      "sha256": "46a3cc47d20bd8f4dce103b7aee5654824c95da5375bac08e074f3997b3aead9"
+    },
+    "new_runtime_identity_sha256": "347417aeeb289aa89c4e59909def7d1ef6b17a3243ecb5e11a0b714b7f88fa5c",
+    "old_code_manifest_sha256": "5b547f7fd9a0c2d70395f3faa174d533e90c067416e4391bd08fa2a0acb4baf0",
+    "old_evaluator": {
+      "bytes": 29963,
+      "sha256": "ff9e3ad30a102c0754156958cd50fb19c0234262f30135335fa1a539b209f929"
+    },
+    "old_runtime_identity_sha256": "5617e210689ce14ea7cb97f80725d13244dfb511c97aa6a14d3461fb227589dc",
+    "preserved_state_sha256": "e54e4556309692c647412001c3bfda70025844f93fc97bb0be5539e9cadb1aeb",
+    "protocol": "qwen38_eval_only_checkpoint_migration_v1",
+    "registration_sha256_retains_original_registration": true,
+    "schedule_cursor": {
+      "arm": "alpha100_rmsnorm",
+      "completed_stages": [],
+      "evaluation_attempt": 2,
+      "milestone": 20000000,
+      "next_complete_group_target_cost": 26624,
+      "phase": "evaluation_pending",
+      "stage_index": 0
+    },
+    "source_checkpoint_unchanged": true,
+    "source_files": {
+      "source_budget_ledger": {
+        "bytes": 901,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_06/final_budget_ledger.json",
+        "sha256": "63c380658c94349cdf74d36052cac6744616846643dfd59d5e2acdc08aba56c5"
+      },
+      "source_checkpoint": {
+        "bytes": 65857631,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_06/joint-latest.pt",
+        "sha256": "a12d15a87e2a16c55a79d6d30470181e5a75eeb3463d23fbc185568b8f26172b"
+      },
+      "source_manifest": {
+        "bytes": 15226,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_06/input_manifest.json",
+        "sha256": "abede12031663c149249c04d96a0bc7132d0e57b1e06481b501590d2ce1c8ef7"
+      },
+      "source_runtime": {
+        "bytes": 6065,
+        "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_06/runtime_identity.json",
+        "sha256": "8e1e0c27f89dd6c82405985ce87ad78e159a19064030c8094f2ff62d0dff9118"
+      }
+    },
+    "tool": {
+      "bytes": 8461,
+      "path": "/workspace/delta-ngram-native-20261020/delta-ngram/scripts/native_qwen38/qwen38_native_migrate_eval_only.py",
+      "sha256": "accf7923990bffbc59c00a99552c8fc334f9565fac30a6a377616a8492b2455a"
+    },
+    "training_state_unchanged": true,
+    "zero_model_forwards": true,
+    "zero_optimizer_steps": true
+  },
+  "pid": 86316,
+  "pid_present": true,
+  "protocol": "qwen38_eval_no_grad_repair_receipt_v1",
+  "run": "native_main_training_07",
+  "started_utc": "2026-10-20T15:26:49.711816+00:00",
+  "training_resume": "alpha099 first20M after successful pending alpha100 DEV64, then existing alternating schedule",
+  "training_runner_sha256": "eaf6fd988a77328fc658f426f0145ad291cb29e324b4294c3049118382cca44e",
+  "validation": {
+    "CPU_migration_tests": 17,
+    "additional_diagnostic_CE": 0,
+    "full_DEV64_complete": false,
+    "passed": 17,
+    "source_training_state_preserved": true
+  }
+}

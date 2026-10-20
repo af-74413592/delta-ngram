@@ -1,7 +1,22 @@
 {
   "protocol": "qwen38_native_staged_schedule_user_adoption_v3",
   "recorded_date": "2026-10-20",
-  "status": "training_first_three_groups_completed",
+  "status": "alpha100_first20M_saved_main07_no_grad_DEV64_in_progress",
+  "latest_recovery": {
+    "run_id": "main07",
+    "pid": 86316,
+    "started_utc": "2026-10-20T15:26:49.711816+00:00",
+    "reason": "user_requested_no_grad_eval_repair_after_main05_and_main06_stalled",
+    "alpha100_completed_model_targets": 19981748,
+    "alpha100_completed_groups": 834,
+    "alpha099_completed_model_targets": 0,
+    "observed_DEV64_families_complete": 36,
+    "training_runner_changed": false,
+    "only_evaluator_code_change_allowed": true,
+    "both_arms_training_state_preserved": true,
+    "after_DEV64": "continue_alpha099_first20M_then_existing_alternating_schedule",
+    "receipt": "qwen38_native_eval_no_grad_repair_20261020.json"
+  },
   "authorization": {
     "source": "explicit_user_instruction",
     "prior_instruction": "新调度直接跑完整100M，不要验证了已经很晚",
