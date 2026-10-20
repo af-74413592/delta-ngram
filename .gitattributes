@@ -4,4 +4,5 @@
 *.yaml text eol=lf
 *.md text eol=lf
 *.sh text eol=lf
+docs/reports/m1_20261020/backup_receipts/** -text
 
