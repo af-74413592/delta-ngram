@@ -151,7 +151,7 @@ writer 的目标只依赖未打补丁的 H，但门控读取旧 Δ，因此状�
 
 2026-10-20 已在固定版本运行时的四张 H200 上完成原生接口预检：空状态保持原输出，原生地址/EOS 检查通过，梯度可经过 lookup overlay 返回。原生 TP scatter/gather 的两处伴随重建误差均为 0，应使用各 TP rank 上已完整的 replica 梯度，不再重复求和。真实 PLE 权重与输入的 12 个局部环节、3 个整链方向均通过 FP64 参考有限差分；原生 BF16 输入梯度与参考的相对 L2 误差约 0.006946，余弦约 0.999976。早先整模型 BF16 有限差分仍保留为未通过验收，不由参考结果替代。
 
-目前另有两个独立问题：grad/no_grad 前向不一致，以及初始小 Δ 被 lookup 的 BF16 舍入扭曲。单独将两个 HC helper 改为 eager 未消除前者；所有已执行检查都关闭了 PLE 融合核。主评测暂定与训练一致的开梯度前向、不做反传，并单独核对真实训练 schedule 的前向。读取精度修复和 writer 反传核对完成前不启动优化。最终读取实现确定后，重算证据 H 与每头尺度，旧缓存仅作历史诊断。旧 `reader.backend=native` 的通用加载入口仍未接通。运行边界与当前状态见 [native runtime guide](../../../scripts/native_qwen38/README.md)。
+两个独立问题已有定位与局部修复：grad/no_grad 的首个分叉位于 MoE router 按梯度模式改变的 top-k 排序；固定训练排序后，books 的四组 native/split、初始/零 Δ 条件及实际训练前向均达到逐位一致。初始小 Δ 的入口舍入通过独立 FP32 投影与相加修复，投影相加余弦超过 0.99999997；PLE 最终转回 BF16 仍有显著量化失真，不能称为全程保真。所有检查均关闭 PLE 融合核。最终选择 sorted router、eager HC、split PLE，证据、self、empty 与 probe 共用；优化前重新生成 H/每头尺度并完成 writer 与端到端方向核对。旧缓存仅作历史诊断。详见[数值审计](../../experiments/qwen38_native_20261020/numerical_runtime_audit_20261020.md)与 [native runtime guide](../../../scripts/native_qwen38/README.md)。
 
 ### 本地一手依据
 

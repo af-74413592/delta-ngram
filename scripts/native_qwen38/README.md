@@ -52,20 +52,39 @@ finite differences. The captured native BF16 input gradient had 0.006946
 relative L2 error and 0.999976 cosine similarity against this reference.
 This establishes reference consistency, not exact native-kernel derivatives.
 
-Grad-enabled replays are bitwise repeatable, but no-grad queries differ,
-including with zero delta. Unwrapping the two compiled HC helpers did not
-remove that difference. PLE fusion was disabled throughout these checks.
-The provisional evaluation contract uses grad-enabled forwards without a
-backward pass; its equivalence to the actual training forward is checked
-separately. It retains autograd activation costs.
+The original no-grad discrepancy was localized to the MoE router. MCore
+selected a different top-k sorting order according to gradient mode,
+changing the order of floating-point score normalization. A scoped native
+top-k callback now fixes the training order in both modes. On the audited
+books family, all four native/split and initial/zero-memory cases had
+bitwise-equal grad/no-grad logits, as did the actual training forwards.
+HC compiled and eager paths still differ numerically; the selected runtime
+uses eager HC consistently. PLE fusion was disabled throughout.
 
-Small initial writes are also distorted by the BF16 lookup cast. This
-precision issue is independent of dispatch parity. A split-projection
-repair, refreshed evidence caches and scales, the writer adjoint check,
-and a training-mode directional check are required before optimizer steps.
-The paired probe entry point remains an unexecuted draft; a registration
-or CPU test result alone does not authorize it to train.
+The split PLE path preserves the native BF16 base projections and computes
+the delta branch, addition, normalization, gating and convolution in FP32.
+Its projection-addition cosine exceeds 0.99999997 on the audited sample.
+The final BF16 output cast still distorts the perturbation substantially;
+this repair does not make the full reader loss smooth or lossless.
+Fresh evidence and scales were collected with the selected runtime.
+The user subsequently canceled the separate eight-step stage and explicitly
+authorized direct training without the remaining checks. The writer
+fixed-cotangent finite difference and end-to-end directional check remain
+unverified; their acceptance is not claimed.
+
+`qwen38_native_train.py` is the full-pool training entry point. It uses the
+existing token-weighted sampler, causal query-before-write execution and
+full-trajectory writer BPTT, with at most 2M loss targets per alpha arm.
+The two arms share one frozen reader. Small TP gradient differences are
+checked against the existing FP32 tolerance before selecting TP0's copy;
+replica gradients are not added together. The main process has been
+dispatched with the explicit authorization and immutable source hashes.
+Checkpoints include writer, optimizer, sampler and per-rank RNG states;
+a resume command is not yet implemented.
 
 CPU tests cover row ownership, valid native row zero, prefix masking,
 full-trajectory gradient propagation, and frozen-data identity. These tests
 do not replace the real-runtime numerical check or establish training quality.
+
+See the [numerical runtime audit](../../docs/experiments/qwen38_native_20261020/numerical_runtime_audit_20261020.md)
+for measured differences, remaining quantization, coverage and receipt hashes.

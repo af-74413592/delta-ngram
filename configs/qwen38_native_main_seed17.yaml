@@ -1,0 +1,59 @@
+# Source/length shares inherited from m1_event_mixture_seed17.yaml.
+# Both alpha arms share one frozen native reader and one cumulative 100M budget.
+version: 1
+seed: 17
+model:
+  name_or_path: Qwen/Qwen3.8-Flash-Next
+  revision: de4b8e4d43b917e7706784d8bb445c9af86a3540
+  device: cuda
+  smoke: false
+reader:
+  backend: native_ngram
+  frozen: true
+writer:
+  hidden_dim: 256
+  right_window: 4
+  input_norm: rmsnorm
+  input_norm_epsilon: 1.0e-6
+method:
+  name: forward
+  operator: D1
+train:
+  lr: 0.0003
+  weight_decay: 0.0
+  gradient_clip: 1.0
+raw:
+  dataset: data/native_full/train_validation.jsonl
+  event_dataset: data/native_full/train_validation_event_streams.jsonl
+  block_size: 512
+  prefix_tokens: 128
+  block_counts: [2, 4, 8, 16, 32]
+  source_weights:
+    code: 0.2
+    papers: 0.25
+    books: 0.2
+    web: 0.15
+    news: 0.175
+    news_event: 0.025
+  source_length_weights:
+    code: {8: 0.5, 16: 0.5}
+    papers: {8: 0.5, 16: 0.5}
+    books: {8: 0.5, 16: 0.5}
+    web: {8: 0.5, 16: 0.5}
+    news: {2: 0.9, 4: 0.1}
+    news_event:
+      4: 0.09629447402461881
+      8: 0.6605601894654698
+      16: 0.20335375659252522
+      32: 0.03979157991738612
+  batch_size: 1
+  gradient_accumulation_steps: 12
+  loss_tokens: 2000000
+  checkpoint_reader: false
+  checkpoint_every_tokens: 500000
+run:
+  alpha_values: [1.0, 0.99]
+  cumulative_optimizer_target_cap: 100000000
+  initial_two_arm_target_cap: 4000000
+  max_wall_seconds: 86400
+  automatic_extension: false

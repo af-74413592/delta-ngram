@@ -1,6 +1,6 @@
 # Qwen3.8 原生启动登记草稿
 
-2026-10-20。**DRAFT：writer optimizer 更新仍为0，有界训练runner尚未放行。**FP64 PLE参考FD已通过，仍待完整writer adjoint、一个端到端方向检查及所选运行路径验收。用户最新要求将A（grad/no-grad差异）改为并行调查，不能单独阻止训练；主评测采用grad-enabled/no-backward并与实际训练前向比较。旧H/scale待所选split-precision路径固定后重算。最新边界见§9；精确合同以[有界训练登记](qwen38_native_normshort_registration_20261020.md)及其JSON为准。
+2026-10-20。**最终运行路径及有界runner已完成本地复核；本文尚无新准备流程通过或optimizer更新的回执。**采用sorted router、HC eager及split PLE，重新采集H/scale；在同一常驻模型内完成完整writer adjoint、端到端方向检查与实际训练前向比较后，才创建优化器。既有诊断消费9,444，新准备检查1,024、有界阶段37,632，全部完成时累计上限48,100。最新证据见§9，精确计划见[有界训练登记](qwen38_native_normshort_registration_20261020.md)；运行候选另行冻结，本次说明更新不改写仓库JSON。
 
 依据：[训练计划 §9](../../training_plan_20261019.md#9-原生诊断阶段与预算)、[五源执行计划](../../multidomain_execution_plan_20261019.md)、[原生架构](../../design/qwen38_native_20261020/architecture.md)。用户已决定推进原生模型，原始文本及冻结划分从 B2 恢复，使用原生 tokenizer 重新编码；不重新抓取数据源。资源、adapter 与 runner 的实际状态由各自验收回执记录。
 
@@ -66,7 +66,7 @@ DEV64 所有配对正文登记的发布日期范围为 **2025-08-01 至 2025-12-
 
 从calibration24每来源按selection_hash/group_id排序取前两个家族训练和校准，后两个固定train-side probe。旧compiled路径观测包含12家族、18个history frames、8,403新tokens；H RMS=3.729683，RMSNorm raw-target RMS约.003768，T⁰约.00801–.00849。所选split-precision运行路径固定后重新生成H及每头scale；旧数值仅保留历史，当前无有效scale向量。唯一rho=.01保持，两α共用新向量；用户允许的.1仅是未选择fallback。
 
-缩减计划为优化24,576、probe10,752、初扰2,304，合37,632；已发生两次norm TP FD各220继续计入，计划加已消费38,072，未分配额度不自动扩试。最新全局已完成诊断消费为5,860，见§9。旧1,408-target全BF16 writer loss FD未运行，本修订改为结构TP adjoint、真实cotangent下FP32 writer链检查及grad/no-grad logits+loss audit；已有部分基础设施证据不代表全部门槛通过。
+固定阶段为优化24,576、probe10,752、初扰2,304，合37,632；新准备检查单独登记1,024。既有诊断9,444（含两次旧norm TP FD合440）保守同时计入75,000阶段上限与100,000全局上限，全部完成时累计48,100。剩余额度不自动扩试。旧1,408-target全BF16 writer loss FD未运行，其预留已取消；真实cotangent writer链与预登记端到端检查仍待新运行回执。
 
 ## 5. 真实原生 preflight 验收矩阵
 
@@ -113,7 +113,7 @@ P6 仍执行原计划 §6.4：拟扩大的原生 reader/writer 在冻结开发�
 
 本轮本地回执位于 `delta-ngram-runs/qwen38_native_launch_20261020`：`initial_receipts` 保留 reader preflight 与 calibration24 身份；`native_full_receipts` 保留全量派生和权重 header 审计；`norm_observation_receipts` 保留 H/T⁰ 与首轮未定 TP FD，`tp_fd_02_receipts` 保留第二轮未定回执；`norm_scale_calibration_20261020.json` 保存真实观测推导的单候选 scale。完整 tensor/cache 在运行主机，紧凑本地 manifest 不等于本地核验了所有 payload bytes。
 
-核心模块位于 `src/delta_ngram`：`qwen38_native`/`qwen38_adapter` 管理地址与原生 PLE 接口，`qwen38_training` 管理轨迹梯度，`qwen38_probe` 管理固定 frame/预算，`qwen38_ple_reference` 提供独立数学参考，`qwen38_probe_analysis` 只分析已保存的配对结果。`scripts/native_qwen38` 负责运行、审计与收据；其中 HC dispatch helper 仅在显式检查中临时解包两个函数并恢复。模块已落地不表示端到端 paired runner 已验收。
+核心模块位于 `src/delta_ngram`：`qwen38_native`/`qwen38_adapter` 管理地址与原生PLE接口，`qwen38_training` 管理轨迹梯度及独立lookup adjoint，`qwen38_precision` 实现split PLE，`qwen38_probe` 管理frame/预算，`qwen38_ple_reference` 提供独立参考，`qwen38_probe_analysis` 分析保存结果。`scripts/native_qwen38` 中HC helper在整个准备/训练scope内使用两个已固定源码函数的eager实现，router helper固定top-k排序，退出时恢复。runner提供 `--validate-preparation` CPU校验和单次模型加载的 `--execute`；44项相关CPU测试及代码复核通过，不代表GPU准备或优化已通过。
 
 ## 8. 全量原生数据容量复核
 
@@ -139,12 +139,15 @@ P6 仍执行原计划 §6.4：拟扩大的原生 reader/writer 在冻结开发�
 | 参考检查边界 | 输入来自结构快照，Δ=`sin(…)×.01`，不是实际writer状态；本次CPU参考新增CE目标为0。`reference_fd_passed`只证明参考函数的导数自洽；native VJP/输出误差是另列观测，尚未形成原生导数验收。 |
 | 原始模式审计 | 六来源×两状态×三模式，共4,608目标；12组grad-repeat logits/loss均逐位一致，grad/no-grad却全部不一致。该结果确认可重复的模式差异，不能称训推等价。回执SHA `8ea1203e0aa8542c98ab0033833f0b772946b89fb49b4e0ab86c328805a28d7a`。 |
 | 实际writer量化可见性 | 非零Δ坐标中10.7–14.4%改变BF16 lookup；52.7–79.2%的请求Δ能量位于未改变坐标，有效扰动能量/请求能量约33.8–70.9%，二者不是互补量，也不证明方向保留。请求Δ与有效Δ的直接cosine仍待补；PLE变化非零目前只覆盖TP0局部位置，须扩展TP覆盖。 |
-| HC eager定位 | books两状态检查完成768目标，grad-repeat均逐位一致，但模式parity仍失败：初始Δ的no-grad减grad loss=+.0012359619140625、最大logit差2.53125、top1变化9/128；零Δ分别为−.0034248828887939453、3.1875、8/128。此完成结果由root回报，本地receipt SHA待绑定；未接受为修复，默认仍为compiled。 |
+| 单独HC eager历史检查 | 消费768 targets，两组grad-repeat逐位一致但grad/no-grad仍不同；仅解包HC不足以消除A。此为后续router定位前的历史结果。 |
+| Sorted-router A/B检查 | 固定books、native/split两条PLE路径×初始writer/零Δ四种情况，grad/no-grad与repeat的logits/loss全部逐位一致；两次实际backward的训练前向也与评估前向一致。消耗2,816目标、optimizer0。回执SHA `8d18a0c8f8fc9bf554aa955d1e3a9d8ab4f3089831ae37249683dd4c419d6c16`已本地核验。 |
 
-已完成全局消费为 **5,860 = 33 reader preflight + 440旧norm FD + 11 TP结构 + 4,608原模式审计 + 768 HC eager检查**；norm子账本440，optimizer0。CPU参考没有新增CE消费；失败检查同样保留消费。
+已完成诊断为 **9,444 = 33 reader preflight + 440旧norm FD + 11 TP结构 + 4,608原模式审计 + 768 HC eager检查 + 768模块定位 + 2,816 sorted-router A/B检查**，这些回执的optimizer更新均为0。新父账本保守把全部9,444计入阶段及全局诊断上限；CPU参考新增CE为0，失败检查消费保留。
 
-**最新执行优先级覆盖早先的A硬门槛。**A（前向dispatch）并行调查，原empty books模式loss差+.04118 nat/token并不小，必须保留报告；主评测正式登记为grad-enabled/no-backward，并直接核对实际训练在backward前的logits/loss。A的no-grad parity失败本身不阻止有界训练。该路径仍创建计算图并保存激活，不能声称具有普通no-grad部署的资源成本。
+**最终runtime固定为sorted router + HC eager + split PLE。**A定位到router原来的 `sorted=torch.is_grad_enabled()`；固定 `sorted=True` 保留训练top-k顺序。修复后的books检查通过，但不推广为所有样本已验收。HC compiled/eager各自模式parity都通过，两者数值仍不同；采用预先选定的eager，未按loss择优。主评测保持grad-enabled/no-backward，准备流程仍直接核对真实训练anchor的logits/loss；其计算图、激活与资源成本照实记录。A的no-grad parity不新增为训练硬门槛。
 
-B选择单PLE路径：base继续用native BF16 TE key/value投影，Δ独立FP32投影，随后norm/gate/conv以FP32执行，末尾转BF16；所有条件使用相同路径。新empty baseline可能偏离旧native baseline，必须量化，不能预称逐位相同。继续记录请求/有效Δ的直接cosine、误差及更完整TP覆盖；`PLE_FUSED_KERNEL=0`在已有运行中均成立。
+B的FP32投影支路保留了约99.99%的非零请求，books观测cosine>.99999997；末尾BF16转换仍有明显方向误差：cosine约.36357、沿请求方向幅度比.9925、能量比7.45、relative-L2约2.543、变化坐标约15.2%。这些是两TP上的实际writer诊断，不证明完整方向保留、端到端loss光滑或B已全部解决；不新增100%保真门槛。native/split empty也不同，必须重新记录baseline。上述审计使用历史H/scale，不能替代最终runtime下的重算；ρ=.01保持，.1不自动启用，`PLE_FUSED_KERNEL=0`保持。
+
+新准备的1,024目标为native empty128、实际backward anchor128、匹配评估前向128、固定两步长的四次端到端FD512、baseline重复128；split empty复用初扰额度。H/scale、真实cotangent writer检查与同anchor的FP32 lookup adjoint不新增CE。端到端仅一个seed20261020、Rademacher RMS=1的materialized-memory方向，h=2⁻¹⁴/2⁻¹³、rtol=.20/atol=.001、两斜率互差≤20%，解析幅度<.01判未定；同RNG、同grad-enabled leaf、baseline逐位一致。失败或未定在STEP001前停，不搜索步长或容差。完整预算为 **9,444既有 + 1,024准备 + 37,632有界阶段 = 48,100累计上限**，未执行部分仍为预留。
 
 优化前仍必须完成完整writer adjoint、已通过的PLE参考及一个预登记端到端方向检查，绑定所选runtime的新H/scale，并冻结稳定性停止规则：非有限loss/grad/state、reader参数变化、预算越界立即停；未裁剪梯度范数超过此前5步中位数10倍连续2步停；有效写事件中β<.001或>.999的比例>.01连续2步停；step4/8每臂总体固定probe平均NLL较step0恶化>.1 nat/token停。step8复核平坦或改善的曲线后才能另行决定延长，不要求每个batch loss单调下降。

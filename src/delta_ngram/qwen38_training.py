@@ -32,6 +32,109 @@ from .batching import BatchMemoryState
 Memory = BatchMemoryState | LazyDecayState
 
 
+@torch.no_grad()
+def manual_split_delta_adjoint(
+        state: Memory, *, physical_rows: Tensor, dense_delta_cotangent: Tensor,
+        valid_mask: Tensor, owner_ids: Tensor) -> Tensor:
+    """Independent index-add adjoint of a split-precision sparse lookup.
+
+    Accepts the actual FP32 dense-delta cotangent before both projections, as
+    either [lanes,T,heads,width] or [lanes,T,heads*width]. Missing rows and padding
+    contribute zero. A lazy state's effective read contributes its exact
+    current decay factor to the gradient of STORED state.values. A materialized
+    BatchMemoryState has factor one. No autograd, process group or model runs.
+    """
+    if not isinstance(state, (BatchMemoryState, LazyDecayState)):
+        raise TypeError("split adjoint requires a native batch or lazy memory")
+    device = state.values.device
+    if (state.values.dtype != torch.float32 or physical_rows.dtype != torch.long
+            or physical_rows.ndim != 3 or valid_mask.dtype != torch.bool
+            or valid_mask.shape != physical_rows.shape[:2]
+            or owner_ids.dtype != torch.long or owner_ids.shape != physical_rows.shape[:1]
+            or dense_delta_cotangent.dtype != torch.float32
+            or any(x.device != device for x in (
+                physical_rows, valid_mask, owner_ids, dense_delta_cotangent))):
+        raise ValueError("split adjoint tensor layouts, dtypes or devices disagree")
+    if (bool((physical_rows < 0).any()) or bool((physical_rows > state.row_capacity).any())
+            or bool((owner_ids < 0).any()) or bool((owner_ids >= state.batch_size).any())):
+        raise ValueError("split adjoint owner or physical row is outside the memory")
+    headed = (*physical_rows.shape, state.width)
+    flattened = (*physical_rows.shape[:2], physical_rows.shape[-1] * state.width)
+    if tuple(dense_delta_cotangent.shape) not in (headed, flattened):
+        raise ValueError("dense delta cotangent has the wrong concatenated-head width")
+    if not bool(torch.isfinite(dense_delta_cotangent).all()):
+        raise ValueError("split delta cotangent contains nonfinite values")
+    result = torch.zeros_like(state.values)
+    if not state.rows.numel():
+        return result
+    gradient = dense_delta_cotangent.reshape(headed).reshape(-1, state.width)
+    active = valid_mask[..., None] & physical_rows.gt(0)
+    if state.batch_size == 1:
+        packed = torch.where(active, physical_rows, 0)
+    else:
+        offsets = owner_ids[:, None, None] * (state.row_capacity + 1)
+        packed = torch.where(active, physical_rows + offsets, 0)
+    packed = packed.reshape(-1)
+    positions = torch.searchsorted(state.rows, packed)
+    safe = positions.clamp_max(state.rows.numel() - 1)
+    hit = packed.gt(0) & positions.lt(state.rows.numel()) & state.rows[safe].eq(packed)
+    if isinstance(state, LazyDecayState):
+        stored_owners = (torch.zeros_like(state.rows) if state.batch_size == 1 else
+                         torch.div(state.rows, state.row_capacity + 1, rounding_mode="floor"))
+        factors = (state.cumulative_log_alpha[stored_owners]
+                   - state.row_log_alpha_at_write).exp().to(state.values.dtype)
+        gradient = gradient * factors[safe, None]
+    result.index_add_(0, safe[hit], gradient[hit])
+    return result
+
+
+@torch.no_grad()
+def split_delta_adjoint_report(reference: Tensor, observed: Tensor, *,
+                               replica_gradients=None) -> dict:
+    """Fixed local adjoint tolerance plus exact TP2 replica equality.
+
+    ``replica_gradients`` contains exactly the two raw stored-value gradients,
+    before any sum/mean. Without them the result is explicitly local-only.
+    """
+    if (reference.shape != observed.shape or reference.dtype != torch.float32
+            or observed.dtype != torch.float32 or reference.device != observed.device
+            or not bool(torch.isfinite(reference).all())
+            or not bool(torch.isfinite(observed).all())):
+        raise ValueError("split adjoint comparison requires finite aligned FP32 gradients")
+    rtol, atol = 1e-6, 1e-7
+    error = (observed - reference).abs()
+    local_passed = bool((error <= atol + rtol * reference.abs()).all())
+    replica_equal = None
+    hashes = None
+    if replica_gradients is not None:
+        if len(replica_gradients) != 2 or any(
+                gradient.shape != observed.shape or gradient.dtype != torch.float32
+                or not bool(torch.isfinite(gradient).all()) for gradient in replica_gradients):
+            raise ValueError("TP proof requires exactly two finite matching raw FP32 gradients")
+        copies = [gradient.detach().contiguous().cpu() for gradient in replica_gradients]
+        if not any(torch.equal(observed.cpu(), gradient) for gradient in copies):
+            raise ValueError("local observed gradient is absent from the two TP replicas")
+        replica_equal = torch.equal(copies[0], copies[1])
+        hashes = [hashlib.sha256(gradient.numpy().tobytes()).hexdigest() for gradient in copies]
+    informative = bool(reference.ne(0).any() and observed.ne(0).any())
+    status = ("rejected" if not local_passed or replica_equal is False else
+              "inconclusive" if not informative else
+              "local_only" if replica_equal is None else "accepted")
+    return {
+        "protocol": "qwen38_split_dense_delta_sparse_adjoint_v1", "status": status,
+        "local_adjoint_passed": local_passed, "rtol": rtol, "atol": atol,
+        "max_abs_error": float(error.max()) if error.numel() else 0.,
+        "reference_gradient_l2": float(reference.norm()),
+        "observed_gradient_l2": float(observed.norm()),
+        "gradient_nonzero": informative,
+        "tp_replicas_bitwise_equal": replica_equal,
+        "raw_replica_sha256": hashes,
+        "tp_reduction": "replica" if status == "accepted" else None,
+        "extra_reader_forwards": 0, "extra_reader_backwards": 0, "extra_ce_targets": 0,
+        "scope": "Sparse lookup/lazy-decay adjoint and TP equality; not whole-reader derivative validation.",
+    }
+
+
 @dataclass(frozen=True)
 class GradientScaleProbe:
     """One central difference of the SAME logical direction on every TP rank.
@@ -199,6 +302,72 @@ def distributed_tp_gradient(gradient: Tensor, policy: TPPolicy, *, group) -> Ten
         if policy.reduction == "mean":
             result.div_(policy.world_size)
     return result
+
+
+@torch.no_grad()
+def checked_tp_replica_gradient(
+        gradient: Tensor, policy: TPPolicy, *, group, diagnostics: dict | None = None) -> Tensor:
+    """Check complete TP replicas, then use TP0's canonical copy without summing.
+
+    The already registered sparse-adjoint tolerance is fixed at 1e-6/1e-7.
+    This function does not make a new TP scaling choice: it requires an accepted
+    replica policy. Tiny upstream numerical differences remain reported; using
+    one checked copy keeps the writer VJP identical on both first-stage ranks.
+    Only one gradient tensor is broadcast, never gathered. Optional diagnostic
+    dictionaries must be supplied on both ranks, or omitted on both ranks.
+    """
+    import torch.distributed as dist
+
+    if (not isinstance(policy, (TPGradientPolicy, NativeTPStructurePolicy))
+            or policy.reduction != "replica" or policy.world_size != 2):
+        raise ValueError("checked TP copies require an accepted TP2 replica policy")
+    if not dist.is_initialized() or group is None or dist.get_world_size(group) != 2:
+        raise RuntimeError("an initialized, explicit TP2 process group is required")
+    if (not isinstance(gradient, Tensor) or gradient.dtype != torch.float32
+            or gradient.ndim != 2 or not gradient.numel()):
+        raise ValueError("checked TP gradient must be a nonempty FP32 stored-value matrix")
+    if diagnostics is not None and not isinstance(diagnostics, dict):
+        raise TypeError("TP replica diagnostics must be a dictionary")
+    rtol, atol = 1e-6, 1e-7
+    local = gradient.detach()
+    canonical = local.clone()
+    source_rank = dist.get_global_rank(group, 0)
+    dist.broadcast(canonical, src=source_rank, group=group)
+    finite = torch.isfinite(local).all() & torch.isfinite(canonical).all()
+    error = (local - canonical).abs()
+    passed = finite & (error <= atol + rtol * canonical.abs()).all()
+    exact = torch.eq(local, canonical).all()
+    flags = torch.stack((~passed, ~exact)).to(dtype=torch.int64)
+    dist.all_reduce(flags, op=dist.ReduceOp.MAX, group=group)
+    accepted, bitwise_equal = int(flags[0]) == 0, int(flags[1]) == 0
+    if diagnostics is not None:
+        left, right = local.double(), canonical.double()
+        difference = left - right
+        reference_norm = right.norm()
+        local_norm = left.norm()
+        relative = difference.norm() / reference_norm.clamp_min(1e-300)
+        cosine = ((left * right).sum() / (local_norm * reference_norm).clamp_min(1e-300))
+        # Global maxima cover both ranks even when only TP0 saves the receipt.
+        metrics = torch.stack((error.double().max(), relative, 1.0 - cosine))
+        metrics = torch.nan_to_num(metrics, nan=float("inf"), posinf=float("inf"), neginf=float("inf"))
+        dist.all_reduce(metrics, op=dist.ReduceOp.MAX, group=group)
+        diagnostics.update(
+            protocol="qwen38_checked_canonical_tp_replica_v1",
+            status="accepted" if accepted else "rejected",
+            rtol=rtol, atol=atol, tp_reduction="replica",
+            raw_replicas_bitwise_equal=bitwise_equal,
+            raw_replica_max_abs_error=float(metrics[0]),
+            raw_replica_max_relative_l2_error=float(metrics[1]),
+            raw_replica_min_cosine=1.0 - float(metrics[2]),
+            canonical_tp_rank=0, canonical_global_rank=source_rank,
+            gradient_shape=list(local.shape),
+            canonical_reference_l2=float(reference_norm),
+            gradient_collective="one TP0 broadcast; no sum, mean or tensor all-gather",
+            scale_factor=1.0,
+        )
+    if not accepted:
+        raise RuntimeError("raw TP gradient replicas exceed the fixed 1e-6/1e-7 tolerance")
+    return canonical
 
 
 def writer_evidence_features(
