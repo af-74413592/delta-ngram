@@ -1,12 +1,12 @@
 # Qwen3.8 固定 RMSNorm 主训练决策与准备记录
 
-## 最新状态：main07 已启动，首个节点评测待完成
+## 最新状态：main07 首个DEV64已完成，α=.99训练已恢复
 
-总B12的四阶段H12/Q4调度已在 `main05` 完成α=1的 **834组、19,981,748个模型目标**，到达20M以内的最后完整组；α=.99仍为0。`main05` 和 `main06` 的旧grad-enabled DEV64均在4/64家族后卡住并停止，当前没有完整DEV64收益结论。
+总B12的四阶段H12/Q4调度已在 `main05` 完成α=1的 **834组、19,981,748个模型目标**，到达20M以内的最后完整组；当时α=.99为0。`main05` 和 `main06` 的旧grad-enabled DEV64均在4/64家族后卡住并停止，修复后的main07已完成64家族评测。
 
 本次只修复评测为 `torch.no_grad` 并增加batch/round显存日志；eval SHA256为 `46a3cc47d20bd8f4dce103b7aee5654824c95da5375bac08e074f3997b3aead9`，训练runner仍为 `eaf6fd988a77328fc658f426f0145ad291cb29e324b4294c3049118382cca44e`。CPU迁移仅接受这一项eval code hash变化，派生checkpoint只改code/runtime两个顶层hash；训练状态、`phase=evaluation_pending, attempt=2` 游标和预算保持，源main06完整hash与序列化往返核对已通过。
 
-`main07` 于 **2026-10-20T15:26:49.711816Z** 启动，PID **86316**；提交快照已完成36/64家族，峰值allocated为71.693 GiB/卡，9轮结束后实占66.286–66.482 GiB/卡。评测完成后自动切换α=.99的第一个20M阶段；完整评测尚未结束。启动时累计训练消费 **21,450,663**、诊断 **59,620**、此前失败评测 **286,682**；100M共享训练上限不变，失败评测另记且不退款。详见[no_grad修复记录](qwen38_native_eval_no_grad_repair_20261020.md)、[机器回执](qwen38_native_eval_no_grad_repair_20261020.json)、[最新运行记录](qwen38_native_launch_registration_20261020.md)及[四阶段核对](qwen38_native_staged_schedule_20261020.md)。
+`main07` 于 **2026-10-20T15:26:49.711816Z** 启动，PID **86316**；DEV64已完成64/64家族，峰值allocated为71.693 GiB/卡，16轮结束后实占65.906–66.482 GiB/卡。程序已自动切换α=.99第一个20M阶段并完成更新、保存检查点。启动时累计训练消费 **21,450,663**、诊断 **59,620**、此前失败评测 **286,682**；本次完整评测后累计评测消费为 **2,483,995**。100M共享训练上限不变，失败评测另记且不退款。详见[no_grad修复记录](qwen38_native_eval_no_grad_repair_20261020.md)、[机器回执](qwen38_native_eval_no_grad_repair_20261020.json)、[最新运行记录](qwen38_native_launch_registration_20261020.md)及[四阶段核对](qwen38_native_staged_schedule_20261020.md)。
 
 两支最初均从同seed17原始writer、同固定scale独立初始化。main04仅加载后撤下、零新增消费；main05早期前3组的61,440目标是历史启动快照，已被834组进度替代。既有数值门槛失败保留，不宣称等价或噪声无害。
 

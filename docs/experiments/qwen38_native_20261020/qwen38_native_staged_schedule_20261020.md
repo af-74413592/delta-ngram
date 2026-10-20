@@ -4,11 +4,11 @@
 
 用户已明确决定：“新调度直接跑完整100M，不要验证了已经很晚”，随后将运行方式改为：**α=1 与 α=.99 各自累计模型目标达到 20M、40M 等节点后保存、执行固定 DEV64 收益评测，再切换到另一支。**共享 optimizer 目标访问上限仍为 100M。正式采用四阶段调度，取消额外调度数值验证，并解除原单组梯度相对 L2 ≤0.02、余弦 ≥0.999 对正式启动的硬门槛。既有对照的失败记录保留；该决定不构成新旧调度数值等价的证明。
 
-`main05` 的α=1现已完成 **834组、19,981,748个模型目标**，这是20M以内的最后一个完整组；α=.99仍为0。`main05` 与 `main06` 的旧grad-enabled DEV64均在完成4/64家族后卡住并停止，已有partial保留，尚无完整64家族收益结论。
+`main05` 的α=1已完成 **834组、19,981,748个模型目标**，这是20M以内的最后一个完整组；当时α=.99为0。`main05` 与 `main06` 的旧grad-enabled DEV64均在完成4/64家族后卡住并停止，旧partial保留。main07已完成完整DEV64并切换α=.99训练。
 
 本次仅将DEV64读取改为 `torch.no_grad` 并增加batch/round显存日志，eval SHA256为 `46a3cc47d20bd8f4dce103b7aee5654824c95da5375bac08e074f3997b3aead9`；训练runner SHA256保持 `eaf6fd988a77328fc658f426f0145ad291cb29e324b4294c3049118382cca44e`。独立CPU迁移仅允许这一项eval code hash变化，派生checkpoint只修改code/runtime两个顶层hash；全部训练状态、`phase=evaluation_pending, attempt=2` 游标及预算保持，源main06完整hash与序列化往返核对已通过。
 
-`main07` 已于 **2026-10-20T15:26:49.711816Z** 从派生checkpoint启动，PID **86316**；提交快照已完成36/64家族，峰值allocated为71.693 GiB/卡，9轮结束后实占66.286–66.482 GiB/卡。完整评测尚未结束，DEV64完成后原调度自动进入α=.99的第一个20M阶段。详见[no_grad修复记录](qwen38_native_eval_no_grad_repair_20261020.md)及[机器回执](qwen38_native_eval_no_grad_repair_20261020.json)。
+`main07` 已于 **2026-10-20T15:26:49.711816Z** 从派生checkpoint启动，PID **86316**；已完成64/64家族，峰值allocated为71.693 GiB/卡，16轮结束后实占65.906–66.482 GiB/卡。原调度已自动进入α=.99的第一个20M阶段，前3组共61,440目标及检查点均完成。详见[no_grad修复记录](qwen38_native_eval_no_grad_repair_20261020.md)及[机器回执](qwen38_native_eval_no_grad_repair_20261020.json)。
 
 从头训练的历史起点保持：用户要求“不用第47组接续，从头来吧”后，`main05` 于 **2026-10-20 13:13:23 UTC** 启动（PID **67307**）。其前3组 **61,440** 模型目标、含首次编译合计80.57秒是早期快照，已被834组进度替代。两支使用相同seed17初始writer、相同已校准scale，分别新建AdamW、sampler与RNG；第47组checkpoint仅提供固定scale和语料身份。见[main05启动回执](qwen38_native_main05_launch_20261020.json)。
 
@@ -26,7 +26,7 @@
 
 每次完整评测实际 CE 访问为 `41 × 全部后来文章原生目标 token 数`，进入独立的 DEV64 账本，不计入 optimizer 消费，也不冒充此前接口诊断消费。原生前缀重新登记：仅在旧正例 span 仍完整位于新前缀内，或新前缀为旧负例前缀的子集时继承标签；其他记为 `unknown`，不直接套用旧 tokenizer 的 34/30 分组。主收益覆盖全部 64 家族，不按这些标签筛选。
 
-CPU 原生派生已完成；该准备过程未调用 reader、未消费 CE。全部 64 家族每个干扰距离共 **53,593** 个目标 token，每次完整 DEV64 评测计 **2,197,313** 次目标访问。新前缀为 **34 restated / 23 not_restated / 7 unknown**。部署数据位于运行根目录的 `data/native_dev64`；`COMPLETE.json` SHA256 为 `2c28fe875fc00cd1fda528e8a66c1cbb7443f205cab9d42fc13d40851280a453`，plan 与 token 文件身份完整登记于采用 JSON。后续main05/06只保存了4/64家族partial；完整评测仍待main07完成，不能据partial宣称全部64家族收益。
+CPU 原生派生已完成；该准备过程未调用 reader、未消费 CE。全部 64 家族每个干扰距离共 **53,593** 个目标 token，每次完整 DEV64 评测计 **2,197,313** 次目标访问。新前缀为 **34 restated / 23 not_restated / 7 unknown**。部署数据位于运行根目录的 `data/native_dev64`；`COMPLETE.json` SHA256 为 `2c28fe875fc00cd1fda528e8a66c1cbb7443f205cab9d42fc13d40851280a453`，plan 与 token 文件身份完整登记于采用 JSON。main05/06只保存了4/64家族partial；main07现已保存完整64家族report与COMPLETE。
 
 ## 实现范围
 
@@ -116,4 +116,4 @@ EP4 三组快测后累计 optimizer 目标访问为 1,231,214；三组新旧对�
 
 截至main07启动，α=1完成834组、19,981,748个模型目标，α=.99为0；累计optimizer消费为 **21,450,663 = 1,468,915 + 19,981,748**，100M共享训练额度剩 **78,549,337**。接口诊断仍为 **59,620**；此前失败DEV64消费 **286,682** 单列保留，main07的新评测调用继续另记。迁移不回退任何账本。
 
-当前提交快照为 **main07首个DEV64完成36/64家族，`evaluation_pending`（attempt 3）**。训练继续遵循完整组及共享预算边界，每组保存恢复状态，节点评测完成后交替；额外调度等价验证仍取消。后续实际评测结果与新增消费以[修复回执](qwen38_native_eval_no_grad_repair_20261020.json)为准。
+当前回执为 **main07首个DEV64完成64/64家族，已切换stage 1的α=.99训练**。本次新增评测2,197,313，累计评测2,483,995；训练每组保存恢复状态，继续遵循完整组及共享预算边界，节点评测完成后交替。额外调度等价验证仍取消。实际评测结果与新增消费见[修复回执](qwen38_native_eval_no_grad_repair_20261020.json)。

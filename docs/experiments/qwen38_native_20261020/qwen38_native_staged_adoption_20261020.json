@@ -1,7 +1,7 @@
 {
   "protocol": "qwen38_native_staged_schedule_user_adoption_v3",
   "recorded_date": "2026-10-20",
-  "status": "alpha100_first20M_saved_main07_no_grad_DEV64_in_progress",
+  "status": "alpha100_first20M_DEV64_complete_main07_training_alpha099",
   "latest_recovery": {
     "run_id": "main07",
     "pid": 86316,
@@ -9,8 +9,9 @@
     "reason": "user_requested_no_grad_eval_repair_after_main05_and_main06_stalled",
     "alpha100_completed_model_targets": 19981748,
     "alpha100_completed_groups": 834,
-    "alpha099_completed_model_targets": 0,
-    "observed_DEV64_families_complete": 36,
+    "alpha099_completed_model_targets": 152223,
+    "observed_DEV64_families_complete": 64,
+    "complete_receipt_captured_utc": "2026-10-20T15:38:56.624276+00:00",
     "training_runner_changed": false,
     "only_evaluator_code_change_allowed": true,
     "both_arms_training_state_preserved": true,
