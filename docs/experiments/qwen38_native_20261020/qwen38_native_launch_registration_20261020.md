@@ -1,6 +1,10 @@
 # Qwen3.8 原生主训练启动与历史准备登记
 
-2026-10-20。**首轮主训练PID32914已按用户最新“重启训练吧，这两个太严格了”“可以重训”的要求停止；完成2次更新，新运行 native_main_training_02 已于 10:19 UTC 启动（PID36991）。**梯度突增与β饱和改为只记录和告警，不触发硬停止；从相同seed17初始状态重训，每个完整optimizer组保存latest checkpoint。sorted router、HC eager、split PLE、固定RMSNorm及ρ=.01保持。准备04与独立八步短测继续取消，完整writer FD/E2E仍未完成，不能记为通过。既有消费为诊断14,564、writer目标54,784，重启继续累计。详见[决策与准备记录](qwen38_native_normshort_registration_20261020.md)，本次说明不修改历史JSON。
+2026-10-20。**用户要求修复 batch=1 和 PP2 单微批吞吐后，运行02在第12组完成时停止；运行 native_main_training_03 已启动（PID40692），从263,433个已训练target的检查点继续。**新版按独立轨迹组成B4、每波最多3个微批送入真实PP流水线，随后收拢仍活跃的轨迹。writer、AdamW、sampler、四rank RNG及稳定性历史全部接续；没有重新初始化训练。本次切换没有检查点之后的在途target消费，累计writer预算为318,217，诊断仍为14,564。实际吞吐和显存以新运行的完整训练组回执为准。
+
+上一次运行02于10:19 UTC启动（PID36991），根据用户要求从seed17重训，并将梯度突增与β饱和改为仅监控。该设置继续保留；sorted router、HC eager、split PLE、固定RMSNorm及ρ=.01保持。准备04与独立八步短测继续取消，完整writer FD/E2E仍未完成，不能记为通过。详见[决策与准备记录](qwen38_native_normshort_registration_20261020.md)；历史JSON保留，批处理接续使用独立登记。
+
+18:46北京时间实测：新版已完成第13–17组，127,698 target / 237.93秒 = 536.70 target/s；去掉含首次B4编译的第一组，后四组为83,666 / 132.89秒 = 629.60 target/s。旧版12组平均266.92 target/s。这是相邻不同采样组的早期运行吞吐，尚非同组配对基准。每组实际B4、最多3微批；五组峰值allocated显存最高85.22 GiB。CPU17项测试及独立审阅通过。用户随后明确只保留批处理：没有启用EP4、激活重算、证据预缓存或TP抽查。见[接续登记](qwen38_native_main_batched_continuation_20261020.json)及[吞吐回执](qwen38_native_batched_throughput_20261020.json)。
 
 依据：[训练计划 §9](../../training_plan_20261019.md#9-原生诊断阶段与预算)、[五源执行计划](../../multidomain_execution_plan_20261019.md)、[原生架构](../../design/qwen38_native_20261020/architecture.md)。用户已决定推进原生模型，原始文本及冻结划分从 B2 恢复，使用原生 tokenizer 重新编码；不重新抓取数据源。资源、adapter 与 runner 的实际状态由各自验收回执记录。
 

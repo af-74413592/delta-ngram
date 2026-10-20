@@ -12,6 +12,7 @@ registered Qwen3.8 experiment. Reusable writer and memory code lives in
 | `src/delta_ngram/qwen38_native.py` | Head layout, native row mapping, fixed alpha, and target scaling |
 | `src/delta_ngram/qwen38_adapter.py` | Overlay at the real native PLE lookup boundary |
 | `src/delta_ngram/qwen38_training.py` | Query leaf gradients and exact full-trajectory writer backpropagation |
+| `src/delta_ngram/qwen38_train_batching.py` | Independent trajectory lanes, padding, and packed query cotangents |
 | `src/delta_ngram/qwen38_ple_reference.py` | CPU reference of native PLE arithmetic and precision diagnostics |
 | `scripts/prepare_qwen38_native_data.py` | Frozen-text retokenization with identity and split checks |
 | `scripts/native_qwen38/` | Pinned Megatron loader, runtime checks, and experiment entry points |
@@ -72,18 +73,33 @@ authorized direct training without the remaining checks. The writer
 fixed-cotangent finite difference and end-to-end directional check remain
 unverified; their acceptance is not claimed.
 
-`qwen38_native_train.py` is the full-pool training entry point. It uses the
+`qwen38_native_train.py` is the original B1 full-pool training entry point. It uses the
 existing token-weighted sampler, causal query-before-write execution and
 full-trajectory writer BPTT, with at most 2M loss targets per alpha arm.
 The two arms share one frozen reader. Small TP gradient differences are
 checked against the existing FP32 tolerance before selecting TP0's copy;
 replica gradients are not added together. The main process has been
 dispatched with the explicit authorization and immutable source hashes.
-Checkpoints include writer, optimizer, sampler and per-rank RNG states;
-a resume command is not yet implemented. Each completed optimizer group
+Checkpoints include writer, optimizer, sampler and per-rank RNG states.
+Each completed optimizer group
 atomically saves the latest checkpoint. At the user's request, gradient
 spikes and gate saturation are monitoring signals only; neither stops
 training. Gradient clipping remains 1.0.
+
+`qwen38_native_train_batched.py` continues a completed alpha=1 checkpoint
+with B4 (or B2) reader microbatches. Each block wave compacts active independent
+trajectories, then runs all query microbatches through one native PP2 schedule,
+followed by all base-only evidence microbatches. The initial 12-trajectory wave
+provides three B4 microbatches. Every trajectory keeps its own causal memory
+and full writer history. Padding creates neither targets nor writes.
+The loss callback compensates MCore's microbatch averaging, leaving exactly
+one division by the whole optimizer group's actual target count.
+
+Continuation restores writer, AdamW, sampler, all four rank RNG states and
+stability history. Its source checkpoint and final source ledger are hashed
+in a new registration. Any dispatched unfinished work stays charged to the
+budget; it is not treated as completed model training. The new runner supports
+a stop-after-group file and saves a latest checkpoint after every update.
 
 CPU tests cover row ownership, valid native row zero, prefix masking,
 full-trajectory gradient propagation, and frozen-data identity. These tests
