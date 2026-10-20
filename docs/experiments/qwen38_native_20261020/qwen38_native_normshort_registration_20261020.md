@@ -1,5 +1,7 @@
 # Qwen3.8 固定 RMSNorm 主训练决策与准备记录
 
+**最新状态：**正式运行03已在第47组停止。用户随后要求直接进行EP4、无PP、总B12、expandable segments三组快测，并取消学习效果评测和短训练存档。三组实际更新已完成，无OOM，最高allocated显存99.34 GiB；后两组加权939.96 target/s。原正式存档未变，正式训练尚未恢复。详见[最新运行记录](qwen38_native_launch_registration_20261020.md#最新状态ep4-三组快测完成正式训练暂停)及[快测回执](qwen38_native_ep4_trial_20261020.json)。以下为此前准备和接续历史。
+
 2026-10-20。**最新用户指令：“不用检查了，开跑把，已经很久了”。据此取消准备04及剩余准备检查，直接进入主训练；独立两α八步小样本短测也已取消。**最终路径保持sorted router、HC eager及split PLE，RMSNorm eps=1e-6、无log(RMS)、ρ=.01。完整writer固定cotangent FD、端到端方向检查尚未完成，不能记作通过；主训练依据这次明确授权推进，并保留数值、reader冻结与预算监控。
 
 **最新批处理接续：**用户要求修复batch=1和PP2单微批吞吐。运行02已在第12组完成时停止，运行 native_main_training_03 已启动（PID40692），恢复263,433个已训练target的writer、AdamW、sampler、四rank RNG及稳定性状态。新版每波将独立轨迹收拢为B4微批，12条轨迹最多提供3个PP微批；逐轨迹因果读写、完整历史梯度和整组实际target分母保持。本次切换没有丢弃在途target；切换时累计writer预算318,217，诊断14,564。18:46北京时间已完成第13–17组；五组平均536.70 target/s，去掉含首次编译的第一组后为629.60 target/s，旧版12组平均266.92 target/s。数据组不同，属于早期吞吐观察。用户随后要求只保留批处理，其余提速提议不实施，详见[启动登记](qwen38_native_launch_registration_20261020.md)和独立吞吐回执。
