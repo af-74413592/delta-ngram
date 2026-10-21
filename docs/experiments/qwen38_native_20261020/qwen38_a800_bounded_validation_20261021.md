@@ -9,6 +9,11 @@ for the complete seven-task 35,000-write experiment or cached generation.
 Cross-host A800/H200 numerical equivalence has **failed** the registered screen.
 The screen remains unchanged.
 
+The user's subsequent execution decision is to run the formal experiment on
+H200 only: one ordinary-writer chain and one delta-writer chain, 70,000 writes
+in total. The previously proposed second delta-writer repetition is cancelled.
+This A800 report remains a record of bounded engineering tests.
+
 The native base table stays on CPU; memory values and split delta projection
 remain FP32. The model and writer are frozen. Query forwards must preserve all
 seven memory-state tensors. There is no training or optimizer in these probes.
@@ -39,6 +44,58 @@ added zero-valued placeholders for the remaining addresses. Its seven state
 tensors occupied 445,387,012 bytes. Sixteen 74–101-token writes averaged
 0.6046 seconds, with sampled device usage up to 37,053 MiB. A cold 946-token
 forward took 25.52 seconds; this is not steady-state query throughput.
+
+## Ordinary-writer batching measurement
+
+`native_writer_benchmark_v2` used the ordinary main100M alpha=1 writer,
+not the full delta-writer checkpoint. Its checkpoint SHA is
+`523b951487cee0ec726077db0104a8fc929f4629bdb4ca46604295a4b78fbfe3`,
+and writer tensor SHA is
+`d83d2ba750913ec5c9e1a3fc43385a7c16fbe683a106934d7f8f21f853fdb460`.
+Each of three independent empty-state runs consumed the first twelve SME
+supports followed by the first twelve NAV supports: 24 frames and 1,841 real
+tokens. All three used static-T0 evidence and the same chronological sequence
+of 24 individual FP32 D1 updates. Only true-token H and native addresses entered
+D1; batch padding never became evidence.
+
+| Encoding layout | Measured seconds / frame | Real tokens / second | Speed relative to canonical B1 |
+|---|---:|---:|---:|
+| Canonical B1, minimum even padding per frame | 0.52825 | 145.21 | 1.00x |
+| B1, padded to the corresponding twelve-frame group's maximum | 0.52328 | 146.59 | 1.01x |
+| B12, same group padding | 0.05339 | 1,436.69 | 9.89x |
+
+These times include native encoding and H transport, RMS features, individual
+D1 updates, TP row synchronization, and a final control barrier. Seven shape
+warmups, model loading, CPU captures and hashes, telemetry, and serialization
+are excluded. The run performed 57 encoding forwards, 72 total D1 updates,
+and no TF or generation. Process wall time was 133.56 seconds; maximum sampled
+device usage was 35,741 MiB. This small empty-state measurement does not establish
+throughput at 666,747 stored rows or over a complete task chain.
+
+The ordinary canonical B1 result, 0.528 seconds per frame, is close to the
+observed delta-writer range of roughly 0.54--0.60 seconds per frame. This is a
+comparison between different cases, writer checkpoints, support populations,
+and state sizes, not a paired estimate of the cost of memory-aware encoding.
+
+The observed B12 speedup is **not numerical-equivalence acceptance**. The
+following relative L2 differences were recomputed on CPU from all saved H
+tensors and final FP32 states:
+
+| Candidate versus reference | H relative L2 | Final delta-values relative L2 |
+|---|---:|---:|
+| Matched-padding B1 versus canonical B1 | 6.0858% | 3.7114% |
+| B12 versus matched-padding B1 | 6.8448% | 4.7687% |
+| B12 versus canonical B1 | 6.8270% | 4.7295% |
+
+Native addresses, counts, block clocks, and both lazy-alpha clock fields were
+identical in every comparison, and all values were finite. Both padding and
+batch shape changed H and the resulting delta values. B12 therefore remains a
+distinct numerical execution layout; this probe does not establish that its
+errors are acceptable or that it can replace canonical B1 in a comparison.
+Eight CPU helper tests and independent verification of all 72 H captures and
+all seven tensors of each final state passed. Raw numerical evidence is retained
+in `native_writer_benchmark_v2/numerical_evidence.pt`; its SHA is
+`37cc4e0fd47913c8f87ef350feceb877a4512e5b94f933215706ee21d7a54a50`.
 
 ## Pipeline communication correction
 
@@ -88,14 +145,25 @@ dot products at the five originally captured differing
 coordinates favor different hosts at different coordinates. H200 is not a
 universal numerical oracle.
 
+The later standalone `hc_reduction_probe_v2` recorded actual CUDA kernel names:
+`ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn` on A800 and
+`nvjet_sm90_tst_128x48_64x9_4x1_v_bz_TNT` on H200. Explicit cuBLASLt selection,
+disabling reduced-precision reduction, and disabling split-K within cuBLASLt
+all left the same 52 cross-host BF16 differences. A direct split-K switch
+under the original cuBLAS backend was unsupported; the failed v1 attempts
+are retained. The complete FP64 GPU outputs matched byte for byte across
+hosts and differed from the CPU FP64 reference by at most 7.11e-15. These are
+single-projection results, not a repair or a full-model precision pass.
+
 ## Remaining gates
 
 - Integrate the validated current-memory encoding and full checkpoint loader
   into the complete seven-task runner, with independent state and ledgers for
-  the ordinary writer and both delta-writer repetitions.
-- Validate ordinary-writer batched static-T0 encoding separately. Its trained
-  writer checkpoint differs from the delta-writer checkpoint. No batching
-  speedup or equivalence is accepted by this report.
+  the ordinary writer and the single delta-writer run on H200.
+- Decide the ordinary writer's batch-layout protocol explicitly. The bounded
+  B12 probe measured a speedup but failed exact H/state equality; its numerical
+  differences are not accepted by this report. The ordinary trained writer
+  checkpoint also differs from the delta-writer checkpoint.
 - Finish fixed-FP32-delta cached generation acceptance, including multi-token
   decode, request isolation, and same-stack uncached comparisons.
 - Resolve or explicitly account for cross-stack numerical differences before
@@ -123,6 +191,10 @@ captures under `artifacts/qwen38_a800_forward_20261021/` and
   `1ea84bf4378624ae62a792de9a1ad6a65cdcd9166de5bb1434f344e8cb78e51c`.
 - Full delta-writer checkpoint file SHA
   `51d5977845e9930f48732c73ae2503511d8976b1201f139a2be46bfab9f57308`.
+- `native_writer_benchmark_v2/COMPLETE.json`: SHA
+  `2a5a3ff4dbc199da4c9e64e55c736594efbab395eea5a7604d6b968e64e175dd`.
+- `native_writer_benchmark_v2.acceptance.json`: independent CPU evidence
+  validation only; it does not declare numerical equivalence.
 
 Local CPU validation: 113 tests passed across A800 host transport, memory
 encoding, recovery, seven-task protocol, shortchain protocol, FP32 snapshot
