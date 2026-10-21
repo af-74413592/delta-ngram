@@ -273,13 +273,77 @@
       "bytes": 1816,
       "sha256": "c1493632fd46e672cc1fd9c6fbf4a956e8bd348a4587800739cd069c827f15ad",
       "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/qwen38_native_b2_backup_receipts_20261021.zip",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021.zip",
+      "bytes": 581084,
+      "sha256": "0a1fee3f4fba20253770b734fffeeda9249426a4d0547e6d30b15667d6e84bd4",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/local_receipt_verification.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021_local_verification.json",
+      "bytes": 3188,
+      "sha256": "5755499bdc42b0ce4f0090b0b2339d44ccced72929afbc06b3f5cb0afced4142",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/RECEIPT_MANIFEST.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021/RECEIPT_MANIFEST.json",
+      "bytes": 5051,
+      "sha256": "748efed72e31bb6ffd8d4fedeec5c6a49e12f7f875429da5c9f21be146c66d62",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/status.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021/ops/status.json",
+      "bytes": 1191,
+      "sha256": "f4e1387fa298a77f8f8caa0d04a94b909bd211760e741199cada6a692f6498e0",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/COMPLETE.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021/ops/COMPLETE.json",
+      "bytes": 1126,
+      "sha256": "1636c8922095441086ba9985bb83653bdc5d47d2551b8fad5b3022600a750cb9",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/seal_verification.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021/ops/seal_verification.json",
+      "bytes": 1311,
+      "sha256": "dea1f8c91ac7f98a6dfbc4fee9c663ce34ba8de7c12f187e9adbf7b3567c30fc",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/checkpoint_identity.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021/ops/checkpoint_identity.json",
+      "bytes": 3862,
+      "sha256": "f22f1d1fcdcc8024b960db74a453263437908c3c082b3876f49090b870d935e4",
+      "transformation": "byte-identical"
+    },
+    {
+      "path": "docs/experiments/qwen38_native_20261020/archive_20261021/cloud_backup/STAGED.json",
+      "source": "C:/Users/shijingzi/Documents/ChatGPT/cl/research/data/qwen38_native_b2_backup_receipts_20261021/stage_metadata/STAGED.json",
+      "bytes": 15331,
+      "sha256": "b60df53b3c4301ede6fd8a577868e1e2630ba51fbcda6cc9d5477da57331d68d",
+      "transformation": "byte-identical"
     }
   ],
   "cloud_backup": {
     "provider": "Backblaze B2",
     "bucket": "clclcl",
     "prefix": "cl-research/delta-ngram/20261021-qwen38-native/",
-    "status": "pending independent upload verification; see root backup receipts"
+    "status": "complete: full remote readback, independent staging-seal verification and local receipt-package verification passed",
+    "files": 2469,
+    "bytes": 4760098462,
+    "payload_completed_utc": "2026-10-21T07:12:33.551843+00:00",
+    "verification_metadata_readback_completed_utc": "2026-10-21T07:12:44.880416+00:00",
+    "independent_seal_verified_at_utc": "2026-10-21T07:16:13.759188+00:00",
+    "receipt_zip_sha256": "0a1fee3f4fba20253770b734fffeeda9249426a4d0547e6d30b15667d6e84bd4",
+    "scope": "completed native mainline/control runs, generated data and their frozen sources; ongoing memory-fork output directory excluded",
+    "readback_location": "remote host; local machine stores the receipt package, not the 4.76 GB payload"
   },
   "validation": "Existing validated frozen code; in-memory Python syntax, UTF-8, secret-pattern and git diff checks only in this backup task. No new GPU execution. Whitespace exceptions: original Matplotlib SVG path-line trailing spaces and copied 100M report final blank line; no implementation whitespace warnings."
 }

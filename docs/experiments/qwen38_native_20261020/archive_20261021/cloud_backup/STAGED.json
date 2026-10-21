@@ -1,0 +1,394 @@
+{
+  "created_utc": "2026-10-21T07:05:20.438311+00:00",
+  "elapsed_seconds": 11.913643847001367,
+  "exclusions": [
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "ops/__pycache__/"
+    },
+    {
+      "reason": "compiled_cache_or_duplicate_transfer",
+      "relative_path": "ops/native_source_base.zip.b64"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "delta-ngram/src/delta_ngram/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "delta-ngram/src/delta_ngram/data/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "delta-ngram/scripts/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "delta-ngram/scripts/native_qwen38/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "delta-ngram/scripts/native_qwen38/ops/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/.git/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/arguments/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/arguments/base_args/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/dataloader/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/dataset/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/dataset/dataset/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/dataset/preprocessor/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/hub/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/infer_engine/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/loss/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/arguments/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/callbacks/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/model/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/pipelines/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/pipelines/train/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/trainers/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/megatron/utils/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/metrics/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/model/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/model/models/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/pipelines/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/pipelines/train/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/ray_utils/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/rlhf_trainers/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/sequence_parallel/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/template/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/template/templates/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/trainers/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/tuner_plugin/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/tuners/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/tuners/longlora/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/tuners/scetuning/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/ms-swift-21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d/swift/utils/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/.git/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/bridge/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/config/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/model/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/model/gpts/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/model/mm_gpts/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/model/modules/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/model/modules/kernels/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/tuners/__pycache__/"
+    },
+    {
+      "reason": "generated_cache_or_git_metadata",
+      "relative_path": "sources/mcore-bridge-3a5ab71264ca0c98db9eab7cc4de58aa57e065e3/src/mcore_bridge/utils/__pycache__/"
+    },
+    {
+      "reason": "duplicate_transfer_archive_or_unrequested_root_file",
+      "relative_path": "bounded_inputs_01_receipts.zip"
+    },
+    {
+      "reason": "duplicate_transfer_archive_or_unrequested_root_file",
+      "relative_path": "final_runtime_01.zip"
+    },
+    {
+      "reason": "duplicate_transfer_archive_or_unrequested_root_file",
+      "relative_path": "main_launch_01_receipts.zip"
+    },
+    {
+      "reason": "previously_sealed_1733_file_backup_already_in_B2",
+      "relative_path": "b2_core/"
+    }
+  ],
+  "groups": {
+    "data": {
+      "files": 21,
+      "size_bytes": 2034290945
+    },
+    "delta-ngram": {
+      "files": 110,
+      "size_bytes": 1872581
+    },
+    "freeze_bounded_candidate_01.py": {
+      "files": 1,
+      "size_bytes": 2586
+    },
+    "freeze_bounded_candidate_02.py": {
+      "files": 1,
+      "size_bytes": 2800
+    },
+    "freeze_bounded_candidate_03.py": {
+      "files": 1,
+      "size_bytes": 2776
+    },
+    "freeze_main_authorization_01.py": {
+      "files": 1,
+      "size_bytes": 1422
+    },
+    "freeze_main_registration_01.py": {
+      "files": 1,
+      "size_bytes": 1841
+    },
+    "freeze_main_registration_02.py": {
+      "files": 1,
+      "size_bytes": 2373
+    },
+    "logs": {
+      "files": 15,
+      "size_bytes": 212227
+    },
+    "ops": {
+      "files": 26,
+      "size_bytes": 346573
+    },
+    "reports": {
+      "files": 651,
+      "size_bytes": 2694971977
+    },
+    "run_bounded_training_01.sh": {
+      "files": 1,
+      "size_bytes": 1264
+    },
+    "run_bounded_training_02.sh": {
+      "files": 1,
+      "size_bytes": 1294
+    },
+    "run_bounded_training_03.sh": {
+      "files": 1,
+      "size_bytes": 1294
+    },
+    "run_main_training_01.sh": {
+      "files": 1,
+      "size_bytes": 1004
+    },
+    "run_main_training_02.sh": {
+      "files": 1,
+      "size_bytes": 1004
+    },
+    "run_main_training_03.sh": {
+      "files": 1,
+      "size_bytes": 1268
+    },
+    "sources": {
+      "files": 1630,
+      "size_bytes": 26998558
+    },
+    "verify_main_data_01.py": {
+      "files": 1,
+      "size_bytes": 1061
+    }
+  },
+  "immutable_source_contract": "All selected native training, diagnostics and evaluation runs have ended; do not edit hardlinked source or stage payload files.",
+  "metadata_self_excluded_from_member_manifest": true,
+  "methods": {
+    "hardlink": 2466
+  },
+  "obvious_credential_scan": "passed_without_printing_values",
+  "payload_bytes": 4758714848,
+  "payload_files": 2466,
+  "priority_files": [
+    {
+      "method": "hardlink",
+      "relative_path": "reports/native_main_training_08/joint-policy-stage-2-alpha100_rmsnorm-model_milestone-100000000.pt",
+      "sha256": "0919747e9eb535744334b6f2b58e2069d9c6ca2dda1a0312fb8a87ac689c1b4d",
+      "size_bytes": 98484043,
+      "source_mtime_ns": 1792549790584085183,
+      "source_path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_08/joint-policy-stage-2-alpha100_rmsnorm-model_milestone-100000000.pt"
+    },
+    {
+      "method": "hardlink",
+      "relative_path": "reports/native_main_training_08/joint-policy-stage-3-final.pt",
+      "sha256": "523b951487cee0ec726077db0104a8fc929f4629bdb4ca46604295a4b78fbfe3",
+      "size_bytes": 98484363,
+      "source_mtime_ns": 1792550204779544834,
+      "source_path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_08/joint-policy-stage-3-final.pt"
+    },
+    {
+      "method": "hardlink",
+      "relative_path": "reports/native_main_training_08/joint-latest.pt",
+      "sha256": "523b951487cee0ec726077db0104a8fc929f4629bdb4ca46604295a4b78fbfe3",
+      "size_bytes": 98484363,
+      "source_mtime_ns": 1792550204682544726,
+      "source_path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_08/joint-latest.pt"
+    },
+    {
+      "method": "hardlink",
+      "relative_path": "reports/native_main_training_07/joint-stage-3-alpha099_rmsnorm-nominal-40000000.pt",
+      "sha256": "96f106208d5f295d303f5845c02c775beaddfb35b8d59b5362a2afbe0b6ac105",
+      "size_bytes": 98472523,
+      "source_mtime_ns": 1792529940218345206,
+      "source_path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_07/joint-stage-3-alpha099_rmsnorm-nominal-40000000.pt"
+    },
+    {
+      "method": "hardlink",
+      "relative_path": "reports/native_main_training_07/joint-stage-4-final.pt",
+      "sha256": "9b42f3c8d3502e36c074b3e89fedea1685bf6c14b0ffee9e82455a27cdb31826",
+      "size_bytes": 98472843,
+      "source_mtime_ns": 1792536027100188900,
+      "source_path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_07/joint-stage-4-final.pt"
+    },
+    {
+      "method": "hardlink",
+      "relative_path": "reports/native_main_training_07/joint-latest.pt",
+      "sha256": "9b42f3c8d3502e36c074b3e89fedea1685bf6c14b0ffee9e82455a27cdb31826",
+      "size_bytes": 98472843,
+      "source_mtime_ns": 1792536026998188741,
+      "source_path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_07/joint-latest.pt"
+    },
+    {
+      "method": "hardlink",
+      "relative_path": "data/native_dev64/plan.json",
+      "sha256": "ab2b9abd82413a2de547a14bd0dd99587090b211c91c20599fd7e334b2522ed9",
+      "size_bytes": 1168752,
+      "source_mtime_ns": 1792501506089125355,
+      "source_path": "/workspace/delta-ngram-native-20261020/data/native_dev64/plan.json"
+    }
+  ],
+  "protocol": "qwen38_native_immutable_backup_stage_v1",
+  "seals": {
+    "metadata/member_manifest.jsonl": {
+      "sha256": "17cd2f3a10594aadf34814a7d61308183076200a88136d0a4b4cc80bb8104158",
+      "size_bytes": 999418
+    },
+    "metadata/member_sha256.txt": {
+      "sha256": "c5949680daf7a13eacdc83112d699b0aee6ae899641ad53b88b16c803c84b888",
+      "size_bytes": 368865
+    }
+  },
+  "source_root": "/workspace/delta-ngram-native-20261020",
+  "source_stats_verified_before_after_hash_and_at_completion": true,
+  "stage_root": "/workspace/delta-ngram-backup-stage-20261021-native",
+  "status": "staged_sha256_verified",
+  "upload_performed": false
+}

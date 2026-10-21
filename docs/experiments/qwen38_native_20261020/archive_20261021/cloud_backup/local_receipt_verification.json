@@ -1,0 +1,78 @@
+{
+  "protocol": "qwen38_native_b2_local_receipt_verification_v1",
+  "verified_at_utc": "2026-10-21T07:23:43.769893+00:00",
+  "status": "complete",
+  "package_zip": "qwen38_native_b2_backup_receipts_20261021.zip",
+  "package_zip_bytes": 581084,
+  "package_zip_sha256": "0a1fee3f4fba20253770b734fffeeda9249426a4d0547e6d30b15667d6e84bd4",
+  "zip_crc_verified": true,
+  "zip_member_count": 28,
+  "receipt_manifest_members_sha256_and_sizes_verified": 27,
+  "safe_zip_member_paths_verified": true,
+  "remote_backup_destination": "b2://clclcl/cl-research/delta-ngram/20261021-qwen38-native/",
+  "remote_full_readback_files": 2469,
+  "remote_full_readback_bytes": 4760098462,
+  "remote_full_readback_complete_receipt_verified": true,
+  "independent_original_seal_verification_receipt_verified": true,
+  "local_original_and_uploaded_manifest_exact_file_set_sizes_and_sha256_match": true,
+  "checkpoint_identity_matches_uploaded_manifest": true,
+  "metadata_seals": [
+    {
+      "path": "stage_metadata/STAGED.json",
+      "sha256": "b60df53b3c4301ede6fd8a577868e1e2630ba51fbcda6cc9d5477da57331d68d",
+      "size_bytes": 15331,
+      "verified": true
+    },
+    {
+      "path": "stage_metadata/member_manifest.jsonl",
+      "sha256": "17cd2f3a10594aadf34814a7d61308183076200a88136d0a4b4cc80bb8104158",
+      "size_bytes": 999418,
+      "verified": true
+    },
+    {
+      "path": "stage_metadata/member_sha256.txt",
+      "sha256": "c5949680daf7a13eacdc83112d699b0aee6ae899641ad53b88b16c803c84b888",
+      "size_bytes": 368865,
+      "verified": true
+    }
+  ],
+  "verification_metadata_readback": [
+    {
+      "name": "backup.py",
+      "size_bytes": 8191,
+      "sha256": "c5a00aa64966e7db4b8b62d046dc596200ce3ac0012eacc5c8a2445c872e4ac1",
+      "matches_uploaded_source": true
+    },
+    {
+      "name": "checkpoint_identity.json",
+      "size_bytes": 3862,
+      "sha256": "f22f1d1fcdcc8024b960db74a453263437908c3c082b3876f49090b870d935e4",
+      "matches_uploaded_source": true
+    },
+    {
+      "name": "COMPLETE.json",
+      "size_bytes": 1126,
+      "sha256": "1636c8922095441086ba9985bb83653bdc5d47d2551b8fad5b3022600a750cb9",
+      "matches_uploaded_source": true
+    },
+    {
+      "name": "qwen38_code_backup_receipt_20261021.json",
+      "size_bytes": 1305,
+      "sha256": "54b9ace233aeafb0dfc4f9f55050bda788ec84de3c4883ef324aafcc7968d28a",
+      "matches_uploaded_source": true
+    },
+    {
+      "name": "qwen38_native_backup_prepare_20261021.py",
+      "size_bytes": 11157,
+      "sha256": "5c220eabed9f74fb30319075e69a26146f6435e5e73cf25a38309360465836c7",
+      "matches_uploaded_source": true
+    },
+    {
+      "name": "uploaded_file_manifest.jsonl",
+      "size_bytes": 500296,
+      "sha256": "b3c034cfde26b55d6046375cb427fa5d5d3f9f3617ff2fa5951cbc2de5ebdf63",
+      "matches_uploaded_source": true
+    }
+  ],
+  "scope": "Local ZIP CRC and receipt-member SHA256 verification; remote payload verification is evidenced by COMPLETE.json and independent seal_verification.json. The 4,760,098,462-byte payload was fully read back and hashed on the remote host, not downloaded to this local host."
+}

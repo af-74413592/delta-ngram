@@ -1,0 +1,94 @@
+{
+  "checked_utc": "2026-10-21T07:05:20.760350+00:00",
+  "all_assertions_passed": true,
+  "cuda_initialized": false,
+  "checkpoints": [
+    {
+      "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_08/joint-policy-stage-2-alpha100_rmsnorm-model_milestone-100000000.pt",
+      "bytes": 98484043,
+      "sha256": "0919747e9eb535744334b6f2b58e2069d9c6ca2dda1a0312fb8a87ac689c1b4d",
+      "protocol": "qwen38_native_staged_alpha100_checkpoint_v1",
+      "arms": {
+        "alpha100_rmsnorm": {
+          "alpha": 1.0,
+          "optimizer_step": 4172,
+          "completed_loss_targets": 99997072,
+          "writer_sha256": "d83d2ba750913ec5c9e1a3fc43385a7c16fbe683a106934d7f8f21f853fdb460",
+          "optimizer_sha256": "48e4b40ae2e9640daf659bbdb213bbb9cf5d38fe4521492989574a1d4b38eb25",
+          "has_optimizer": true,
+          "has_sampler": true,
+          "has_rng": true
+        },
+        "alpha099_rmsnorm": {
+          "alpha": 0.99,
+          "optimizer_step": 1669,
+          "completed_loss_targets": 39998107,
+          "writer_sha256": "e1beedb0fc091481fa044e3ef96f67857cf1c501504e29030ba3301f80097579",
+          "optimizer_sha256": "f43ea2b778495701394875db924ad409e3663aec0c85bdf5200e002e32ddd2a9",
+          "has_optimizer": true,
+          "has_sampler": true,
+          "has_rng": true
+        }
+      },
+      "trajectory_boundary": true
+    },
+    {
+      "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_08/joint-policy-stage-3-final.pt",
+      "bytes": 98484363,
+      "sha256": "523b951487cee0ec726077db0104a8fc929f4629bdb4ca46604295a4b78fbfe3",
+      "protocol": "qwen38_native_staged_alpha100_checkpoint_v1",
+      "arms": {
+        "alpha100_rmsnorm": {
+          "alpha": 1.0,
+          "optimizer_step": 4172,
+          "completed_loss_targets": 99997072,
+          "writer_sha256": "d83d2ba750913ec5c9e1a3fc43385a7c16fbe683a106934d7f8f21f853fdb460",
+          "optimizer_sha256": "48e4b40ae2e9640daf659bbdb213bbb9cf5d38fe4521492989574a1d4b38eb25",
+          "has_optimizer": true,
+          "has_sampler": true,
+          "has_rng": true
+        },
+        "alpha099_rmsnorm": {
+          "alpha": 0.99,
+          "optimizer_step": 1669,
+          "completed_loss_targets": 39998107,
+          "writer_sha256": "e1beedb0fc091481fa044e3ef96f67857cf1c501504e29030ba3301f80097579",
+          "optimizer_sha256": "f43ea2b778495701394875db924ad409e3663aec0c85bdf5200e002e32ddd2a9",
+          "has_optimizer": true,
+          "has_sampler": true,
+          "has_rng": true
+        }
+      },
+      "trajectory_boundary": true
+    },
+    {
+      "path": "/workspace/delta-ngram-native-20261020/reports/native_main_training_07/joint-stage-3-alpha099_rmsnorm-nominal-40000000.pt",
+      "bytes": 98472523,
+      "sha256": "96f106208d5f295d303f5845c02c775beaddfb35b8d59b5362a2afbe0b6ac105",
+      "protocol": "qwen38_native_staged_alternating_checkpoint_v1",
+      "arms": {
+        "alpha100_rmsnorm": {
+          "alpha": 1.0,
+          "optimizer_step": 1669,
+          "completed_loss_targets": 39998107,
+          "writer_sha256": "0c84dd67e25317b37baf0138f5d71d08cd6fb1c0ec4e6d4424d0b4bae0e7a8e9",
+          "optimizer_sha256": "edb0beed8a64bad7a46cc700f4e8ff12436248fab897d2f55cbb7cc741d5d507",
+          "has_optimizer": true,
+          "has_sampler": true,
+          "has_rng": true
+        },
+        "alpha099_rmsnorm": {
+          "alpha": 0.99,
+          "optimizer_step": 1669,
+          "completed_loss_targets": 39998107,
+          "writer_sha256": "e1beedb0fc091481fa044e3ef96f67857cf1c501504e29030ba3301f80097579",
+          "optimizer_sha256": "f43ea2b778495701394875db924ad409e3663aec0c85bdf5200e002e32ddd2a9",
+          "has_optimizer": true,
+          "has_sampler": true,
+          "has_rng": true
+        }
+      },
+      "trajectory_boundary": true
+    }
+  ]
+}

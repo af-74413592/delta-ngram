@@ -1,0 +1,33 @@
+{
+  "all_payload_sha256_and_sizes_verified": true,
+  "checksum_text_matches_manifest_exactly": true,
+  "elapsed_seconds": 5.091922450999846,
+  "exact_file_set_payload_plus_three_metadata": true,
+  "payload_bytes": 4758714848,
+  "payload_files": 2466,
+  "preregistered_metadata": {
+    "metadata/STAGED.json": {
+      "sha256": "b60df53b3c4301ede6fd8a577868e1e2630ba51fbcda6cc9d5477da57331d68d",
+      "size_bytes": 15331
+    },
+    "metadata/member_manifest.jsonl": {
+      "sha256": "17cd2f3a10594aadf34814a7d61308183076200a88136d0a4b4cc80bb8104158",
+      "size_bytes": 999418
+    },
+    "metadata/member_sha256.txt": {
+      "sha256": "c5949680daf7a13eacdc83112d699b0aee6ae899641ad53b88b16c803c84b888",
+      "size_bytes": 368865
+    }
+  },
+  "protocol": "qwen38_native_b2_original_seal_verification_v1",
+  "restore": "/workspace/delta-ngram-backup-readback-20261021-native",
+  "safe_relative_paths_and_no_symlinks": true,
+  "source_paths_validated_without_reading_original_sources": true,
+  "staged_seals_verified": true,
+  "status": "complete",
+  "total_restored_bytes": 4760098462,
+  "total_restored_files": 2469,
+  "verification_subdirectory_absent": true,
+  "verified_at_utc": "2026-10-21T07:16:13.759188+00:00",
+  "verifier_sha256": "98380c5aae45651519568296759ef691903c2e6198ab219356c92943543f16ee"
+}
