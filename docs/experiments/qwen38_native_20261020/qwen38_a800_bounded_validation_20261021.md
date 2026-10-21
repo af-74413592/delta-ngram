@@ -231,16 +231,84 @@ actual two-method gate produced 2,904 basic and 1,500 detailed metric rows,
 plus checksum-bound paired NLL, without initializing CUDA. Ordinary and delta
 identities cannot be paired as if they were one trajectory.
 
+## A800 live writer implementation
+
+The separate live vLLM runner owns two independent seven-field FP32 states.
+Ordinary-writer supports encode with a zero memory read; delta-writer supports
+read that arm's current state. Each complete B1 support prefill is followed by
+one canonical D1 update on TP rank 0, then the touched rows and global clocks
+are synchronized across all eight ranks. Queries bind an immutable state for
+the complete cached request and do not write memory.
+
+The formal population is 35,000 supports per arm and 4,480 task generations
+across both arms. Math/code K and NLL remain on the independent H200 run.
+Alternating full-state recovery checkpoints, immutable endpoint snapshots,
+query traces and evaluation acknowledgements bind the state and cursor.
+
+The live GPU acceptance checks native ngram addresses on the same token
+history, convolution state against its own inputs, repeated requests in a
+different order with actual cache-slot reuse, read-only queries, eight-rank
+state agreement, and capacity with 666,747 zero-filled rows per arm. That
+capacity probe is engineering evidence, not a trained terminal state. The
+gate saves full-vocabulary cached/fresh logits and candidate margins. It
+does not require bitwise cached/fresh equality or reclassify the earlier
+strict parity failure.
+
+The live v3 gate passed at 2026-10-21 12:42:40 UTC with process exit code 0.
+The run uses B1, a 210-token engine context and GPU memory utilization 0.85.
+An independent scan of all 35,000 encoded supports found a maximum of 101
+input tokens; support prefill plus one generated token fits this bound.
+
+The 32 same-history comparisons had one greedy difference: ordinary nonzero
+SME step 1 had a cached top margin of 0.125 and a fresh tie. The largest
+full-vocabulary logit difference over all steps was 2.1875, at a different
+step with the same greedy result. Twelve cross-history physical-slot reuse
+events passed the isolation checks. These observations support the registered
+cached protocol and do not establish cached/fresh numerical equivalence.
+
+Formal resume started at 2026-10-21 12:44:26 UTC under supervisor 3668223 and
+worker 3668224. At 12:46:16 UTC, the first ordinary SME baseline had completed
+64/64 generations and the ordinary chain had performed 42 D1 writes. Gate
+SHA256 is `8412c9efee69941659aa108ad5da57641616385a7b90d22f2182c1387e96459a`;
+baseline trace SHA256 is
+`78b2771ff41452bb1b6e2ea21140b56f9aaae1ee8fcf4b1efcc4ee47c5534fcf`.
+The independent H200 process was also confirmed running at 12:45:26 UTC with
+2,779 ordinary writes and a checksum-verified 2,700-write checkpoint.
+These are startup receipts, not completed long-chain results.
+
+Final focused CPU validation passed 94 tests across the live implementation,
+its reused PLE/fork helpers, worker, driver and recovery receipts. Seventeen
+relevant source/test files stayed byte-identical during validation, and the
+ten deployed runtime files matched the frozen deployment by SHA256.
+
+V1 exited before model loading because the launch environment omitted the
+virtual environment's ninja and selected an older CUDA compiler. The launcher
+now pins the virtual environment and CUDA 13.2 paths; the sampling module was
+separately compiled and loaded without initializing CUDA. V2 exercised real
+cached decode but rejected slot reuse under an incorrect same-prompt/same-slot
+assumption. Its saved request records showed cross-history reuse of physical
+slots 3 and 4. V3 records all preceding slot owners and requires actual
+cross-history reuse, while retaining the fresh-context, own-history and
+repeat-output checks. Both failed attempts remain preserved.
+
+The frozen deployment is
+`/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3`.
+The companion workspace preserves all 331 deployed files in
+`a800_live_v3_code.tar.gz`, SHA256
+`a9ef14426b6f60af7d1d425e962331dda8eb2677c0f5dfe7f972301b28666532`.
+Its driver is `cl/scripts/qwen38_vllm_live_two_chain.py`, SHA256
+`0f9610c567072b9933eb8700ce33fd02e1dd8e1c3db96a85e8086840a345cf95`;
+the worker and core retain their originally tested versions. The archive
+includes the companion CL runtime imports needed by this repository.
+
 ## Remaining gates
 
-- Integrate the validated current-memory encoding and full checkpoint loader
-  into the complete seven-task runner, with independent state and ledgers for
-  the ordinary writer and the single delta-writer run on H200.
+- Complete both formal H200 chains and validate their endpoint artifacts.
 - Keep the registered B1 ordinary-writer layout. The bounded B12 probe measured
   a speedup but failed exact H/state equality; it is not the formal protocol.
   The ordinary trained writer checkpoint differs from the delta-writer checkpoint.
-- Finish fixed-FP32-delta cached generation acceptance, including multi-token
-  decode, request isolation, and same-stack uncached comparisons.
+- Complete both independent formal A800 chains and validate their endpoint
+  generation traces against the locked population and state receipts.
 - Resolve or explicitly account for cross-stack numerical differences before
   comparing new tables with historical baselines. New within-run drift
   references must use the same backend, precision path, and batch layout.
