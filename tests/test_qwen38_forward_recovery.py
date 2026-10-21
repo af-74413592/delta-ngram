@@ -109,7 +109,7 @@ def test_missing_or_duplicate_committed_ledger_writes_are_rejected(tmp_path, row
     assert path.read_bytes() == before
 
 
-def artifact_fixture(tmp_path, capture_layers=True):
+def artifact_fixture(tmp_path, capture_layers=True, pipeline_size=4):
     name = "boundary_00_base"
     directory = tmp_path / "tf" / name
     directory.mkdir(parents=True)
@@ -119,13 +119,14 @@ def artifact_fixture(tmp_path, capture_layers=True):
     files = []
     if capture_layers:
         (directory / "representations").mkdir()
-        for rank in range(8):
+        for rank in range(2 * pipeline_size):
             path = directory / "representations" / f"query-0000-rank-{rank:02d}.pt"
             path.write_bytes(f"rank{rank}".encode())
             files.append({"path": path.relative_to(directory).as_posix(), "bytes": path.stat().st_size,
                           "sha256": digest(path)})
     summary = {"status": "completed", "identity": {"reader": "locked"}, "cursor": initial_cursor(),
         "capture_layers": capture_layers, "task_count": 1, "completed_tasks": 1,
+        "topology": {"tp": 2, "pp": pipeline_size, "ep": 2, "cp": 1, "dp": 1},
         "encoded_records": records, "predictions_sha256": digest(predictions), "capture_files": files}
     target = directory / "summary.json"
     target.write_text(json.dumps(summary))
@@ -134,14 +135,17 @@ def artifact_fixture(tmp_path, capture_layers=True):
     return name, directory, target, summary, receipt, kwargs
 
 
-def test_complete_evaluation_artifacts_validate(tmp_path):
-    name, _, _, _, receipt, kwargs = artifact_fixture(tmp_path)
+@pytest.mark.parametrize("pipeline_size", [2, 4])
+@pytest.mark.parametrize("capture_layers", [False, True])
+def test_complete_evaluation_artifacts_validate(tmp_path, pipeline_size, capture_layers):
+    name, _, _, _, receipt, kwargs = artifact_fixture(tmp_path, capture_layers, pipeline_size)
     validate_evaluation_artifacts(tmp_path, name, receipt, **kwargs)
 
 
-def test_missing_rank_capture_prevents_evaluation_completion(tmp_path):
-    name, directory, _, _, receipt, kwargs = artifact_fixture(tmp_path)
-    (directory / "representations/query-0000-rank-07.pt").unlink()
+@pytest.mark.parametrize("pipeline_size", [2, 4])
+def test_missing_rank_capture_prevents_evaluation_completion(tmp_path, pipeline_size):
+    name, directory, _, _, receipt, kwargs = artifact_fixture(tmp_path, pipeline_size=pipeline_size)
+    (directory / f"representations/query-0000-rank-{2 * pipeline_size - 1:02d}.pt").unlink()
     with pytest.raises(ValueError, match="capture is missing"):
         validate_evaluation_artifacts(tmp_path, name, receipt, **kwargs)
 
@@ -150,4 +154,30 @@ def test_changed_predictions_prevents_evaluation_completion(tmp_path):
     name, directory, _, _, receipt, kwargs = artifact_fixture(tmp_path)
     (directory / "predictions.jsonl").write_text("")
     with pytest.raises(ValueError, match="predictions"):
+        validate_evaluation_artifacts(tmp_path, name, receipt, **kwargs)
+
+
+@pytest.mark.parametrize("topology", [None, {},
+    {"tp": 2, "pp": 2, "ep": 2, "cp": 1, "dp": True},
+    {"tp": 2, "pp": 2, "ep": 2, "cp": 1, "dp": 2},
+    {"tp": 2, "pp": 1, "ep": 2, "cp": 1, "dp": 1},
+    {"tp": 2, "pp": 2, "ep": 1, "cp": 1, "dp": 1},
+    {"tp": 2, "pp": 2, "ep": 2, "cp": 1, "dp": 1, "world_size": 4},
+])
+def test_unregistered_or_missing_topology_is_rejected(tmp_path, topology):
+    name, _, target, summary, receipt, kwargs = artifact_fixture(tmp_path, pipeline_size=2)
+    summary["topology"] = topology
+    target.write_text(json.dumps(summary))
+    receipt["summary_sha256"] = digest(target)
+    with pytest.raises(ValueError, match="topology"):
+        validate_evaluation_artifacts(tmp_path, name, receipt, **kwargs)
+
+
+@pytest.mark.parametrize("pipeline_size,claimed_size", [(2, 4), (4, 2)])
+def test_capture_manifest_cannot_claim_different_rank_layout(tmp_path, pipeline_size, claimed_size):
+    name, _, target, summary, receipt, kwargs = artifact_fixture(tmp_path, pipeline_size=pipeline_size)
+    summary["topology"]["pp"] = claimed_size
+    target.write_text(json.dumps(summary))
+    receipt["summary_sha256"] = digest(target)
+    with pytest.raises(ValueError, match="topology"):
         validate_evaluation_artifacts(tmp_path, name, receipt, **kwargs)

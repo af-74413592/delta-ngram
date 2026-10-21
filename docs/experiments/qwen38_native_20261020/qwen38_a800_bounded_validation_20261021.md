@@ -155,15 +155,44 @@ are retained. The complete FP64 GPU outputs matched byte for byte across
 hosts and differed from the CPU FP64 reference by at most 7.11e-15. These are
 single-projection results, not a repair or a full-model precision pass.
 
+## Final execution decision (2026-10-21 evening)
+
+The user selected two independent experiments. H200 uses its native MCore
+TP2/PP2/EP2 path to write its own ordinary and delta-writer chains and measure
+K, ki and answer NLL. A800 uses TP8/PP1 vLLM to write its own two chains and
+measure greedy generation accuracy. Each host performs 70,000 chronological
+D1 updates; both hosts together perform 140,000. Each chain starts with empty
+memory. Both writers use B1 evidence encoding, with distinct registered
+main100M/full100M checkpoints. Only the delta writer reads current memory
+when encoding H; both D1 gates read their own current memory.
+
+H200 is authorized to start as soon as its local runner passes preflight,
+without waiting for A800. A800 still requires a request-boundary live-delta
+protocol, full-token pre-head H capture, and full-model short-run checks.
+The previous immutable fixed-delta API must not be silently mutated. All TP
+workers must acknowledge the new FP32 delta before the next evidence request;
+evaluation requests hold the endpoint fixed and never write test tokens.
+
+H200 has 7,168 planned TF queries plus zero-memory baselines and bounded
+checks. A800 has 4,480 planned generation queries before any verified reuse.
+These metrics describe separately evolved states. Host, method, endpoint and
+state hashes must accompany results; H200 NLL and A800 accuracy are not joint
+measurements of one shared delta.
+
+Recovery artifact validation now accepts exactly the registered native
+TP2/PP2/EP2 and TP2/PP4/EP2 layouts (CP=DP=1). It expects one capture per query
+per rank, with rank count TP*PP*CP*DP; EP is not an extra rank multiplier.
+The focused 27-test suite covers both layouts, missing ranks, incompatible
+manifests, invalid topology metadata, and the existing durable cursor rules.
+
 ## Remaining gates
 
 - Integrate the validated current-memory encoding and full checkpoint loader
   into the complete seven-task runner, with independent state and ledgers for
   the ordinary writer and the single delta-writer run on H200.
-- Decide the ordinary writer's batch-layout protocol explicitly. The bounded
-  B12 probe measured a speedup but failed exact H/state equality; its numerical
-  differences are not accepted by this report. The ordinary trained writer
-  checkpoint also differs from the delta-writer checkpoint.
+- Keep the registered B1 ordinary-writer layout. The bounded B12 probe measured
+  a speedup but failed exact H/state equality; it is not the formal protocol.
+  The ordinary trained writer checkpoint differs from the delta-writer checkpoint.
 - Finish fixed-FP32-delta cached generation acceptance, including multi-token
   decode, request isolation, and same-stack uncached comparisons.
 - Resolve or explicitly account for cross-stack numerical differences before

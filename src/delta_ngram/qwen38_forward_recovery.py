@@ -200,10 +200,19 @@ def validate_evaluation_artifacts(output, name, receipt, *, identity, expected_r
         for row, metadata in zip(scored, expected_records)), "scored query population differs from capture manifest")
     files = summary.get("capture_files")
     require(isinstance(files, list), "evaluation capture file manifest is missing")
+    topology = summary.get("topology")
+    topology_keys = ("tp", "pp", "ep", "cp", "dp")
+    require(isinstance(topology, dict) and set(topology) == set(topology_keys)
+            and all(type(topology[key]) is int for key in topology_keys)
+            and tuple(topology[key] for key in topology_keys) in ((2, 2, 2, 1, 1), (2, 4, 2, 1, 1)),
+            "evaluation topology is missing or is not a registered native layout")
+    # EP partitions experts within the model's existing parallel groups; it is
+    # not an additional multiplier of the ranks writing capture files.
+    world_size = topology["tp"] * topology["pp"] * topology["cp"] * topology["dp"]
     expected = ({f"representations/query-{index:04d}-rank-{rank:02d}.pt"
-                 for index in range(len(expected_records)) for rank in range(8)} if capture_layers else set())
+                 for index in range(len(expected_records)) for rank in range(world_size)} if capture_layers else set())
     require(len(files) == len(expected) and {row.get("path") for row in files} == expected,
-            "evaluation is missing expected TP2/PP4 capture files")
+            "evaluation capture files do not match the registered topology and query population")
     for row in files:
         path = summary_path.parent / row["path"]
         require(path.is_file() and path.stat().st_size == row.get("bytes") and digest(path) == row.get("sha256"),
