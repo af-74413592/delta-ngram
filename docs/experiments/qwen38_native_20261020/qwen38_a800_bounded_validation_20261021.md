@@ -185,6 +185,52 @@ per rank, with rank count TP*PP*CP*DP; EP is not an extra rank multiplier.
 The focused 27-test suite covers both layouts, missing ranks, incompatible
 manifests, invalid topology metadata, and the existing durable cursor rules.
 
+## H200 formal runner acceptance
+
+The H200 runner uses one model load for an isolated two-write/four-query gate
+for each method, then resets each method to an independent empty state for
+its formal 35,000-write chain. The gate passed for both methods. Formal
+ordinary-writer evaluation began at 2026-10-21 12:22:33 UTC under supervisor
+229046, with artifacts in
+`/workspace/qwen38-h200-formal-20261021-v1/run_v2`. This records startup and
+gate acceptance; it is not a completed long-chain result.
+
+The full math/code baseline has 128/64 queries. Main K uses last-prompt
+representations, with four additional answer positions retained. Every task
+endpoint repeats these probes and the relevant task queries; no query
+updates memory. Each chain checkpoints every 100 writes and at evaluation
+boundaries with all seven memory fields, cursor and evaluation receipts.
+
+The runner requires the companion CL workspace. In particular,
+`cl/scripts/qwen38_h200_writer_timing.py` supplies registered writer and
+original-H200 source hashes; its SHA256 is
+`c24674672c48e79b4ff3f0eba16d6c01bf0f87d5e41d07ed1ecd2a7189241bba`.
+CL's original LayerCapture and retention helpers are also required. The
+actual deployed source package contains all 153 files, including the older
+H200 core ABI, and is preserved as `code_v2_source.tar.gz` with SHA256
+`5b42b841f3c0171b7c0f836d73a178d7fe3ed011b28658ff7a68c661b67f4600`
+in the companion workspace's `h200_formal_v1` transfer receipts.
+
+The earlier v1 attempt exited with zero TF queries and zero D1 writes because
+a newer statistics helper required a type absent from the old H200 writer.
+V2 observes the original writer's event method once and calls the original
+D1 implementation. Actual CPU imports and a seven-field byte-equality check
+passed before launch; writer/native/operator sources retain their original
+hashes. V1 artifacts are preserved.
+
+The bounded paired B1 timing measured 0.487011 seconds per ordinary write and
+0.475749 seconds per delta write on the same 16 supports. Engineering runs
+with 666,747 allocated rows measured 0.481556 and 0.469635 seconds per write.
+This suggests about 9.25 hours for 70,000 writes alone, excluding TF captures,
+checkpointing, loading and transfer. The expanded capacity state is not a
+scientific 35,000-write endpoint.
+
+The separate CPU drift consumer supports the four-rank H200 layout and keeps
+the historical float64 metric formulas. Its 33 tests passed. Reading the
+actual two-method gate produced 2,904 basic and 1,500 detailed metric rows,
+plus checksum-bound paired NLL, without initializing CUDA. Ordinary and delta
+identities cannot be paired as if they were one trajectory.
+
 ## Remaining gates
 
 - Integrate the validated current-memory encoding and full checkpoint loader
