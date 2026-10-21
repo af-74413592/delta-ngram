@@ -1,0 +1,46 @@
+{
+  "protocol": "qwen38_memory_full_only_registration_v1",
+  "status": "registered_for_execution",
+  "registered_utc": "2026-10-21T05:27:28.853507+00:00",
+  "user_authorization": "Train full only; residual terminated by explicit user authorization; paired loss warns only and stopping requires user decision",
+  "order": [
+    "full"
+  ],
+  "GPU_count": 4,
+  "complete_groups": 835,
+  "additional_targets": 20015113,
+  "optimizer": "inherited_AdamW",
+  "learning_rate": 0.0003,
+  "endpoint_DEV64_runs": 2,
+  "node_checkpoint": {
+    "nominal_model_targets": 90000000,
+    "completed_groups": 417,
+    "optimizer_step": 3754,
+    "actual_model_targets": 89977396,
+    "next_group_model_targets": 90010164
+  },
+  "paired_loss": {
+    "threshold_nats_per_target": 0.01,
+    "warmup_groups": 50,
+    "window_groups": 50,
+    "consecutive_windows": 3,
+    "action": "monitor",
+    "automatic_stop": false,
+    "user_decision_required": true,
+    "difference": "branch_minus_mainline_mean_NLL_for_identical_group",
+    "window": "nonoverlapping_target_weighted_groups_after_warmup"
+  },
+  "diagnostic_G_action": "monitor_only_never_automatic_stop",
+  "diagnostic_twins": "actual_training_reference_and_independent_repeat; no added CE; monitor-only",
+  "first_group_effect": "compare pre-update Hmem writer group loss to authenticated mainline step3338",
+  "residual_status": "stopped_early_by_user_decision_not_an_experimental_result",
+  "residual_completed_groups": 77,
+  "residual_completed_targets": 1839254,
+  "residual_receipt": "/workspace/delta-ngram-memory-fork-20261021/reports/native_memory_residual_01/USER_STOPPED.json",
+  "supplemental_output": "/workspace/delta-ngram-memory-fork-20261021/reports/native_memory_supplemental_probe_01",
+  "supplemental_report_sha256": "031f55fb23e6a616ca8a2e6cd0b3b6a5b076a0e064c9bb8c45ab361d832561ab",
+  "training_code_manifest_sha256": "85262e2614b7a0e684332cb8f2aeab1671a179372a3a75fe0dae006c3543ef6f",
+  "stop_after_group_file": "/workspace/delta-ngram-memory-fork-20261021/reports/native_memory_full_01/stop-after-group",
+  "automatic_retry": false,
+  "FINAL_used": false
+}
