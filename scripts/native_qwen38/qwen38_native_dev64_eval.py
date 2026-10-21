@@ -121,13 +121,15 @@ def _score_summary(losses, frames):
 
 
 def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
-                   charge_targets, checkpoint_metadata):
+                   charge_targets, checkpoint_metadata, evidence_writer=None):
     """All four ranks evaluate one frozen checkpoint and return the same report.
 
     ``charge_targets(global_actual_targets)`` is called on EVERY rank before
     each collective-bearing native CE forward. Its ledger must persist charges
     before returning. Evidence forwards do not execute the LM head or CE.
     ``output`` is a fresh attempt directory, including on resumed evaluation.
+    A separately registered ``evidence_writer`` can provide causal memory-aware
+    article writes. The default retains the original base-only evaluation.
     """
     import torch
     import torch.distributed as dist
@@ -245,6 +247,8 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
             },
             "code_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         }
+        if evidence_writer is not None:
+            manifest["encoding_policy"] = evidence_writer.metadata()
         if rank == 0:
             output.mkdir(parents=True, exist_ok=True)
             require(not (output / "manifest.json").exists(),
@@ -398,15 +402,21 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                 tasks = [(source_id, index, frame) for source_id in source_ids
                          for index, frame in enumerate(evidence_frames[source_id])]
                 evidence = {}
-                for start, size in batches(len(tasks), 12):
+                base_tasks = (tasks if evidence_writer is None
+                              or evidence_writer.cache_base_evidence else [])
+                for start, size in batches(len(base_tasks), 12):
                     memory_started = begin_batch()
-                    active = tasks[start:start + size]
+                    active = base_tasks[start:start + size]
                     mb = collate_staged_frames([item[2] for item in active]
                                                + [None] * (size - len(active)),
                                                kind="evidence", device=device)
                     execution["evidence_input_tokens"] += sum(gather(mb["real_input_tokens"]))
                     execution["native_evidence_calls"] += 1
-                    captured = collect_evidence_microbatches(session, [mb])["microbatches"][0]
+                    if evidence_writer is not None:
+                        evidence_writer.charge_base_encoding(mb, gather)
+                    captured = (collect_evidence_microbatches(session, [mb])["microbatches"][0]
+                                if evidence_writer is None else
+                                evidence_writer.collect_base_encoding(session, mb))
                     cropped = crop_evidence_lanes(mb, captured["hidden"], captured["physical_rows"])
                     for task, block in zip(active, cropped):
                         require(block is not None, "DEV64 evidence crop dropped a real source block")
@@ -434,13 +444,22 @@ def evaluate_dev64(session, writer, alpha, *, plan_path, arm, milestone, output,
                                 "DEV64 interference schedule must retain nested evidence prefixes")
                         for source_id in planned[len(written):]:
                             require(source_id != later_id, "later target cannot be written")
+                            if evidence_writer is not None:
+                                state = evidence_writer.write_article(
+                                    session, writer, alpha, state, evidence_frames[source_id],
+                                    base_blocks=[evidence.get((source_id, index))
+                                                 for index in range(len(evidence_frames[source_id]))],
+                                    gather=gather, batches=batches, execution=execution,
+                                    begin_batch=begin_batch, finish_batch=finish_batch,
+                                    condition=mode, distance=distance)
                             for index, frame in enumerate(evidence_frames[source_id]):
-                                block = evidence[(source_id, index)]
-                                hidden = writer_evidence_features(
-                                    block["H_new"].to(device), mode="rmsnorm", eps=1e-6)
-                                state = write_native_block(
-                                    writer, state, hidden, block["physical_rows_new"].to(device),
-                                    torch.ones(hidden.shape[:2], dtype=torch.bool, device=device), alpha)
+                                if evidence_writer is None:
+                                    block = evidence[(source_id, index)]
+                                    hidden = writer_evidence_features(
+                                        block["H_new"].to(device), mode="rmsnorm", eps=1e-6)
+                                    state = write_native_block(
+                                        writer, state, hidden, block["physical_rows_new"].to(device),
+                                        torch.ones(hidden.shape[:2], dtype=torch.bool, device=device), alpha)
                                 require(bool(state.values.isfinite().all()), "nonfinite DEV64 writer memory")
                                 totals["tokens"] += frame["new_tokens"]
                                 totals["blocks"] += 1

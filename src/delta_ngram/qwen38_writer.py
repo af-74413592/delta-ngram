@@ -22,6 +22,40 @@ class WriteEvents:
     def targets(self):
         return self.target
 
+
+@dataclass(frozen=True)
+class NativeWriterFeatures:
+    """The original event features, without expanding shared tokens per head.
+
+    ``dense`` is populated only for the legacy single-head execution. The
+    multi-head execution keeps ``evidence`` [B,T,3*input_dim] separate from
+    ``head_features`` [events,head_dim]. ``as_tensor`` is for small diagnostics;
+    training should project these two pieces before gathering event rows.
+    """
+
+    rows: Tensor
+    indices: Tensor
+    head_features: Tensor
+    evidence: Tensor | None
+    dense: Tensor | None
+
+    def as_tensor(self) -> Tensor:
+        if self.dense is not None:
+            return self.dense
+        batch, token, _ = self.indices.unbind(dim=1)
+        return torch.cat((self.evidence[batch, token], self.head_features), dim=-1)
+
+
+@dataclass(frozen=True)
+class WriteEventComponents:
+    """Original scaled targets and pre-sigmoid gate logits for composition."""
+
+    rows: Tensor
+    target: Tensor
+    gate_logits: Tensor
+    features: NativeWriterFeatures
+
+
 class NativeForwardWriter(nn.Module):
     """Map a complete, already-arrived evidence block to D1 write events.
 
@@ -84,6 +118,18 @@ class NativeForwardWriter(nn.Module):
     def events(self, hidden: Tensor, rows: Tensor, mask: Tensor,
                state: SparseMemoryState) -> WriteEvents:
         """Expose targets/gates for diagnostics; no write math is repeated here."""
+        components = self.event_components(hidden, rows, mask, state)
+        beta = torch.sigmoid(components.gate_logits).float()
+        return WriteEvents(components.rows, components.target, beta)
+
+    def event_components(self, hidden: Tensor, rows: Tensor, mask: Tensor,
+                         state: SparseMemoryState) -> WriteEventComponents:
+        """Keep the original arithmetic while exposing logits and features.
+
+        Freezing the writer's parameters does not detach the direct state
+        inputs to the gate. No inverse sigmoid or alternate projection is
+        used to recover the base logits.
+        """
         if hidden.ndim != 3 or hidden.shape[-1] != self.input_dim:
             raise ValueError("hidden must be [B, T, input_dim]")
         if rows.shape != (*hidden.shape[:2], self.num_heads) or mask.shape != hidden.shape[:2]:
@@ -93,12 +139,67 @@ class NativeForwardWriter(nn.Module):
         if not (hidden.device == rows.device == mask.device == state.rows.device
                 == self.pool_score.weight.device):
             raise ValueError("writer, evidence, and state must share a device")
+        features = self.event_features(hidden, rows, mask)
+        if not features.rows.numel():
+            return WriteEventComponents(
+                features.rows, state.values.new_empty((0, self.width)),
+                state.counts.new_empty(0), features)
+        batch, token, head = features.indices.unbind(dim=1)
+        head_features = features.head_features
+        if self.heads_per_order == 1:
+            target = self.target_head(features.dense).float()
+        else:
+            evidence = features.evidence
+            evidence_dim = 3 * self.input_dim
+            target_first = self.target_head[0]
+            shared = F.linear(evidence, target_first.weight[:, :evidence_dim],
+                              target_first.bias)
+            per_head = F.linear(head_features, target_first.weight[:, evidence_dim:])
+            target = self.target_head[2](
+                self.target_head[1](shared[batch, token] + per_head)).float()
+        if self.target_scale is not None:
+            target = target * self.target_scale[head, None].float()
+        event_rows = features.rows
+        state_features = None
+        if not self.operator.evidence_only_gate:
+            old_values, old_counts = state.lookup(event_rows)
+            dtype = self.pool_score.weight.dtype
+            state_features = torch.cat((old_values.to(dtype),
+                                        (target - old_values).to(dtype),
+                                        old_counts.log1p()[:, None].to(dtype)), dim=-1)
+        if self.heads_per_order == 1:
+            gate_features = features.dense if state_features is None else torch.cat(
+                (features.dense, state_features), dim=-1)
+            logits = self.gate_head(gate_features)
+        else:
+            gate_first = self.gate_head[0]
+            shared = F.linear(evidence, gate_first.weight[:, :evidence_dim], gate_first.bias)
+            head_end = evidence_dim + head_features.shape[-1]
+            gate = shared[batch, token] + F.linear(
+                head_features, gate_first.weight[:, evidence_dim:head_end])
+            if state_features is not None:
+                gate = gate + F.linear(state_features, gate_first.weight[:, head_end:])
+            logits = self.gate_head[2](self.gate_head[1](gate))
+        return WriteEventComponents(event_rows, target, logits.squeeze(-1), features)
+
+    def event_features(self, hidden: Tensor, rows: Tensor, mask: Tensor) -> NativeWriterFeatures:
+        """Build the same detached evidence features used by targets and gates."""
+        if hidden.ndim != 3 or hidden.shape[-1] != self.input_dim:
+            raise ValueError("hidden must be [B, T, input_dim]")
+        if rows.shape != (*hidden.shape[:2], self.num_heads) or mask.shape != hidden.shape[:2]:
+            raise ValueError("rows/mask must have shapes [B, T, K] and [B, T]")
+        if rows.dtype != torch.long:
+            raise ValueError("row dtype must be int64")
+        if not (hidden.device == rows.device == mask.device == self.pool_score.weight.device):
+            raise ValueError("writer and evidence must share a device")
         valid = mask.bool()
         events = valid[:, :, None] & rows.ne(0)
         indices = events.nonzero(as_tuple=False)
         if not indices.numel():
-            return WriteEvents(rows.new_empty(0), state.values.new_empty((0, self.width)),
-                               state.counts.new_empty(0))
+            return NativeWriterFeatures(
+                rows.new_empty(0), indices,
+                self.head_embedding.weight.new_empty((0, self.head_embedding.embedding_dim)),
+                None, self.pool_score.weight.new_empty((0, self.target_head[0].in_features)))
 
         hidden = hidden.detach().to(dtype=self.pool_score.weight.dtype)
         scores = self.pool_score(hidden).squeeze(-1)
@@ -122,39 +223,11 @@ class NativeForwardWriter(nn.Module):
             # Preserve the executed single-head path, including floating-point order.
             features = torch.cat((hidden[batch, token], right[batch, token], pooled[batch],
                                   head_features), dim=-1)
-            target = self.target_head(features).float()
+            evidence = None
         else:
             # Both first layers are affine in the shared evidence. Project once
             # per token rather than copying 3*input_dim features to every head.
             evidence = torch.cat((hidden, right, pooled[:, None].expand_as(hidden)), dim=-1)
-            evidence_dim = 3 * self.input_dim
-            target_first = self.target_head[0]
-            shared = F.linear(evidence, target_first.weight[:, :evidence_dim],
-                              target_first.bias)
-            per_head = F.linear(head_features, target_first.weight[:, evidence_dim:])
-            target = self.target_head[2](
-                self.target_head[1](shared[batch, token] + per_head)).float()
-        if self.target_scale is not None:
-            target = target * self.target_scale[head, None].float()
+            features = None
         event_rows = rows[batch, token, head]
-        state_features = None
-        if not self.operator.evidence_only_gate:
-            old_values, old_counts = state.lookup(event_rows)
-            state_features = torch.cat((old_values.to(hidden.dtype),
-                                        (target - old_values).to(hidden.dtype),
-                                        old_counts.log1p()[:, None].to(hidden.dtype)), dim=-1)
-        if self.heads_per_order == 1:
-            gate_features = features if state_features is None else torch.cat(
-                (features, state_features), dim=-1)
-            logits = self.gate_head(gate_features)
-        else:
-            gate_first = self.gate_head[0]
-            shared = F.linear(evidence, gate_first.weight[:, :evidence_dim], gate_first.bias)
-            head_end = evidence_dim + head_features.shape[-1]
-            gate = shared[batch, token] + F.linear(
-                head_features, gate_first.weight[:, evidence_dim:head_end])
-            if state_features is not None:
-                gate = gate + F.linear(state_features, gate_first.weight[:, head_end:])
-            logits = self.gate_head[2](self.gate_head[1](gate))
-        beta = torch.sigmoid(logits.squeeze(-1)).float()
-        return WriteEvents(event_rows, target, beta)
+        return NativeWriterFeatures(event_rows, indices, head_features, evidence, features)
