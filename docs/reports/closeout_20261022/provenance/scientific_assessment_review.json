@@ -1,0 +1,63 @@
+{
+  "protocol": "qwen38_locomo_final_assessment_independent_review_v1",
+  "status": "passed",
+  "utc": "2026-10-22T04:13:02.265105+00:00",
+  "scope": "Read-only independent review of actual NLL arithmetic, denominators, all intervals and final assessment wording. Historical non-NLL results are not newly re-audited here.",
+  "assessment": {
+    "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\research\\qwen38_delta_writer_assessment_20261022.md",
+    "sha256": "26e35cd5565ef6b57045f5fdeb4485a52c053db6903f411b61cbd63b8b9f3ab2",
+    "bytes": 57285
+  },
+  "actual_nll_review": {
+    "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_position_results_v1\\independent_actual_nll_review_v1.json",
+    "sha256": "ad6701130d270abf4131ebe503b832313bd8f3686bd1e3ba18d3e993af335015"
+  },
+  "checks": {
+    "displayed_NLL_numeric_table_rows_exact_at_five_decimal_places": 12,
+    "all_condition_and_contrast_interval_entries_independently_recomputed": 36,
+    "target_length_min": 1,
+    "target_length_max": 68,
+    "max_prompt_plus_target_tokens": 125,
+    "overall_questions": 1540,
+    "overall_evaluations": 4620,
+    "target_tokens_per_condition": 10804,
+    "first_token_questions": 1540,
+    "continuation_questions": 1436,
+    "continuation_tokens_per_condition": 9264,
+    "one_token_answers_excluded_from_continuation": 104,
+    "zero_imputation": false,
+    "source_UTF8_valid_no_replacement_char": true,
+    "overall_self_empty_both_intervals_cross_zero": true,
+    "overall_self_donor_both_intervals_negative": true,
+    "first_self_and_donor_vs_empty_both_worse": true,
+    "continuation_self_and_donor_vs_empty_both_improve": true,
+    "first_and_both_continuation_self_donor_intervals_cross_zero": true
+  },
+  "interpretation_review": [
+    "Overall self-donor difference is limited to the fixed computational path and is not presented as improvement against empty or proof of factual recall.",
+    "The first/continuation groups and their distinct weighting are explicit; split-contrast intervals crossing zero are correctly compatible with a combined interval excluding zero because of weights and covariance.",
+    "Teacher-forced continuation improvement is not equated with free-generation ability and its presence with donor memory is not called conversation-specific factual retrieval.",
+    "Original failed cross-shape gate and exit 1 remain explicit; diagnostic maximum is expressly not an error upper bound or a noise baseline.",
+    "The final summary now states applicability only to the fixed single-prefill path and that sampling intervals omit computational-path uncertainty; the ambiguous numerical-range wording was removed.",
+    "No causal mechanism for the observed generation failure is asserted as established."
+  ],
+  "root_git_fixture_record": {
+    "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_closeout_backup_20261022\\root_git_prepublication_cpu_validation_v1.json",
+    "sha256": "e13cc55283b98ec662a9dabd857ff3bd16b07c7ad52e6cced677b15634403067",
+    "reported_before": {
+      "passed": 15,
+      "failed": 1
+    },
+    "reported_after": {
+      "passed": 16,
+      "failed": 0
+    },
+    "change": "Untracked test fixture uses explicit batch_size/width/row_capacity instead of reversed positional arguments. Production and sealed runtime sources unchanged.",
+    "independently_reexecuted_here": false
+  },
+  "unresolved_scientific_text_findings": [],
+  "source_MD_modified_by_reviewer": false,
+  "remote_connections": 0,
+  "new_GPU_forwards": 0,
+  "new_synthetic_tests": 0
+}

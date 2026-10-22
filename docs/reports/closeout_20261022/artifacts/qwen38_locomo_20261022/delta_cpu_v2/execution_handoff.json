@@ -1,0 +1,119 @@
+{
+  "status": "CPU_complete_awaiting_root_review_and_GPU_handoff",
+  "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7",
+  "amendment_sha256": "fab0e8f5c24a45bb7d29da5177fef0da180cbc3d65f944b0fdd3e379f63e452f",
+  "writer": {
+    "path": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/checkpoints/memory-full-100m-branch-terminal.pt",
+    "sha256": "51d5977845e9930f48732c73ae2503511d8976b1201f139a2be46bfab9f57308",
+    "tensor_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+    "tensor_hash_algorithm": "delta_ngram.qwen38_probe.tensor_state_hash",
+    "model_optimizer_step": 4172,
+    "model_completed_loss_targets": 99997072,
+    "branch_completed_groups": 835,
+    "branch_completed_targets": 20015113,
+    "checkpoint_memory_loaded_as_initial_state": false
+  },
+  "cpu_reverification": {
+    "returncode": 0,
+    "stdout": "{\"status\": \"binding_reverified\", \"questions\": 1986, \"cuda_initialized\": false, \"execution_root_exists\": false}\n",
+    "stderr": ""
+  },
+  "remote_root": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2",
+  "environment": {
+    "PYTHONPATH": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts:/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/vllm_fork:/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/delta-ngram/src:/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/scripts:/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/src",
+    "PATH": "/mnt/disk2/wuhao/qwen38_vllm_smoke/.venv/bin:/usr/local/cuda-13.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+    "CUDA_HOME": "/usr/local/cuda-13.2",
+    "FLASHINFER_CUDA_ARCH_LIST": "8.0",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OMP_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "pilot_argv": [
+    "/mnt/disk2/wuhao/qwen38_vllm_smoke/.venv/bin/python",
+    "-B",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta.py",
+    "execute",
+    "--binding",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/binding_v1",
+    "--mode",
+    "pilot"
+  ],
+  "rest_after_completed_pilot_argv": [
+    "/mnt/disk2/wuhao/qwen38_vllm_smoke/.venv/bin/python",
+    "-B",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta.py",
+    "execute",
+    "--binding",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/binding_v1",
+    "--mode",
+    "rest",
+    "--resume"
+  ],
+  "single_uninterrupted_formal_alternative_argv": [
+    "/mnt/disk2/wuhao/qwen38_vllm_smoke/.venv/bin/python",
+    "-B",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta.py",
+    "execute",
+    "--binding",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/binding_v1",
+    "--mode",
+    "formal"
+  ],
+  "launch_owner": "Root coordinates the GPU handoff only after Seven full_context has exited and GPUs are confirmed idle.",
+  "failed_attempts": "No automatic retry. Explicit --resume retains durable events and existing validated final snapshots/predictions.",
+  "checkpoint_recovery": "Seven fields + own conversation token hash + ordered frame hash + writer/binding + actual frame clock are verified before indexing an atomic unindexed final snapshot.",
+  "predictions": {
+    "path": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/run_v1/delta_predictions.jsonl",
+    "count": 5958,
+    "conditions": [
+      "self",
+      "empty",
+      "donor"
+    ],
+    "minimum_scorer_fields": [
+      "qid",
+      "condition",
+      "text"
+    ],
+    "prompt_sha256": "Original frozen short_prompt_sha256",
+    "generated_token_ids": "Continuation only, includes EOS if produced.",
+    "text": "Pinned tokenizer.decode(ids,skip_special_tokens=True), no cleanup."
+  },
+  "final_scoring": {
+    "only_after_all_four_conditions_complete": true,
+    "pilot_scores_opened": false,
+    "scorer": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\scorer.py",
+    "scorer_sha256": "5f4cb98ab27d5bec6d028f929a85f49aaba7e6313f876474e8158c4d175e1d26",
+    "merge": "Concatenate 5958 delta rows with Seven full_context predictions.jsonl (1986 rows), require 7944 unique qid+condition and exactly the frozen population.",
+    "argv": [
+      "python",
+      "-B",
+      "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\scorer.py",
+      "--prepared",
+      "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\prepared_v1",
+      "--predictions",
+      "<new merged four_conditions.jsonl>",
+      "--output",
+      "<fresh final report directory>"
+    ],
+    "report_method_metadata": {
+      "writer_method": "delta",
+      "writer_tensor_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+      "writer_archive_sha256": "51d5977845e9930f48732c73ae2503511d8976b1201f139a2be46bfab9f57308",
+      "delta_binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7",
+      "protocol_amendment_sha256": "fab0e8f5c24a45bb7d29da5177fef0da180cbc3d65f944b0fdd3e379f63e452f",
+      "original_protocol_retained": true,
+      "original_ordinary_choice_superseded_by_explicit_delta_amendment": true
+    },
+    "primary_questions": 1540,
+    "adversarial_questions_separate": 446,
+    "conversation_clusters": 10,
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261022,
+    "paired": true,
+    "official_F1_unchanged": true
+  },
+  "GPU_fit_verified": false,
+  "GPU_launched": false,
+  "annotations_opened": false
+}

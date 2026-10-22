@@ -1,0 +1,274 @@
+{
+  "protocol": "qwen38_locomo_nll_v1",
+  "question_count": 1540,
+  "evaluation_count": 4620,
+  "target_token_count_per_condition": 10804,
+  "excluded_category5": 446,
+  "metrics": {
+    "query_mean_nll": {
+      "unit": "nats/token",
+      "conditions": {
+        "self": {
+          "estimate": 4.033916498733123,
+          "cluster_bootstrap_95ci": [
+            3.8035260021573407,
+            4.209178839705197
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "empty": {
+          "estimate": 4.0175751878742,
+          "cluster_bootstrap_95ci": [
+            3.7775026469944457,
+            4.194319744944196
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "donor": {
+          "estimate": 4.048573702948822,
+          "cluster_bootstrap_95ci": [
+            3.810982066826356,
+            4.2267665270902075
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      },
+      "paired_differences": {
+        "self-empty": {
+          "estimate": 0.01634131085892353,
+          "cluster_bootstrap_95ci": [
+            -0.006340606775371,
+            0.03518943187408817
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "donor-empty": {
+          "estimate": 0.03099851507462268,
+          "cluster_bootstrap_95ci": [
+            0.015274685180381622,
+            0.04614464150882601
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "self-donor": {
+          "estimate": -0.014657204215699148,
+          "cluster_bootstrap_95ci": [
+            -0.02504240098823542,
+            -0.004266196985027047
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      }
+    },
+    "token_pooled_nll": {
+      "unit": "nats/token",
+      "conditions": {
+        "self": {
+          "estimate": 3.4356401586141123,
+          "cluster_bootstrap_95ci": [
+            3.251115157068314,
+            3.5910623634668957
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "empty": {
+          "estimate": 3.4403195951851826,
+          "cluster_bootstrap_95ci": [
+            3.2509390776265716,
+            3.5949753049820514
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "donor": {
+          "estimate": 3.4436381208252493,
+          "cluster_bootstrap_95ci": [
+            3.2539487146438035,
+            3.6027613942175734
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      },
+      "paired_differences": {
+        "self-empty": {
+          "estimate": -0.004679436571070261,
+          "cluster_bootstrap_95ci": [
+            -0.01834547624655439,
+            0.007707267529612828
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "donor-empty": {
+          "estimate": 0.003318525640066489,
+          "cluster_bootstrap_95ci": [
+            -0.006752949537355221,
+            0.012334966650896824
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "self-donor": {
+          "estimate": -0.00799796221113675,
+          "cluster_bootstrap_95ci": [
+            -0.013696270684454776,
+            -0.001196956426893197
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      }
+    }
+  },
+  "per_conversation": {
+    "conv-26": {
+      "question_count": 152,
+      "target_token_count": 1061,
+      "query_mean_nll": {
+        "self": 3.285961297855094,
+        "empty": 3.2349095155645653,
+        "donor": 3.272197679780168
+      },
+      "token_pooled_nll": {
+        "self": 2.8582211203475407,
+        "empty": 2.836313781026702,
+        "donor": 2.8466694540750703
+      }
+    },
+    "conv-30": {
+      "question_count": 81,
+      "target_token_count": 583,
+      "query_mean_nll": {
+        "self": 3.4425724386897123,
+        "empty": 3.386718563568069,
+        "donor": 3.454967472238358
+      },
+      "token_pooled_nll": {
+        "self": 3.124727740967744,
+        "empty": 3.1313170550995895,
+        "donor": 3.1343951639693097
+      }
+    },
+    "conv-41": {
+      "question_count": 152,
+      "target_token_count": 989,
+      "query_mean_nll": {
+        "self": 4.245514050645263,
+        "empty": 4.236113580215241,
+        "donor": 4.285062238210164
+      },
+      "token_pooled_nll": {
+        "self": 3.5640412191688964,
+        "empty": 3.5508047423139577,
+        "donor": 3.570810643288752
+      }
+    },
+    "conv-42": {
+      "question_count": 199,
+      "target_token_count": 1502,
+      "query_mean_nll": {
+        "self": 4.364477912952987,
+        "empty": 4.3145012845440815,
+        "donor": 4.381871677827699
+      },
+      "token_pooled_nll": {
+        "self": 3.8019259021217406,
+        "empty": 3.8009423244324285,
+        "donor": 3.8180694200928507
+      }
+    },
+    "conv-43": {
+      "question_count": 178,
+      "target_token_count": 1242,
+      "query_mean_nll": {
+        "self": 4.361622172688992,
+        "empty": 4.334017219018707,
+        "donor": 4.360980467863023
+      },
+      "token_pooled_nll": {
+        "self": 3.5667142730331665,
+        "empty": 3.5635312173566223,
+        "donor": 3.574622699983089
+      }
+    },
+    "conv-44": {
+      "question_count": 123,
+      "target_token_count": 839,
+      "query_mean_nll": {
+        "self": 3.831631401532359,
+        "empty": 3.8073071972461574,
+        "donor": 3.8431324996434935
+      },
+      "token_pooled_nll": {
+        "self": 3.3135011443989066,
+        "empty": 3.3132497522887028,
+        "donor": 3.308132595176207
+      }
+    },
+    "conv-47": {
+      "question_count": 150,
+      "target_token_count": 934,
+      "query_mean_nll": {
+        "self": 4.097404143131418,
+        "empty": 4.08998725548609,
+        "donor": 4.112185950326337
+      },
+      "token_pooled_nll": {
+        "self": 3.571578670750699,
+        "empty": 3.566475580884491,
+        "donor": 3.5839004303596425
+      }
+    },
+    "conv-48": {
+      "question_count": 191,
+      "target_token_count": 1331,
+      "query_mean_nll": {
+        "self": 4.0968144534147575,
+        "empty": 4.153045723136771,
+        "donor": 4.13766248394793
+      },
+      "token_pooled_nll": {
+        "self": 3.5463741350962783,
+        "empty": 3.592405564804124,
+        "donor": 3.5678678716962207
+      }
+    },
+    "conv-49": {
+      "question_count": 156,
+      "target_token_count": 1329,
+      "query_mean_nll": {
+        "self": 3.8951051113772177,
+        "empty": 3.8873567398074207,
+        "donor": 3.9049620862610266
+      },
+      "token_pooled_nll": {
+        "self": 3.200231407708446,
+        "empty": 3.2279961527272802,
+        "donor": 3.2146674408477085
+      }
+    },
+    "conv-50": {
+      "question_count": 158,
+      "target_token_count": 994,
+      "query_mean_nll": {
+        "self": 4.225757558807252,
+        "empty": 4.212968331619297,
+        "donor": 4.2341761562793865
+      },
+      "token_pooled_nll": {
+        "self": 3.531152254378616,
+        "empty": 3.5264141647285783,
+        "donor": 3.5286044084850965
+      }
+    }
+  },
+  "negative_paired_difference": "First condition has lower NLL.",
+  "bootstrap": {
+    "cluster": "conversation",
+    "cluster_count": 10,
+    "replicates": 10000,
+    "seed": 20261022,
+    "paired": true,
+    "percentile": [
+      2.5,
+      97.5
+    ],
+    "weighting": "Resample complete conversations; ratio of sums to question counts or token counts."
+  }
+}

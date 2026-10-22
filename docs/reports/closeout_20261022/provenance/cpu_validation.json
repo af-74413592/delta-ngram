@@ -1,0 +1,22 @@
+{
+  "protocol": "qwen38_git_prepublication_cpu_validation_v1",
+  "utc": "2026-10-22T04:02:53.502197+00:00",
+  "repository": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram",
+  "initial_result": {
+    "passed": 15,
+    "failed": 1,
+    "failure": "Untracked cross-stack test supplied LazyDecayState.empty positional width and row_capacity in reverse order."
+  },
+  "fix": "Use explicit batch_size, width and row_capacity keywords in test fixture. Production and sealed runtime sources unchanged.",
+  "final_result": {
+    "exit_code": 0,
+    "passed": 16,
+    "failed": 0
+  },
+  "CUDA_VISIBLE_DEVICES": "",
+  "tests": {
+    "tests/test_qwen38_b1_dev64_eval.py": "95e1c54e0236790dce42e8c40daae94c06592d7fed3a9071f18f70a587f96066",
+    "tests/test_qwen38_native_cross_stack.py": "cef1de91af449b44fd017a0b4d7ed23e840c3868208a909ee85e66255df7e783",
+    "tests/test_qwen38_writer_batch_benchmark.py": "919b6ba42bd721892b12d7ca25aaee3a9bf3c8b7c004079ec0d59493ea9e019c"
+  }
+}

@@ -1,0 +1,592 @@
+{
+  "protocol": "qwen38_local_git_source_candidate_manifest_v2",
+  "status": "candidate_staged_not_committed",
+  "created_utc": "2026-10-22T03:57:04.734759+00:00",
+  "source_cl_root": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl",
+  "future_target_repo": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\delta-ngram",
+  "staging_root": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_closeout_backup_20261022\\git_source_staging_v1",
+  "files": [
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_native.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_native.py",
+      "destination": "scripts/qwen38_locomo_native.py",
+      "bytes": 25513,
+      "sha256": "96f9e5e4c7a442926fc86cd8248181186afee803a3974ec52ba8182cb5d1bea8",
+      "purpose": "core: LoCoMo parent adapter",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_native.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_delta.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_delta.py",
+      "destination": "scripts/qwen38_locomo_delta.py",
+      "bytes": 32346,
+      "sha256": "af66b350a906245dcf3d3f4914d29fad6b4927606095c9861eedcd01f790711a",
+      "purpose": "core: LoCoMo parent adapter",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_delta_contract.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_delta_contract.py",
+      "destination": "scripts/qwen38_locomo_delta_contract.py",
+      "bytes": 6497,
+      "sha256": "e4aef63403e715ce8d48baaeda15a6ef262b42a3a72da6de980fd8787c09913d",
+      "purpose": "core: LoCoMo parent adapter",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta_contract.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_delta_state.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_delta_state.py",
+      "destination": "scripts/qwen38_locomo_delta_state.py",
+      "bytes": 4803,
+      "sha256": "73367469adfb876197b8c8ddc531d4653ec597cf3a1cd8ae4f8fca9b13656fbe",
+      "purpose": "core: LoCoMo parent adapter",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta_state.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_delta_worker.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_delta_worker.py",
+      "destination": "scripts/qwen38_locomo_delta_worker.py",
+      "bytes": 10757,
+      "sha256": "034119f423227b2d4e6895876796bb4eefc94db996dab4858633d25a2eb20a4a",
+      "purpose": "core: LoCoMo parent adapter",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/scripts/qwen38_locomo_delta_worker.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_vllm_live_worker.py",
+      "source_relative_to_cl": "scripts/qwen38_vllm_live_worker.py",
+      "destination": "scripts/qwen38_vllm_live_worker.py",
+      "bytes": 22958,
+      "sha256": "af7de6ef7729599400f2f609b9cab1493f16fe23ab7c8c680a4bc3bc325c13c2",
+      "purpose": "core: sealed live reader/generation helper",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/scripts/qwen38_vllm_live_worker.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_vllm_live_two_chain.py",
+      "source_relative_to_cl": "scripts/qwen38_vllm_live_two_chain.py",
+      "destination": "scripts/qwen38_vllm_live_two_chain.py",
+      "bytes": 38943,
+      "sha256": "0f9610c567072b9933eb8700ce33fd02e1dd8e1c3db96a85e8086840a345cf95",
+      "purpose": "core: sealed live reader/generation helper",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/scripts/qwen38_vllm_live_two_chain.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_vllm_delta_accuracy.py",
+      "source_relative_to_cl": "scripts/qwen38_vllm_delta_accuracy.py",
+      "destination": "scripts/qwen38_vllm_delta_accuracy.py",
+      "bytes": 22450,
+      "sha256": "20bcf57117013bc9757eb59d2c9b33fad601706bc5a866a70002ce7e9c52bf55",
+      "purpose": "core: sealed live reader/generation helper",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/scripts/qwen38_vllm_delta_accuracy.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_vllm_accuracy.py",
+      "source_relative_to_cl": "scripts/qwen38_vllm_accuracy.py",
+      "destination": "scripts/qwen38_vllm_accuracy.py",
+      "bytes": 28656,
+      "sha256": "7aa34c362053f92af73d086c24908b860e12040db47f3de98ab45065b537bc51",
+      "purpose": "core: sealed live reader/generation helper",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/scripts/qwen38_vllm_accuracy.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_greedy_decode.py",
+      "source_relative_to_cl": "scripts/qwen38_greedy_decode.py",
+      "destination": "scripts/qwen38_greedy_decode.py",
+      "bytes": 16116,
+      "sha256": "92a3fee2aebdebde8ef0130d6bbcdf41f519ced73fdab3a3d6467c507cbee4b9",
+      "purpose": "core: sealed live reader/generation helper",
+      "provenance": {
+        "kind": "sealed_parent_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json",
+        "remote_source": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/cl/scripts/qwen38_greedy_decode.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_nll.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_nll.py",
+      "destination": "scripts/qwen38_locomo_nll.py",
+      "bytes": 26234,
+      "sha256": "500012e8122220b35f663265fd1bc42c07d0031660b9ac97d5b3d581470d63d1",
+      "purpose": "core: sealed NLL measurement implementation",
+      "provenance": {
+        "kind": "sealed_NLL_v3_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_nll_contract.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_nll_contract.py",
+      "destination": "scripts/qwen38_locomo_nll_contract.py",
+      "bytes": 13284,
+      "sha256": "1f3d4f348ec9c84958949ea1cb9d703dc70492144cf1a6232df3f04465e49e26",
+      "purpose": "core: sealed NLL measurement implementation",
+      "provenance": {
+        "kind": "sealed_NLL_v3_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_nll_engine.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_nll_engine.py",
+      "destination": "scripts/qwen38_locomo_nll_engine.py",
+      "bytes": 2172,
+      "sha256": "66f14d51d52f5a7f8569b288562a4bf0640063cef663764d75d9285df6e1c926",
+      "purpose": "core: sealed NLL measurement implementation",
+      "provenance": {
+        "kind": "sealed_NLL_v3_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_nll_worker.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_nll_worker.py",
+      "destination": "scripts/qwen38_locomo_nll_worker.py",
+      "bytes": 2174,
+      "sha256": "b955ed09e9b72d9d83f0e1f856cf2d32593aad13e33c05cb0f88887a2083c487",
+      "purpose": "core: sealed NLL measurement implementation",
+      "provenance": {
+        "kind": "sealed_NLL_v3_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_nll_summary.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_nll_summary.py",
+      "destination": "scripts/qwen38_locomo_nll_summary.py",
+      "bytes": 3802,
+      "sha256": "1d4deac3ecfb169307283be5e1c8901804475a9bf3fbf7c2d07df962cfaaee2c",
+      "purpose": "core: sealed NLL measurement implementation",
+      "provenance": {
+        "kind": "sealed_NLL_v3_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_locomo_nll_supervisor.py",
+      "source_relative_to_cl": "scripts/qwen38_locomo_nll_supervisor.py",
+      "destination": "scripts/qwen38_locomo_nll_supervisor.py",
+      "bytes": 5809,
+      "sha256": "d6c7c257aaaed7b2c7bdd96bce24e20cc9d7084ff47274aefd28acaf2093b8e1",
+      "purpose": "core: sealed NLL measurement implementation",
+      "provenance": {
+        "kind": "sealed_NLL_v3_binding",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\full_context_cpu_v3\\qwen38_locomo_full_context_v3.py",
+      "source_relative_to_cl": "artifacts/qwen38_locomo_20261022/full_context_cpu_v3/qwen38_locomo_full_context_v3.py",
+      "destination": "scripts/qwen38_locomo_full_context_v3.py",
+      "bytes": 22906,
+      "sha256": "7702e6c2d4ce5c32ccfb835007524584df96ed83ca889afbd8f248f88814aee8",
+      "purpose": "core: completed LoCoMo full-context runner/worker",
+      "provenance": {
+        "kind": "completed_full_context_source_receipt",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\full_context_gpu_v3_formal\\formal_prepared_config.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\full_context_cpu_v3\\qwen38_locomo_prefetch_worker.py",
+      "source_relative_to_cl": "artifacts/qwen38_locomo_20261022/full_context_cpu_v3/qwen38_locomo_prefetch_worker.py",
+      "destination": "scripts/qwen38_locomo_prefetch_worker.py",
+      "bytes": 7464,
+      "sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254",
+      "purpose": "core: completed LoCoMo full-context runner/worker",
+      "provenance": {
+        "kind": "completed_full_context_source_receipt",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\full_context_gpu_v3_formal\\formal_prepared_config.json"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_h200_writer_timing.py",
+      "source_relative_to_cl": "scripts/qwen38_h200_writer_timing.py",
+      "destination": "scripts/qwen38_h200_writer_timing.py",
+      "bytes": 31425,
+      "sha256": "c24674672c48e79b4ff3f0eba16d6c01bf0f87d5e41d07ed1ecd2a7189241bba",
+      "purpose": "core: timing constants and native timing runner",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/qwen38_h200_writer_timing.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\qwen38_h200_writer_timing.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_score_generated.py",
+      "source_relative_to_cl": "scripts/qwen38_score_generated.py",
+      "destination": "scripts/qwen38_score_generated.py",
+      "bytes": 15393,
+      "sha256": "60946877f833c3115ebb30a89937c4a51fa004b2858d968eb985a37930e1ff3e",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/qwen38_score_generated.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\qwen38_score_generated.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\qwen38_accuracy_eval.py",
+      "source_relative_to_cl": "scripts/qwen38_accuracy_eval.py",
+      "destination": "scripts/qwen38_accuracy_eval.py",
+      "bytes": 11365,
+      "sha256": "683765275c3ae17c4d1e4599ab1f652f26f41c6900085aba008d9477117bcfd3",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/qwen38_accuracy_eval.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\qwen38_accuracy_eval.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\math_probe.py",
+      "source_relative_to_cl": "scripts/math_probe.py",
+      "destination": "scripts/math_probe.py",
+      "bytes": 26543,
+      "sha256": "6b0f6a5826518a93ae5911f4247b9d6284ab005bc0563a6c2f9d1f1f2b57e4c5",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/math_probe.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\math_probe.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\humaneval_probe.py",
+      "source_relative_to_cl": "scripts/humaneval_probe.py",
+      "destination": "scripts/humaneval_probe.py",
+      "bytes": 13734,
+      "sha256": "59cc647b03f9f5bf3ec6579fcff604d35741d37ac71b26652ad8f1ffb3505891",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/humaneval_probe.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\humaneval_probe.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\evaluate_humaneval_wasi.py",
+      "source_relative_to_cl": "scripts/evaluate_humaneval_wasi.py",
+      "destination": "scripts/evaluate_humaneval_wasi.py",
+      "bytes": 16759,
+      "sha256": "f2fb22fa281c253832c32134c28a938ca6e25065b114060dde02aff38ceb4917",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/evaluate_humaneval_wasi.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\evaluate_humaneval_wasi.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\scripts\\evaluate_humaneval_isolated.py",
+      "source_relative_to_cl": "scripts/evaluate_humaneval_isolated.py",
+      "destination": "scripts/evaluate_humaneval_isolated.py",
+      "bytes": 9771,
+      "sha256": "1cfdc9b0a3ce33b0215953abeb762c4f494002a2e89df9dc9fd34a984f7c0416",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/scripts/evaluate_humaneval_isolated.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\scripts\\evaluate_humaneval_isolated.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\src\\cl_research\\math_retention.py",
+      "source_relative_to_cl": "src/cl_research/math_retention.py",
+      "destination": "src/cl_research/math_retention.py",
+      "bytes": 12758,
+      "sha256": "6b0da47c816fa1a068b1091ba2f14336e154cd63acb567919115a922afd6591d",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/src/cl_research/math_retention.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\src\\cl_research\\math_retention.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\src\\cl_research\\niche_metrics.py",
+      "source_relative_to_cl": "src/cl_research/niche_metrics.py",
+      "destination": "src/cl_research/niche_metrics.py",
+      "bytes": 4891,
+      "sha256": "a2ae90c111b64d6ada332b0715fd7770b58cda2351d695838b603be7607b3aea",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/src/cl_research/niche_metrics.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\src\\cl_research\\niche_metrics.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\src\\cl_research\\science_niche_metrics.py",
+      "source_relative_to_cl": "src/cl_research/science_niche_metrics.py",
+      "destination": "src/cl_research/science_niche_metrics.py",
+      "bytes": 6306,
+      "sha256": "2a294a676513d48a46ca9230df01a2408db64230f2b1f6a07e26acb74ccc5aec",
+      "purpose": "accuracy dependency: exact original scoring/data-helper source",
+      "provenance": {
+        "kind": "prior_verified_live_v3_member",
+        "receipt": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json",
+        "archive_member": "cl/artifacts/qwen38_native_parity_transfer_20261021/a800_live_frozen_sources/v3/cl/src/cl_research/science_niche_metrics.py",
+        "verified_local_snapshot": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\a800_live_b2_verified_backup_20261021_v1\\verified_deployment_members\\v3\\cl\\src\\cl_research\\science_niche_metrics.py"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\evaluation\\humaneval\\wasi_worker.py",
+      "source_relative_to_cl": "evaluation/humaneval/wasi_worker.py",
+      "destination": "evaluation/humaneval/wasi_worker.py",
+      "bytes": 5878,
+      "sha256": "3b2d3fd47439edc6d2b11886154698c44398a122af585860b907b14126dde5c8",
+      "purpose": "HumanEval WASI actual imported and subprocess-launched host worker; guest binary stays external",
+      "provenance": {
+        "kind": "required_local_first_party_dependency",
+        "importer": "scripts/evaluate_humaneval_wasi.py",
+        "source_identity_note": "Not listed in the parent binding/old v3 source archive; controller hashes this worker at runtime."
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\evaluation\\humaneval\\requirements-wasi.txt",
+      "source_relative_to_cl": "evaluation/humaneval/requirements-wasi.txt",
+      "destination": "evaluation/humaneval/requirements-wasi.txt",
+      "bytes": 17,
+      "sha256": "9dfe1a4cacff76f0e33dfea3676de3202aadd30ae2f27e2cdfe050166c60f7f8",
+      "purpose": "Pinned wasmtime dependency version for the selected WASI host worker",
+      "provenance": {
+        "kind": "required_local_dependency_metadata",
+        "content": "wasmtime==48.0.0"
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\launch_amended_nll.py",
+      "source_relative_to_cl": "artifacts/qwen38_locomo_20261022/nll_amended_v1/launch_amended_nll.py",
+      "destination": "scripts/launch_amended_nll.py",
+      "bytes": 13590,
+      "sha256": "9e8a94c729c4fc2ae5c35cc8dea6cee384300f7c5da22896c5606f0b77396815",
+      "purpose": "core: exact actual amended formal-only launcher; deploy to its original absolute NEW_ROOT path",
+      "provenance": {
+        "kind": "W_confirmed_actual_amended_launch_source",
+        "remote_source_path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_amended_v1/launch_amended_nll.py",
+        "note": "Exact final source frozen and reported by sole A owner; no source edits made here."
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    },
+    {
+      "source": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\protocol_amendment.json",
+      "source_relative_to_cl": "artifacts/qwen38_locomo_20261022/nll_amended_v1/protocol_amendment.json",
+      "destination": "docs/experiments/qwen38_native_20261020/locomo_nll_protocol_amendment_20261022.json",
+      "bytes": 18784,
+      "sha256": "a1f8a684821c7503622beb23e3608ce1fa9f28dd1c06a96b4cd6064af9659412",
+      "purpose": "Protocol evidence: original failed parity retained and actual formal-only method amendment",
+      "provenance": {
+        "kind": "W_confirmed_actual_amended_launch_source",
+        "remote_source_path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_amended_v1/protocol_amendment.json",
+        "note": "Exact final source frozen and reported by sole A owner; no source edits made here."
+      },
+      "target_existing": false,
+      "target_existing_sha256": null,
+      "target_action": "new_file",
+      "staged": true
+    }
+  ],
+  "candidate_files": 32,
+  "core_files": 20,
+  "staged_files": 32,
+  "total_staged_bytes": 480098,
+  "existing_native_sources_reused": 133,
+  "dependency_review_sha256": "1a83654676ba052302f54fe4323984d151328fc89d53fd899247d17379ee958b",
+  "source_receipts": {
+    "artifacts\\qwen38_locomo_20261022\\delta_cpu_v2\\a800_binding.json": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7",
+    "artifacts\\qwen38_locomo_20261022\\nll_cpu_v2\\prepared_cpu_v1\\binding.json": "9ee5da0bfbd58531ce733e49c5e98ab5e373e961af99ce39c2bbdbf8ce8541a8",
+    "artifacts\\qwen38_locomo_20261022\\full_context_gpu_v3_formal\\formal_prepared_config.json": "2d4728d2b311533d41f98f83d5e38281b4478499f37d77f01e7fc4ae86c32ca3",
+    "artifacts\\a800_live_b2_verified_backup_20261021_v1\\archive_member_manifest.json": "fb0ee7548e5d6f718cd700565be4505e354b7f22b39a73062aa673d9fa82c149"
+  },
+  "builder": {
+    "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_closeout_backup_20261022\\prepare_git_source_staging_v1.py",
+    "sha256": "b228878c9b79dc1ed8440df918bb5a7851b406b0ddb9559dd58541689c6e040c"
+  },
+  "exclusions": [
+    "model/checkpoint tensors",
+    "datasets and predictions",
+    "entire vLLM or other third-party package",
+    "WASM/binary runtime",
+    "all already-existing delta_ngram/native source copies",
+    "Git metadata",
+    "credentials",
+    "tests/caches"
+  ],
+  "publication_or_git_commands_run": false,
+  "target_repo_or_git_modified": false,
+  "dependency_review_path": "dependency_review_v2.json",
+  "prior_manifest": {
+    "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_closeout_backup_20261022\\git_source_staging_v1\\candidate_manifest.json",
+    "sha256": "6a1cf896e648bd8341c2414bdb75a18b10df3a1adbe4698098d42b2f8f3fc502"
+  },
+  "revision_builder": {
+    "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_closeout_backup_20261022\\finalize_git_source_staging_v2.py",
+    "sha256": "6710b5e67272fd1d2f87109005adbdd594dc4e701613fcab0358df55ded1d38b"
+  }
+}

@@ -12,12 +12,21 @@ The generic M1 `reader.backend: native` entry point remains unsupported.
 The [M1 experiment report](docs/reports/m1_20261020/report.md) records the
 100M budget endpoint, all 21 DEV64 checkpoints, analysis, and recovery index.
 The [Qwen3.8 native writer](docs/design/qwen38_native_20261020/architecture.md)
-has passed the four-H200 frozen-reader interface preflight. The current run
-trains fresh alpha=1 and alpha=.99 arms with EP4 and four-stage scheduling,
-saving and evaluating fixed DEV64 at each arm's 20M milestones before switching.
-The user waived the remaining numerical launch gates; historical failures and
-unverified checks remain recorded. See the [native runtime guide](scripts/native_qwen38/README.md)
-for code boundaries, launch prerequisites, and current validation status.
+supports the pinned native PLE runtime. The
+[2026-10-22 assessment](docs/reports/closeout_20261022/research/qwen38_delta_writer_assessment_20261022.md)
+reports the completed ordinary/delta seven-task chains, H200 representation
+measurements and row interventions, seen-question recall, and LoCoMo generation
+and reference-answer NLL. It records the null and adverse findings, preserved
+failed numerical checks, and interpretation limits.
+
+See the [source and runtime map](docs/reports/closeout_20261022/RUNTIME.md) for
+the archived evaluation paths and dependencies, the
+[analysis guide](docs/reports/closeout_20261022/analysis/README.md) for commands
+to recompute the LoCoMo figures and statistics, and
+[vLLM 0.30.0 modifications](third_party/vllm/README.md) for the two modified
+Python files and their exact input/output hashes. The
+[native runtime guide](scripts/native_qwen38/README.md) retains the training
+setup and historical validation record.
 
 ## Install and run
 

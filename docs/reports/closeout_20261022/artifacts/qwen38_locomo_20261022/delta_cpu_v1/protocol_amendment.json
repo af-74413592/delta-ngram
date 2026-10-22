@@ -1,0 +1,79 @@
+{
+  "protocol": "qwen38_locomo_a800_delta_readonly_v1",
+  "parent_protocol_sha256": "866045ef6e8afa937b3424da2c232c20e57a4a687a1cb35c50613127bdaf791c",
+  "parent_execution_plan_sha256": "19c4757e20d0e98de7edd8d6c606f4db0d273bd8e90e0e90225295e8566a2246",
+  "prepared_manifest_sha256": "3a5b27f86738fe6cfb1135d8bd1ef862e4aff82d07cc0f4c4dbadf1cd9250bd4",
+  "authorization": "User explicitly selected the original formal seven-task delta writer and all four LoCoMo conditions on A800.",
+  "writer": {
+    "method": "delta",
+    "checkpoint_archive_sha256": "51d5977845e9930f48732c73ae2503511d8976b1201f139a2be46bfab9f57308",
+    "tensor_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+    "tensor_hash_algorithm": "delta_ngram.qwen38_probe.tensor_state_hash",
+    "checkpoint_protocol": "qwen38_native_memory_fork_checkpoint_v1",
+    "branch": "full",
+    "completed_groups": 835,
+    "branch_completed_targets": 20015113,
+    "model_optimizer_step": 4172,
+    "model_completed_loss_targets": 99997072,
+    "alpha": 1.0,
+    "initial_memory": "New empty state for each of the ten conversations. No seven-task final memory is loaded."
+  },
+  "evidence": {
+    "encoder": "Read the current conversation Delta through the unchanged live_v3 FP32 split PLE path.",
+    "new_tokens_per_frame": 512,
+    "old_prefix_tokens_max": 128,
+    "chronological": true,
+    "write_final_chunk": true,
+    "writer_input": "Crop both pre-head H and physical rows to the new-token span before RMSNorm, right-context features, pooling and D1.",
+    "D1_commits_per_frame": 1,
+    "D1_commits_total": 426,
+    "new_tokens_total": 215278,
+    "padding_transport": "Prepared SP-even padding is masked non-evidence. vLLM receives exactly the valid prefix+new tokens, omitting only the trailing masked pad; valid token IDs and positions are unchanged.",
+    "state_fields": [
+      "rows",
+      "values",
+      "counts",
+      "block_clock",
+      "cumulative_log_alpha",
+      "row_last_written_block",
+      "row_log_alpha_at_write"
+    ],
+    "state_clock": "Exactly the actual evidence-frame count of that conversation, never 35000."
+  },
+  "generation": {
+    "conditions": [
+      "self",
+      "empty",
+      "donor"
+    ],
+    "short_prompt_ids": "Unchanged prepared_v1 IDs, identical across the three conditions.",
+    "algorithm": "Complete-prefix greedy recomputation; each next-token request is a fresh B1 live_v3 FP32 split read.",
+    "max_new_tokens": 32,
+    "eos_token_ids": [
+      248044,
+      248046
+    ],
+    "temperature": 0.0,
+    "memory_updates": 0,
+    "self": "Own final conversation snapshot.",
+    "empty": "Fresh empty state through the same FP32 split path.",
+    "donor": "Fixed prepared_v1 partner final snapshot.",
+    "query_count": 5958,
+    "decode": "Continuation token IDs only; pinned tokenizer decode(skip_special_tokens=True), no answer cleanup."
+  },
+  "full_context": "Separate unchanged full-history base condition on A800; no truncation, owned by its existing runner.",
+  "unchanged": [
+    "All prepared files, valid input tokens, conversation/question population, donor pairs, prompts, EOS, 32-token limit, official scorer and bootstrap."
+  ],
+  "old_protocol_modified": false,
+  "new_training": false,
+  "new_gate": false,
+  "answers_loaded_by_runtime": false,
+  "pilot": {
+    "sample_id": "conv-48",
+    "donor": "conv-47",
+    "questions": 239,
+    "short_requests": 717,
+    "selection_uses_scores": false
+  }
+}

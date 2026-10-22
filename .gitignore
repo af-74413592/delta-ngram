@@ -30,6 +30,10 @@ models/
 docs/reports/*
 !docs/reports/m1_20261020/
 !docs/reports/m1_20261020/**
+!docs/reports/closeout_20261022/
+!docs/reports/closeout_20261022/**
+!third_party/vllm/models/
+!third_party/vllm/models/**
 !docs/design/qwen38_native_20261020/references/*manifest.json
 !scripts/archive/m1_20261020/provenance_manifest.json
 !scripts/archive/m1_context_20261020/provenance_manifest.json

@@ -1,0 +1,732 @@
+{
+  "status": "passed",
+  "max_prompt_tokens": 25194,
+  "longest_admitted_without_truncation": true,
+  "repeat_same_tokens_after_other_prompt": true,
+  "observations": [
+    {
+      "qid": "conv-41:qa0103",
+      "sample_id": "conv-41",
+      "condition": "full_context",
+      "prompt_sha256": "a92e450145a08ed1108b0b3bd0445a58a9c2e9baca546430e4835692d9ea51d9",
+      "prompt_tokens": 25194,
+      "source_memory_sample_id": null,
+      "state_fingerprint_before": null,
+      "state_fingerprint_after": null,
+      "Delta_enabled": false,
+      "memory_updates": 0,
+      "generated_token_ids": [
+        5786,
+        248046
+      ],
+      "generated_token_ids_sha256": "7fa00710db8dba4b59e11a6a953e1fb1cfc8fa885611d70116d226052cb77aa3",
+      "text": "Max",
+      "vllm_text": "Max",
+      "stop_reason": null,
+      "finish_reason": "stop",
+      "max_token_limit_reached": false,
+      "elapsed_seconds": 2.633289657533169,
+      "contract_sha256": "16298a251b388559678f108deed05eee1cec06698618e9ac742e4fcd4dd47768"
+    },
+    {
+      "qid": "conv-48:qa0165",
+      "sample_id": "conv-48",
+      "condition": "full_context",
+      "prompt_sha256": "a965c7481769e5434b5d5d31e779496764a91dede6e5f141a875b42ae8099c28",
+      "prompt_tokens": 23050,
+      "source_memory_sample_id": null,
+      "state_fingerprint_before": null,
+      "state_fingerprint_after": null,
+      "Delta_enabled": false,
+      "memory_updates": 0,
+      "generated_token_ids": [
+        56,
+        13631,
+        6632,
+        248046
+      ],
+      "generated_token_ids_sha256": "c58f5e37c42b1fefd31526cc8d720c1e89a8ff295123ca1dffecb8229791662d",
+      "text": "Yoga classes",
+      "vllm_text": "Yoga classes",
+      "stop_reason": null,
+      "finish_reason": "stop",
+      "max_token_limit_reached": false,
+      "elapsed_seconds": 4.493916010484099,
+      "contract_sha256": "16298a251b388559678f108deed05eee1cec06698618e9ac742e4fcd4dd47768"
+    },
+    {
+      "qid": "conv-41:qa0103",
+      "sample_id": "conv-41",
+      "condition": "full_context",
+      "prompt_sha256": "a92e450145a08ed1108b0b3bd0445a58a9c2e9baca546430e4835692d9ea51d9",
+      "prompt_tokens": 25194,
+      "source_memory_sample_id": null,
+      "state_fingerprint_before": null,
+      "state_fingerprint_after": null,
+      "Delta_enabled": false,
+      "memory_updates": 0,
+      "generated_token_ids": [
+        5786,
+        248046
+      ],
+      "generated_token_ids_sha256": "7fa00710db8dba4b59e11a6a953e1fb1cfc8fa885611d70116d226052cb77aa3",
+      "text": "Max",
+      "vllm_text": "Max",
+      "stop_reason": null,
+      "finish_reason": "stop",
+      "max_token_limit_reached": false,
+      "elapsed_seconds": 2.956102129071951,
+      "contract_sha256": "16298a251b388559678f108deed05eee1cec06698618e9ac742e4fcd4dd47768"
+    }
+  ],
+  "resources_after": [
+    {
+      "rank": 0,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "e91b0af42fefec62179cb2b8b7e8860b306828cc36f6c7fce8da481b66cd0077",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44683936,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 1,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "9c708a3743e9981504fb19eed4bf841cca6a0a7a37ba984fa55679b0c0d55b1d",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44680876,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 2,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "f117283f4d820e33eb9816bf30f363ea5809fa18a500014df297c4142470b11d",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44679888,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 3,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "296ea4580ee3fadfc2686eb09bfba09874caa248a38bed8831b55529679f05b4",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44679468,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 4,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "bca2fdbe101722bbc2637fe5d5b230935e90f34fb494b1dc36a73d5f4d7fe2b0",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44677460,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 5,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "45cd89f8c7751c40653be7df423218f1909a3d8ea21503f16c90e8ae29a744a2",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44675856,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 6,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "31257de1a295149bcd11a9f1674fd8d9c67be4d8ca9746daf6cdd562bbcb5b17",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44675568,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    },
+    {
+      "rank": 7,
+      "base_parameters_unchanged": true,
+      "Delta_enabled": false,
+      "canonical_cpu_weights_unchanged": true,
+      "canonical_cpu_weights_sha256": "87a9f1d47842fff172e2c5827e326e0fe7f402df0b9bffc5fd31d00f6a8a329a",
+      "offload_backend": "PrefetchOffloader",
+      "offload_module_count": 16,
+      "offload_host_bytes": 10066329600,
+      "offload_gpu_pool_bytes": 629145600,
+      "offload_net_saved_bytes": 9437184000,
+      "offload_host_dtypes": [
+        "torch.bfloat16"
+      ],
+      "offload_host_all_pinned": true,
+      "offload_group_size": 3,
+      "offload_num_in_group": 1,
+      "offload_prefetch_step": 1,
+      "offload_params": [
+        "experts"
+      ],
+      "quiescent": true,
+      "kv_capacity_tokens": 296131,
+      "kv_max_concurrency": 11.73913043478261,
+      "kv_num_blocks": 810,
+      "kv_groups": [
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 25226,
+          "page_size_bytes": 4915200,
+          "max_request_bytes": 4915200
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 1,
+          "block_size": 25226,
+          "page_size_bytes": 409600,
+          "max_request_bytes": 409600
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 12,
+          "block_size": 4,
+          "page_size_bytes": 12288,
+          "max_request_bytes": 12288
+        },
+        {
+          "type": "UniformTypeKVCacheSpecs",
+          "layers": 24,
+          "block_size": 400,
+          "page_size_bytes": 5222400,
+          "max_request_bytes": 334233600
+        }
+      ],
+      "allocated_bytes": 32919157248,
+      "reserved_bytes": 37002149888,
+      "peak_allocated_bytes": 36083168768,
+      "peak_reserved_bytes": 37002149888,
+      "free_bytes": 4190306304,
+      "total_bytes": 42600300544,
+      "cpu_max_rss_kib": 44685316,
+      "PLE_cache_dtypes": [
+        "torch.bfloat16"
+      ],
+      "worker_sha256": "78aa622a5b1a2a988609d2b2f530ec9511549499010b09cddced5fdd4b79c254"
+    }
+  ]
+}

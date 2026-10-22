@@ -1,0 +1,414 @@
+{
+  "status": "verified",
+  "source_analysis_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\research\\qwen38_seven_task_results_analysis_20261022.md",
+  "source_analysis_sha256": "7a4cce269f5779cd8c84fbc9d45375f5be1cd6d8a55dfa255e54831262abf098",
+  "observed_utc": "2026-10-21T20:18:46.199359+00:00",
+  "completion": {
+    "status": "completed",
+    "D1_total": 70000,
+    "epochs": {
+      "ordinary": 35000,
+      "delta": 35000
+    },
+    "execution_exit_code": 0,
+    "generated_records": 4480,
+    "final_state_hashes": {
+      "ordinary": "68c8ee78ec2e3c1435f130498493da70f176aca144d41368621d3389496b6db6",
+      "delta": "323f278df9da966eea6166fd81ebeb7de78d4ebce8daa7b83781534563d832de"
+    }
+  },
+  "table": [
+    {
+      "arm": "ordinary",
+      "task": "sme",
+      "before_epoch": 0,
+      "before_correct": 10,
+      "own_after_correct": 7,
+      "final_correct": 6,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 3,
+      "own_output_changes": 27,
+      "retention_rescued": 0,
+      "retention_lost": 1,
+      "retention_output_changes": 8
+    },
+    {
+      "arm": "ordinary",
+      "task": "nav",
+      "before_epoch": 5000,
+      "before_correct": 6,
+      "own_after_correct": 5,
+      "final_correct": 5,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 1,
+      "own_output_changes": 8,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 6
+    },
+    {
+      "arm": "ordinary",
+      "task": "hye",
+      "before_epoch": 10000,
+      "before_correct": 33,
+      "own_after_correct": 28,
+      "final_correct": 29,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 5,
+      "own_output_changes": 10,
+      "retention_rescued": 1,
+      "retention_lost": 0,
+      "retention_output_changes": 4
+    },
+    {
+      "arm": "ordinary",
+      "task": "afb",
+      "before_epoch": 15000,
+      "before_correct": 5,
+      "own_after_correct": 2,
+      "final_correct": 2,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 3,
+      "own_output_changes": 16,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 9
+    },
+    {
+      "arm": "ordinary",
+      "task": "sqi",
+      "before_epoch": 20000,
+      "before_correct": 24,
+      "own_after_correct": 27,
+      "final_correct": 25,
+      "n": 64,
+      "own_rescued": 3,
+      "own_lost": 0,
+      "own_output_changes": 8,
+      "retention_rescued": 0,
+      "retention_lost": 2,
+      "retention_output_changes": 6
+    },
+    {
+      "arm": "ordinary",
+      "task": "mkd",
+      "before_epoch": 25000,
+      "before_correct": 29,
+      "own_after_correct": 27,
+      "final_correct": 28,
+      "n": 64,
+      "own_rescued": 1,
+      "own_lost": 3,
+      "own_output_changes": 11,
+      "retention_rescued": 1,
+      "retention_lost": 0,
+      "retention_output_changes": 6
+    },
+    {
+      "arm": "ordinary",
+      "task": "amh",
+      "before_epoch": 30000,
+      "before_correct": 31,
+      "own_after_correct": 30,
+      "final_correct": 30,
+      "n": 64,
+      "own_rescued": 1,
+      "own_lost": 2,
+      "own_output_changes": 11,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 0
+    },
+    {
+      "arm": "delta",
+      "task": "sme",
+      "before_epoch": 0,
+      "before_correct": 10,
+      "own_after_correct": 7,
+      "final_correct": 7,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 3,
+      "own_output_changes": 25,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 8
+    },
+    {
+      "arm": "delta",
+      "task": "nav",
+      "before_epoch": 5000,
+      "before_correct": 6,
+      "own_after_correct": 6,
+      "final_correct": 6,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 0,
+      "own_output_changes": 6,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 4
+    },
+    {
+      "arm": "delta",
+      "task": "hye",
+      "before_epoch": 10000,
+      "before_correct": 32,
+      "own_after_correct": 32,
+      "final_correct": 32,
+      "n": 64,
+      "own_rescued": 1,
+      "own_lost": 1,
+      "own_output_changes": 3,
+      "retention_rescued": 1,
+      "retention_lost": 1,
+      "retention_output_changes": 8
+    },
+    {
+      "arm": "delta",
+      "task": "afb",
+      "before_epoch": 15000,
+      "before_correct": 6,
+      "own_after_correct": 2,
+      "final_correct": 2,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 4,
+      "own_output_changes": 16,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 8
+    },
+    {
+      "arm": "delta",
+      "task": "sqi",
+      "before_epoch": 20000,
+      "before_correct": 27,
+      "own_after_correct": 27,
+      "final_correct": 26,
+      "n": 64,
+      "own_rescued": 1,
+      "own_lost": 1,
+      "own_output_changes": 6,
+      "retention_rescued": 0,
+      "retention_lost": 1,
+      "retention_output_changes": 1
+    },
+    {
+      "arm": "delta",
+      "task": "mkd",
+      "before_epoch": 25000,
+      "before_correct": 26,
+      "own_after_correct": 27,
+      "final_correct": 26,
+      "n": 64,
+      "own_rescued": 2,
+      "own_lost": 1,
+      "own_output_changes": 7,
+      "retention_rescued": 1,
+      "retention_lost": 2,
+      "retention_output_changes": 9
+    },
+    {
+      "arm": "delta",
+      "task": "amh",
+      "before_epoch": 30000,
+      "before_correct": 31,
+      "own_after_correct": 30,
+      "final_correct": 30,
+      "n": 64,
+      "own_rescued": 0,
+      "own_lost": 1,
+      "own_output_changes": 10,
+      "retention_rescued": 0,
+      "retention_lost": 0,
+      "retention_output_changes": 0
+    }
+  ],
+  "overall": {
+    "ordinary": {
+      "n": 448,
+      "before_diagonal_correct": 138,
+      "own_after_diagonal_correct": 126,
+      "final_correct": 125,
+      "final_accuracy": 0.27901785714285715,
+      "acquisition_net": -12,
+      "acquisition_pp": -2.6785714285714284,
+      "own_rescued": 5,
+      "own_lost": 17,
+      "own_output_changes": 91,
+      "retention_first_six_n": 384,
+      "retention_net": -1,
+      "retention_pp": -0.2604166666666667,
+      "retention_rescued": 2,
+      "retention_lost": 3,
+      "retention_output_changes": 39
+    },
+    "delta": {
+      "n": 448,
+      "before_diagonal_correct": 138,
+      "own_after_diagonal_correct": 131,
+      "final_correct": 129,
+      "final_accuracy": 0.28794642857142855,
+      "acquisition_net": -7,
+      "acquisition_pp": -1.5625,
+      "own_rescued": 4,
+      "own_lost": 11,
+      "own_output_changes": 73,
+      "retention_first_six_n": 384,
+      "retention_net": -2,
+      "retention_pp": -0.5208333333333334,
+      "retention_rescued": 2,
+      "retention_lost": 4,
+      "retention_output_changes": 38
+    }
+  },
+  "final_arm_comparison": {
+    "delta_only_correct": 9,
+    "ordinary_only_correct": 5,
+    "final_net": 4,
+    "final_pp": 0.8928571428571429,
+    "same_correctness": 434,
+    "same_normalized_answer": 395,
+    "same_token_sequence": 393,
+    "exact_paired_p": 0.4239501953125,
+    "tasks": [
+      {
+        "task": "sme",
+        "n": 64,
+        "delta_only_correct": 1,
+        "ordinary_only_correct": 0,
+        "same_correctness": 63,
+        "same_normalized_answer": 55,
+        "same_token_sequence": 55,
+        "delta_only_correct_ids": [
+          "sigmorphon/2023:sme:test:968"
+        ],
+        "ordinary_only_correct_ids": []
+      },
+      {
+        "task": "nav",
+        "n": 64,
+        "delta_only_correct": 1,
+        "ordinary_only_correct": 0,
+        "same_correctness": 63,
+        "same_normalized_answer": 57,
+        "same_token_sequence": 57,
+        "delta_only_correct_ids": [
+          "sigmorphon/2023:nav:test:841"
+        ],
+        "ordinary_only_correct_ids": []
+      },
+      {
+        "task": "hye",
+        "n": 64,
+        "delta_only_correct": 4,
+        "ordinary_only_correct": 1,
+        "same_correctness": 59,
+        "same_normalized_answer": 53,
+        "same_token_sequence": 53,
+        "delta_only_correct_ids": [
+          "sigmorphon/2023:hye:test:972",
+          "sigmorphon/2023:hye:test:898",
+          "sigmorphon/2023:hye:test:51",
+          "sigmorphon/2023:hye:test:458"
+        ],
+        "ordinary_only_correct_ids": [
+          "sigmorphon/2023:hye:test:229"
+        ]
+      },
+      {
+        "task": "afb",
+        "n": 64,
+        "delta_only_correct": 0,
+        "ordinary_only_correct": 0,
+        "same_correctness": 64,
+        "same_normalized_answer": 57,
+        "same_token_sequence": 57,
+        "delta_only_correct_ids": [],
+        "ordinary_only_correct_ids": []
+      },
+      {
+        "task": "sqi",
+        "n": 64,
+        "delta_only_correct": 1,
+        "ordinary_only_correct": 0,
+        "same_correctness": 63,
+        "same_normalized_answer": 60,
+        "same_token_sequence": 60,
+        "delta_only_correct_ids": [
+          "sigmorphon/2023:sqi:test:322"
+        ],
+        "ordinary_only_correct_ids": []
+      },
+      {
+        "task": "mkd",
+        "n": 64,
+        "delta_only_correct": 1,
+        "ordinary_only_correct": 3,
+        "same_correctness": 60,
+        "same_normalized_answer": 57,
+        "same_token_sequence": 55,
+        "delta_only_correct_ids": [
+          "sigmorphon/2023:mkd:test:47"
+        ],
+        "ordinary_only_correct_ids": [
+          "sigmorphon/2023:mkd:test:531",
+          "sigmorphon/2023:mkd:test:672",
+          "sigmorphon/2023:mkd:test:596"
+        ]
+      },
+      {
+        "task": "amh",
+        "n": 64,
+        "delta_only_correct": 1,
+        "ordinary_only_correct": 1,
+        "same_correctness": 62,
+        "same_normalized_answer": 56,
+        "same_token_sequence": 56,
+        "delta_only_correct_ids": [
+          "sigmorphon/2023:amh:test:140"
+        ],
+        "ordinary_only_correct_ids": [
+          "sigmorphon/2023:amh:test:909"
+        ]
+      }
+    ]
+  },
+  "document_accuracy_table_exact_match": true,
+  "interpretation_corrections": [
+    {
+      "claim": "Each task is flat or declines after writing",
+      "finding": "Too strong: ordinary SQI improves 24 to 27; delta MKD improves 26 to 27. Aggregate acquisition is negative."
+    },
+    {
+      "claim": "Before accuracies sum to a base score",
+      "finding": "Each arm sums to 138/448, but only SME before is epoch zero. The seven values come from different pre-task states."
+    },
+    {
+      "claim": "Almost no forgetting",
+      "finding": "Net retention changes are -1 and -2 out of 384. Ordinary rescues 2 and loses 3; delta rescues 2 and loses 4. Report net effect alongside gross paired changes and negative acquisition."
+    },
+    {
+      "claim": "The two writers are identical or memory read has no difference",
+      "finding": "Final accuracies differ by 4/448; output-level differences are explicitly counted. One seed and these data do not establish equivalence or a causal absence of effect."
+    }
+  ],
+  "timing": {
+    "old_4480_query_seconds": 3203.157647870481,
+    "old_generated_tokens": 26368,
+    "new_h200_state_generation_queries": 4480,
+    "new_seen_support_queries": 1792,
+    "projected_new_total_query_seconds_at_old_rate": 4484.420707018674
+  },
+  "evidence_sha256": {
+    "download_receipt.json": "1b524208ff97f218789382bbe8988b852d50d4356b920937b0689aa08a4f3f77",
+    "scoring_report.json": "face1aa5354a9d90306532a97a6a4d8d1f48ee7d0f3841edb6bedd156e0b77f7",
+    "paired_report.json": "1eaace3fccace77586070b33922944f211595c0005fabcb6d385d36d2dbc548b",
+    "boundary_state_index.json": "819ca71ce89708e6b4d389f248dd0e2f96c3cb4ff0841eddf6b95ac7e581c031"
+  }
+}

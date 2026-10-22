@@ -1,0 +1,635 @@
+{
+  "protocol": "qwen38_locomo_actual_nll_independent_arithmetic_review_v1",
+  "status": "passed",
+  "created_utc": "2026-10-22T04:10:33.278606+00:00",
+  "scope": "Offline actual-result arithmetic, denominators and all 36 condition/contrast confidence interval entries; no model execution and no synthetic tests.",
+  "inputs": {
+    "artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\essential_v1\\fetch_manifest.json": {
+      "sha256": "74e90f5493c7335db1d19e8320973bd2f2d70d0fdac1efc9848c29b93e43c1ed",
+      "bytes": 2020
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\essential_v1\\run_v1\\nll_results.jsonl": {
+      "sha256": "5179e5fbbfa02a4d6ec75410cec69df5d4688d6c1b457057680960724d8437ed",
+      "bytes": 5779031
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\essential_v1\\run_v1\\summary.json": {
+      "sha256": "6d6ebc4d65cc53cdc4d6ceb48566a46ed17f3cfcf84103015962d39eeab13133",
+      "bytes": 7395
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\essential_v1\\audit_v1\\final_audit.json": {
+      "sha256": "176ff9627d0684daa76c1ec7b03a187ef31755a6acd3b4772406166553a07efc",
+      "bytes": 812730
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_amended_v1\\essential_v1\\launch_v1\\execution.json": {
+      "sha256": "15967cfed723685e8b94315896233d3bacf678b8f2f4d81a149eb8704ae66015",
+      "bytes": 2366
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_position_results_v1\\report.json": {
+      "sha256": "066ecdccd56c4088ec84862a7f02cae00981756e9991169b74fc8994958307e5",
+      "bytes": 18474
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_position_results_v1\\per_question.jsonl": {
+      "sha256": "00c3f1bd4c25d80a41fad7d1dc0df35ce3e964aaf6931dade93fe6812c3be96e",
+      "bytes": 948414
+    },
+    "artifacts\\qwen38_locomo_20261022\\nll_figures_v1\\audit_and_plotted_values.json": {
+      "sha256": "dd51724602ca1dc2908843b1f4fb5b06caffab81429f3def61feb11e36f4d88f",
+      "bytes": 3980
+    }
+  },
+  "actual_formal_exit": 0,
+  "actual_CPU_product_audit_exit": 0,
+  "original_gate_status": "failed",
+  "original_gate_returncode": 1,
+  "cross_shape_parity_failed": true,
+  "seven_downloaded_essential_files_verified": true,
+  "question_count": 1540,
+  "evaluations": 4620,
+  "conversations": 10,
+  "denominators": {
+    "overall": {
+      "questions": 1540,
+      "tokens_per_condition": 10804,
+      "excluded": 0,
+      "by_conversation": {
+        "conv-26": {
+          "questions": 152,
+          "tokens": 1061
+        },
+        "conv-30": {
+          "questions": 81,
+          "tokens": 583
+        },
+        "conv-41": {
+          "questions": 152,
+          "tokens": 989
+        },
+        "conv-42": {
+          "questions": 199,
+          "tokens": 1502
+        },
+        "conv-43": {
+          "questions": 178,
+          "tokens": 1242
+        },
+        "conv-44": {
+          "questions": 123,
+          "tokens": 839
+        },
+        "conv-47": {
+          "questions": 150,
+          "tokens": 934
+        },
+        "conv-48": {
+          "questions": 191,
+          "tokens": 1331
+        },
+        "conv-49": {
+          "questions": 156,
+          "tokens": 1329
+        },
+        "conv-50": {
+          "questions": 158,
+          "tokens": 994
+        }
+      }
+    },
+    "first_token": {
+      "questions": 1540,
+      "tokens_per_condition": 1540,
+      "excluded": 0,
+      "by_conversation": {
+        "conv-26": {
+          "questions": 152,
+          "tokens": 152
+        },
+        "conv-30": {
+          "questions": 81,
+          "tokens": 81
+        },
+        "conv-41": {
+          "questions": 152,
+          "tokens": 152
+        },
+        "conv-42": {
+          "questions": 199,
+          "tokens": 199
+        },
+        "conv-43": {
+          "questions": 178,
+          "tokens": 178
+        },
+        "conv-44": {
+          "questions": 123,
+          "tokens": 123
+        },
+        "conv-47": {
+          "questions": 150,
+          "tokens": 150
+        },
+        "conv-48": {
+          "questions": 191,
+          "tokens": 191
+        },
+        "conv-49": {
+          "questions": 156,
+          "tokens": 156
+        },
+        "conv-50": {
+          "questions": 158,
+          "tokens": 158
+        }
+      }
+    },
+    "continuation": {
+      "questions": 1436,
+      "tokens_per_condition": 9264,
+      "excluded": 104,
+      "by_conversation": {
+        "conv-26": {
+          "questions": 143,
+          "tokens": 909
+        },
+        "conv-30": {
+          "questions": 77,
+          "tokens": 502
+        },
+        "conv-41": {
+          "questions": 144,
+          "tokens": 837
+        },
+        "conv-42": {
+          "questions": 183,
+          "tokens": 1303
+        },
+        "conv-43": {
+          "questions": 165,
+          "tokens": 1064
+        },
+        "conv-44": {
+          "questions": 110,
+          "tokens": 716
+        },
+        "conv-47": {
+          "questions": 140,
+          "tokens": 784
+        },
+        "conv-48": {
+          "questions": 182,
+          "tokens": 1140
+        },
+        "conv-49": {
+          "questions": 150,
+          "tokens": 1173
+        },
+        "conv-50": {
+          "questions": 142,
+          "tokens": 836
+        }
+      }
+    }
+  },
+  "all_1540_position_question_records_equal_direct_slices": true,
+  "single_token_answers_excluded_from_continuation": 104,
+  "continuation_zero_imputation": false,
+  "bootstrap": {
+    "seed": 20261022,
+    "replicates": 10000,
+    "cluster": "conversation",
+    "draws_sha256": "16c5ef6a45d79c6f42aba4191ab634d7af6a9f2f73d8b8aefcef3aeac252d495",
+    "shared_draws_for_all_groups_conditions_and_contrasts": true,
+    "independent_method": "Direct indexed cluster resampling and explicit sorted-array linear percentiles; no production analysis functions imported."
+  },
+  "interval_entries_recomputed": 36,
+  "max_absolute_arithmetic_error": 0.0,
+  "max_absolute_statistic_error": 8.239936510889834e-16,
+  "checked_interval_entries": [
+    {
+      "group": "overall",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "self",
+      "estimate": 4.033916498733123,
+      "cluster_bootstrap_95ci": [
+        3.8035260021573407,
+        4.209178839705197
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "empty",
+      "estimate": 4.0175751878742,
+      "cluster_bootstrap_95ci": [
+        3.777502646994446,
+        4.194319744944196
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "donor",
+      "estimate": 4.048573702948822,
+      "cluster_bootstrap_95ci": [
+        3.810982066826356,
+        4.2267665270902075
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "self-empty",
+      "estimate": 0.016341310858923208,
+      "cluster_bootstrap_95ci": [
+        -0.00634060677537137,
+        0.03518943187408884
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "donor-empty",
+      "estimate": 0.030998515074622368,
+      "cluster_bootstrap_95ci": [
+        0.015274685180380798,
+        0.04614464150882564
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "self-donor",
+      "estimate": -0.01465720421569916,
+      "cluster_bootstrap_95ci": [
+        -0.025042400988234646,
+        -0.004266196985027385
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "self",
+      "estimate": 3.4356401586141123,
+      "cluster_bootstrap_95ci": [
+        3.251115157068314,
+        3.5910623634668957
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "empty",
+      "estimate": 3.4403195951851826,
+      "cluster_bootstrap_95ci": [
+        3.2509390776265716,
+        3.5949753049820514
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "donor",
+      "estimate": 3.4436381208252493,
+      "cluster_bootstrap_95ci": [
+        3.253948714643803,
+        3.6027613942175734
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "self-empty",
+      "estimate": -0.0046794365710702834,
+      "cluster_bootstrap_95ci": [
+        -0.018345476246554582,
+        0.007707267529613232
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "donor-empty",
+      "estimate": 0.0033185256400667384,
+      "cluster_bootstrap_95ci": [
+        -0.00675294953735579,
+        0.012334966650897138
+      ]
+    },
+    {
+      "group": "overall",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "self-donor",
+      "estimate": -0.007997962211137022,
+      "cluster_bootstrap_95ci": [
+        -0.013696270684454514,
+        -0.0011969564268929827
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "self",
+      "estimate": 9.239160806523007,
+      "cluster_bootstrap_95ci": [
+        8.905341874111633,
+        9.520290120108648
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "empty",
+      "estimate": 9.109851318061981,
+      "cluster_bootstrap_95ci": [
+        8.730723795536143,
+        9.419921799465927
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "donor",
+      "estimate": 9.27506560834923,
+      "cluster_bootstrap_95ci": [
+        8.921220706546595,
+        9.568792537748246
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "self-empty",
+      "estimate": 0.12930948846102552,
+      "cluster_bootstrap_95ci": [
+        0.06010264237367507,
+        0.1895752724920511
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "donor-empty",
+      "estimate": 0.1652142902872491,
+      "cluster_bootstrap_95ci": [
+        0.12733575062435126,
+        0.20024817063201153
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "self-donor",
+      "estimate": -0.035904801826223576,
+      "cluster_bootstrap_95ci": [
+        -0.07298980274026419,
+        0.0006990477554445767
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "self",
+      "estimate": 9.239160806523007,
+      "cluster_bootstrap_95ci": [
+        8.905341874111633,
+        9.520290120108648
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "empty",
+      "estimate": 9.109851318061981,
+      "cluster_bootstrap_95ci": [
+        8.730723795536143,
+        9.419921799465927
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "donor",
+      "estimate": 9.27506560834923,
+      "cluster_bootstrap_95ci": [
+        8.921220706546595,
+        9.568792537748246
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "self-empty",
+      "estimate": 0.12930948846102552,
+      "cluster_bootstrap_95ci": [
+        0.06010264237367507,
+        0.1895752724920511
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "donor-empty",
+      "estimate": 0.1652142902872491,
+      "cluster_bootstrap_95ci": [
+        0.12733575062435126,
+        0.20024817063201153
+      ]
+    },
+    {
+      "group": "first_token",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "self-donor",
+      "estimate": -0.035904801826223576,
+      "cluster_bootstrap_95ci": [
+        -0.07298980274026419,
+        0.0006990477554445767
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "self",
+      "estimate": 2.2339482956133008,
+      "cluster_bootstrap_95ci": [
+        2.091392533061156,
+        2.3671995314124197
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "empty",
+      "estimate": 2.254237558103851,
+      "cluster_bootstrap_95ci": [
+        2.114595065506803,
+        2.3852684632062697
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "query_mean_nll",
+      "category": "conditions",
+      "label": "donor",
+      "estimate": 2.2386256422820314,
+      "cluster_bootstrap_95ci": [
+        2.0923192187365127,
+        2.377002086600686
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "self-empty",
+      "estimate": -0.020289262490550186,
+      "cluster_bootstrap_95ci": [
+        -0.03134220204046582,
+        -0.007962042138388109
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "donor-empty",
+      "estimate": -0.015611915821819533,
+      "cluster_bootstrap_95ci": [
+        -0.026231216394297516,
+        -0.0059512173600684126
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "query_mean_nll",
+      "category": "paired_differences",
+      "label": "self-donor",
+      "estimate": -0.004677346668730653,
+      "cluster_bootstrap_95ci": [
+        -0.012567975776453355,
+        0.0039148727212821016
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "self",
+      "estimate": 2.4708925552268397,
+      "cluster_bootstrap_95ci": [
+        2.296477680657637,
+        2.647907880575935
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "empty",
+      "estimate": 2.4978456257086856,
+      "cluster_bootstrap_95ci": [
+        2.3216450386884366,
+        2.6758661822654735
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "token_pooled_nll",
+      "category": "conditions",
+      "label": "donor",
+      "estimate": 2.4742514270874545,
+      "cluster_bootstrap_95ci": [
+        2.296048297291842,
+        2.654852101892535
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "self-empty",
+      "estimate": -0.02695307048184592,
+      "cluster_bootstrap_95ci": [
+        -0.03618408002180472,
+        -0.01707315553223077
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "donor-empty",
+      "estimate": -0.023594198621231133,
+      "cluster_bootstrap_95ci": [
+        -0.030318527035559605,
+        -0.017141558477487252
+      ]
+    },
+    {
+      "group": "continuation",
+      "metric": "token_pooled_nll",
+      "category": "paired_differences",
+      "label": "self-donor",
+      "estimate": -0.003358871860614787,
+      "cluster_bootstrap_95ci": [
+        -0.00881475648243789,
+        0.0026560852347885505
+      ]
+    }
+  ],
+  "pooled_contrast_decomposition": {
+    "self-empty": {
+      "first_token_contribution_to_total_pooled": 0.01843174863291182,
+      "continuation_contribution_to_total_pooled": -0.023111185203981914,
+      "total_pooled": -0.0046794365710702834
+    },
+    "donor-empty": {
+      "first_token_contribution_to_total_pooled": 0.023549611906919996,
+      "continuation_contribution_to_total_pooled": -0.0202310862668535,
+      "total_pooled": 0.0033185256400667384
+    },
+    "self-donor": {
+      "first_token_contribution_to_total_pooled": -0.005117863274008173,
+      "continuation_contribution_to_total_pooled": -0.002880098937128414,
+      "total_pooled": -0.007997962211137022
+    }
+  },
+  "query_mean_decomposition": "Reconstructed per answer as (first loss + continuation loss sum) / full answer token count, then averaged all 1540 questions. Group means cannot be combined using 1540/1436 question counts alone.",
+  "figure_values_match_summary": true,
+  "interpretation": [
+    "Overall self-minus-empty confidence intervals contain zero for both query-weighted and token-pooled NLL; their point estimates have opposite signs. No stable improvement over empty is demonstrated.",
+    "Overall self-minus-donor intervals are negative on this fixed amended teacher-forcing path. This is a condition-specific difference, not evidence that self improves over empty or that correct conversation facts are freely recalled.",
+    "First-token self-minus-empty and donor-minus-empty are positive; first-token self-minus-donor includes zero.",
+    "Continuation self and donor both improve against empty within the conversation-bootstrap intervals; their mutual difference includes zero for both weighting schemes. Shared continuation improvement does not isolate conversation-specific factual memory.",
+    "Continuation is conditioned on supplied gold answer prefixes. The 104 one-token answers have no continuation record; they are excluded, not assigned zero.",
+    "The original cross-shape numerical gate failed. The 14 diagnostic positions provide neither a calibrated formal error bound nor a noise cutoff; these bootstrap intervals quantify sampling uncertainty only, not execution-path uncertainty."
+  ],
+  "remote_connections": 0,
+  "new_GPU_forwards": 0,
+  "source_files_modified": false,
+  "formal_rows_modified": false
+}

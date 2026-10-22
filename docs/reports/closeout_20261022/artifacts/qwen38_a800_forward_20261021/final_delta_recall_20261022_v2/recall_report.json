@@ -1,0 +1,167 @@
+{
+  "protocol": "qwen38_final_delta_seen_support_recall_audit_v1",
+  "status": "completed",
+  "scope": "448 seen training supports, 64 per fixed task; final A800 delta only; no empty-state comparison",
+  "selection": "sha256(source_row_id UTF-8), ascending; first64 per task",
+  "source_manifest_sha256": "b32e9d38e428b7edacad4d577410e79ea76359199762c03c07cc156a2ef30e7c",
+  "formal_source": {
+    "arm": "delta",
+    "stage": 7,
+    "path": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/runtime/live_v3/run/delta.boundary_07_amh.state.pt",
+    "sha256": "efcfaed3f4fc2ed995840fcdbeb824c97d6ef723b03390d0137277d8bf36fd09",
+    "origin": "A800_formal_final_delta_fixed_state",
+    "live_seven_field_hash": "323f278df9da966eea6166fd81ebeb7de78d4ebce8daa7b83781534563d832de",
+    "selected_export_path": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/closeout_20261022/a800_selected_states/delta.boundary07.pt",
+    "selected_export_sha256": "c9f7841b2c20b7206faf5145079a0cdc6278082657ed30f9df21652a9925ed83",
+    "formal_binding_sha256": "b601e9995c8a86eeeb23eef48f6419bb41f22051b997a7a3f295dbb5736bf978",
+    "formal_state_identity": "3178e3752184ce1cae5baf9644b0a298c6dca1a9180889b448d8a0521cff09a3",
+    "block_clock": 35000
+  },
+  "source_checkpoint_unchanged": true,
+  "all_seven_state_fields_unchanged": true,
+  "all_eight_TP_states_agree": true,
+  "D1_updates": 0,
+  "optimizer_steps": 0,
+  "backward_calls": 0,
+  "scorer": "cl_research.niche_metrics.score_prediction inflection_exact; NFC + strip; exact training target",
+  "scorer_sha256": "a2ae90c111b64d6ada332b0715fd7770b58cda2351d695838b603be7607b3aea",
+  "overall": {
+    "n": 448,
+    "correct": 112,
+    "accuracy": 0.25,
+    "format_valid_rate": 1.0,
+    "single_reference_correct_rate": 0.25,
+    "mean_edit_distance": 2.779017857142857,
+    "character_error_rate": 0.31711665817626083,
+    "wilson95_accuracy": [
+      0.21214292299448068,
+      0.29210796937683947
+    ]
+  },
+  "tasks": [
+    {
+      "task": "sme",
+      "n": 64,
+      "correct": 11,
+      "accuracy": 0.171875,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.171875,
+      "mean_edit_distance": 3.328125,
+      "character_error_rate": 0.35323383084577115,
+      "trace_sha256": "01cfff8ce8f55931448395cb8babadf0909223ea3d93416ae75ee900e507fc75",
+      "truncated": 0,
+      "generated_tokens": 306,
+      "wilson95_accuracy": [
+        0.09877742301244645,
+        0.282132116226582
+      ]
+    },
+    {
+      "task": "nav",
+      "n": 64,
+      "correct": 2,
+      "accuracy": 0.03125,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.03125,
+      "mean_edit_distance": 4.09375,
+      "character_error_rate": 0.4433164128595601,
+      "trace_sha256": "6487562d4e87ee0880a298a607bfd986223752438de995753149db09d3c44301",
+      "truncated": 0,
+      "generated_tokens": 414,
+      "wilson95_accuracy": [
+        0.008612138346171874,
+        0.10697291770958313
+      ]
+    },
+    {
+      "task": "hye",
+      "n": 64,
+      "correct": 28,
+      "accuracy": 0.4375,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.4375,
+      "mean_edit_distance": 1.765625,
+      "character_error_rate": 0.17251908396946564,
+      "trace_sha256": "573c46ae3151837a5b7b80c9bb4f7c5e17b8d474c35402facc6326aacd3179cf",
+      "truncated": 0,
+      "generated_tokens": 501,
+      "wilson95_accuracy": [
+        0.3229400970440308,
+        0.5591379104300699
+      ]
+    },
+    {
+      "task": "afb",
+      "n": 64,
+      "correct": 3,
+      "accuracy": 0.046875,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.046875,
+      "mean_edit_distance": 2.75,
+      "character_error_rate": 0.43781094527363185,
+      "trace_sha256": "6f2efe7f3f93e892f88d114ceba05fdacc8e675a0d2c4263bfc7421f2731b6ab",
+      "truncated": 0,
+      "generated_tokens": 332,
+      "wilson95_accuracy": [
+        0.016069016786292974,
+        0.12899653740093686
+      ]
+    },
+    {
+      "task": "sqi",
+      "n": 64,
+      "correct": 22,
+      "accuracy": 0.34375,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.34375,
+      "mean_edit_distance": 4.53125,
+      "character_error_rate": 0.38563829787234044,
+      "trace_sha256": "156549e70732363be52c8a78a4f04a25c3cbcc1e3f1486d718fa48884a622f24",
+      "truncated": 0,
+      "generated_tokens": 306,
+      "wilson95_accuracy": [
+        0.23923142078443355,
+        0.46596359790081815
+      ]
+    },
+    {
+      "task": "mkd",
+      "n": 64,
+      "correct": 27,
+      "accuracy": 0.421875,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.421875,
+      "mean_edit_distance": 1.15625,
+      "character_error_rate": 0.11635220125786164,
+      "trace_sha256": "298ef3bf1a55e524f5087c15f7ec2df9bc5baa3792091697991a4f2b2a6761f1",
+      "truncated": 0,
+      "generated_tokens": 316,
+      "wilson95_accuracy": [
+        0.30869782474345486,
+        0.5438996845991709
+      ]
+    },
+    {
+      "task": "amh",
+      "n": 64,
+      "correct": 19,
+      "accuracy": 0.296875,
+      "format_valid_rate": 1.0,
+      "single_reference_correct_rate": 0.296875,
+      "mean_edit_distance": 1.828125,
+      "character_error_rate": 0.4076655052264808,
+      "trace_sha256": "01e9e372826a25241d7b127d174d8726edbd514593138d61544d7e9bc57499c2",
+      "truncated": 0,
+      "generated_tokens": 503,
+      "wilson95_accuracy": [
+        0.19905151325539794,
+        0.41770201103542925
+      ]
+    }
+  ],
+  "truncated": 0,
+  "generated_tokens": 2678,
+  "gate_sha256": "fe97a8f0a353fd1f7deaec192de5f24443d1435ac4007faf28895757c6a649f9",
+  "uncertainty_scope": "Wilson intervals describe observed question proportions; no training-seed, new-task or memory-attribution uncertainty is estimated.",
+  "limitation": "Accuracy measures final seen-support recall; without same-question empty-state control, correct outputs cannot be attributed uniquely to memory."
+}

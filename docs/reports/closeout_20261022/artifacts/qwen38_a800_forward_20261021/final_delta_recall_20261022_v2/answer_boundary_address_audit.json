@@ -1,0 +1,63 @@
+{
+  "source_sha256": {
+    "qwen38_writer.py": "66dc18a28ff64c0054eb474a6dc3c4139ddbbde0dbd5c45f7e5893e2af79e2b5",
+    "qwen38_native.py": "c98eabd958f49ff1143743b6cfab75c134c790abd4b0f7f34dcbaf8acfd0d33a"
+  },
+  "decode": {
+    "tokens": {
+      "248069": "</think>",
+      "271": "ĊĊ"
+    },
+    "tail2": "</think>\n\n",
+    "tail3": "\n\n</think>\n\n",
+    "cuda_initialized": false
+  },
+  "local_source_sha256": {
+    "qwen38_writer.py": "66dc18a28ff64c0054eb474a6dc3c4139ddbbde0dbd5c45f7e5893e2af79e2b5",
+    "qwen38_native.py": "c98eabd958f49ff1143743b6cfab75c134c790abd4b0f7f34dcbaf8acfd0d33a"
+  },
+  "seen_manifest_sha256": "b32e9d38e428b7edacad4d577410e79ea76359199762c03c07cc156a2ef30e7c",
+  "gate_sha256": "fe97a8f0a353fd1f7deaec192de5f24443d1435ac4007faf28895757c6a649f9",
+  "rows": 448,
+  "all_prompt_last2_equal": true,
+  "all_prompt_last3_equal": true,
+  "native_ids_last_prompt_position": [
+    14994213,
+    29109737,
+    59905942,
+    67207585,
+    91639824,
+    107248118,
+    131408243,
+    145017346,
+    165781476,
+    192030570,
+    207190014,
+    234559739,
+    257104370,
+    260545992,
+    288559444,
+    310120988
+  ],
+  "physical_rows_last_prompt_position": [
+    14994214,
+    29109738,
+    59905943,
+    67207586,
+    91639825,
+    107248119,
+    131408244,
+    145017347,
+    165781477,
+    192030571,
+    207190015,
+    234559740,
+    257104371,
+    260545993,
+    288559445,
+    310120989
+  ],
+  "native_address_evidence": "Two actual scored-run gate prefill observations: different seen prompts at last positions70 and83; both produce this identical16vector. All448share the exact last2/3token sequences; vector is inferred for remaining prompts from native local ngram addressing, not448 additional model calls.",
+  "interpretation": "These are the final prompt causal positions used for the first-answer logits. H_t is causal, but the writer event features additionally use right-window4 and whole-block pool, so no claim that writing the row cannot see answer content.",
+  "source_hashes_match": true
+}

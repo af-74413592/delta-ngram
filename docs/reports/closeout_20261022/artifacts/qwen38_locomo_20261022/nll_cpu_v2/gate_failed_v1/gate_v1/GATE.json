@@ -1,0 +1,1119 @@
+{
+  "protocol": "qwen38_locomo_nll_v1",
+  "status": "failed",
+  "nll_binding_sha256": "9ee5da0bfbd58531ce733e49c5e98ab5e373e961af99ce39c2bbdbf8ce8541a8",
+  "fixed_question_qid": "conv-48:qa0000",
+  "synthetic_targets_only": true,
+  "actual_max_abs_difference_nats": 0.34473681449890137,
+  "absolute_tolerance_nats": 0.005,
+  "bitwise_equivalence_claimed": false,
+  "comparisons": [
+    {
+      "condition": "empty",
+      "case": "short",
+      "target_position": 0,
+      "target_token": 42,
+      "full_prefill_logprob": -12.954486846923828,
+      "fresh_prefix_logprob": -12.92313289642334,
+      "abs_difference_nats": 0.03135395050048828,
+      "prefix_sha256": "09fab1b22efef37f487892499e9659d90c8d682a764295e61827ddfc5234de37",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/59741ff4c8b7428e8e4f187fb7fd132e.pt",
+        "sha256": "f06369bf66a3cb11d8f7a0bcd22e6ee2e614caf0db123355ab2eb17771be3b47"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:short",
+        "epoch": 0,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.2936316318809986
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "empty",
+      "case": "short",
+      "target_position": 1,
+      "target_token": 43,
+      "full_prefill_logprob": -13.377592086791992,
+      "fresh_prefix_logprob": -13.37092113494873,
+      "abs_difference_nats": 0.006670951843261719,
+      "prefix_sha256": "965ac2851939eb93f43ed08f389590cafd65eefe3dd1cb3824b928f98bc1ab9a",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/1292d57039f44a1c9660adb9c4f043c1.pt",
+        "sha256": "905021e5607c241579154b2c947b84b9067bb7a4d2846bb9436c630c7e0e7970"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:short",
+        "epoch": 0,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.2936316318809986
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "empty",
+      "case": "short",
+      "target_position": 2,
+      "target_token": 44,
+      "full_prefill_logprob": -11.708248138427734,
+      "fresh_prefix_logprob": -11.707632064819336,
+      "abs_difference_nats": 0.0006160736083984375,
+      "prefix_sha256": "9ae5bba7df8ffc645714abd0f81914b32faac9017fa3f5bfcc08185d047ba71a",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/d6d2677fc8ca4d65a37ea44946317b73.pt",
+        "sha256": "3fb587c59cc5a2d83d6d693ecdfb3063ab3976b2f1088b5ca24f1447deceb304"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:short",
+        "epoch": 0,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.2936316318809986
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "empty",
+      "case": "short",
+      "target_position": 3,
+      "target_token": 45,
+      "full_prefill_logprob": -11.071310043334961,
+      "fresh_prefix_logprob": -11.040289878845215,
+      "abs_difference_nats": 0.031020164489746094,
+      "prefix_sha256": "d20bdbe556a97517c7159eedd92f9ccb2f6e7553c80ac5872fbdd3e70771c863",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/65f14a139be54957b2638abd7290d627.pt",
+        "sha256": "a3279e4cf4243c1156d611aecae3a98465ba50c4d529f7ebaab8ee9addbd9b78"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:short",
+        "epoch": 0,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.2936316318809986
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "empty",
+      "case": "full_input_640",
+      "target_position": 0,
+      "target_token": 42,
+      "full_prefill_logprob": -13.064179420471191,
+      "fresh_prefix_logprob": -12.92313289642334,
+      "abs_difference_nats": 0.14104652404785156,
+      "prefix_sha256": "09fab1b22efef37f487892499e9659d90c8d682a764295e61827ddfc5234de37",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/d31b3e9a58f94db58ffbeccc92412912.pt",
+        "sha256": "4c2603a537a8cebdae6602ff0aa37f6b0d5eb421160e085803b249ace14780fb"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:full_input_640",
+        "epoch": 0,
+        "input_sha256": "609ff992656dfdec0ed922fe222ad7bdd76d94fe6c59b364dd5d7c23fcb2849a",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "1e4ba0d9d71923a93489bfabe0023899b99972f8b783731f9561bb7b17c82510",
+        "history_sha256": "c2961b0a9c55c46138b07401f225a6a1dfaa3f62f12eb392a4841e3617014a69",
+        "nll_head_rows": [
+          1,
+          640
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.15566436387598515
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "empty",
+      "case": "full_input_640",
+      "target_position": 285,
+      "target_token": 43,
+      "full_prefill_logprob": -2.350600004196167,
+      "fresh_prefix_logprob": -2.6953368186950684,
+      "abs_difference_nats": 0.34473681449890137,
+      "prefix_sha256": "6608749180314b3ba211fbc32e4ae8871ec8e066aeceb92874bfd7c3406145ee",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/d591da4205004c288d5e30c2ff0a503c.pt",
+        "sha256": "503ebfc0f37f564df2f65f73aa64cc8f8371f26564c1e201f6d3b0650c6c56e9"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:full_input_640",
+        "epoch": 0,
+        "input_sha256": "609ff992656dfdec0ed922fe222ad7bdd76d94fe6c59b364dd5d7c23fcb2849a",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "1e4ba0d9d71923a93489bfabe0023899b99972f8b783731f9561bb7b17c82510",
+        "history_sha256": "c2961b0a9c55c46138b07401f225a6a1dfaa3f62f12eb392a4841e3617014a69",
+        "nll_head_rows": [
+          1,
+          640
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.15566436387598515
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "empty",
+      "case": "full_input_640",
+      "target_position": 570,
+      "target_token": 44,
+      "full_prefill_logprob": -5.006972789764404,
+      "fresh_prefix_logprob": -5.255460739135742,
+      "abs_difference_nats": 0.2484879493713379,
+      "prefix_sha256": "16ee971244ba52998b0cca8e0442c801938a3047d64bbe4b2111b2e3897d2153",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/ad70bb3fa41a4ebe8b1f75fcd56252fc.pt",
+        "sha256": "321735eec154642b7ca27a48322a11e8a09e6d64889e1d85e370927239b818ad"
+      },
+      "nll_observation": {
+        "arm": "ordinary",
+        "kind": "query",
+        "request_id": "nll-gate:empty:full_input_640",
+        "epoch": 0,
+        "input_sha256": "609ff992656dfdec0ed922fe222ad7bdd76d94fe6c59b364dd5d7c23fcb2849a",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "1e4ba0d9d71923a93489bfabe0023899b99972f8b783731f9561bb7b17c82510",
+        "history_sha256": "c2961b0a9c55c46138b07401f225a6a1dfaa3f62f12eb392a4841e3617014a69",
+        "nll_head_rows": [
+          1,
+          640
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.15566436387598515
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "short",
+      "target_position": 0,
+      "target_token": 42,
+      "full_prefill_logprob": -13.587377548217773,
+      "fresh_prefix_logprob": -13.587321281433105,
+      "abs_difference_nats": 5.626678466796875e-05,
+      "prefix_sha256": "09fab1b22efef37f487892499e9659d90c8d682a764295e61827ddfc5234de37",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/e2cf8b8442b9413182227d8b6cebda8f.pt",
+        "sha256": "3aed94fcc07bbffb8dd87909258f7cf2b0753c8f38bba28bb2b3e1df632f9246"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:short",
+        "epoch": 45,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.19470144249498844
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "short",
+      "target_position": 1,
+      "target_token": 43,
+      "full_prefill_logprob": -13.562666893005371,
+      "fresh_prefix_logprob": -13.548970222473145,
+      "abs_difference_nats": 0.013696670532226562,
+      "prefix_sha256": "965ac2851939eb93f43ed08f389590cafd65eefe3dd1cb3824b928f98bc1ab9a",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/156d34e234d84edb9c515c7f3865754c.pt",
+        "sha256": "13260c3378e548ff3e41a807d84ae8e5570d042c9abf3da5991223e6464b409f"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:short",
+        "epoch": 45,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.19470144249498844
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "short",
+      "target_position": 2,
+      "target_token": 44,
+      "full_prefill_logprob": -11.74069881439209,
+      "fresh_prefix_logprob": -11.738480567932129,
+      "abs_difference_nats": 0.0022182464599609375,
+      "prefix_sha256": "9ae5bba7df8ffc645714abd0f81914b32faac9017fa3f5bfcc08185d047ba71a",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/ec7a19f175ef4921953ed9fde38dcf6a.pt",
+        "sha256": "db3effc2c69b63dbc6a70688a3a89dbdf1cdeec4695eed9c09f727bd2d0a3a9f"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:short",
+        "epoch": 45,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.19470144249498844
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "short",
+      "target_position": 3,
+      "target_token": 45,
+      "full_prefill_logprob": -10.53239631652832,
+      "fresh_prefix_logprob": -10.562838554382324,
+      "abs_difference_nats": 0.030442237854003906,
+      "prefix_sha256": "d20bdbe556a97517c7159eedd92f9ccb2f6e7553c80ac5872fbdd3e70771c863",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/04394a80bfb240cc9b6b6af45cee8940.pt",
+        "sha256": "bdc91734c2d62a372df8b2dc1301a89a761571b930d92516f932723a40e66765"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:short",
+        "epoch": 45,
+        "input_sha256": "5689ca8572bfc3cd347986eba2847260a8976a5d62b19a0f26e187fb0e0d4c86",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          3
+        ],
+        "native_ids_sha256": "455a7ed6aee0b6ac2c5ebbfa96bc6035a519880e29896c5f8094a127e415352b",
+        "history_sha256": "c479750fe4969b137c6e9b28c13141dbcbe11ac9437df354aa108113ad304c0f",
+        "nll_head_rows": [
+          1,
+          73
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.19470144249498844
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "full_input_640",
+      "target_position": 0,
+      "target_token": 42,
+      "full_prefill_logprob": -13.761390686035156,
+      "fresh_prefix_logprob": -13.587321281433105,
+      "abs_difference_nats": 0.17406940460205078,
+      "prefix_sha256": "09fab1b22efef37f487892499e9659d90c8d682a764295e61827ddfc5234de37",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/cf83581cf334443eafcbe00a841506fb.pt",
+        "sha256": "031f62f851ef0339d1d97fb2f2d0086495e7278d01be5ea906e9d770b9e3495c"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:full_input_640",
+        "epoch": 45,
+        "input_sha256": "609ff992656dfdec0ed922fe222ad7bdd76d94fe6c59b364dd5d7c23fcb2849a",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "1e4ba0d9d71923a93489bfabe0023899b99972f8b783731f9561bb7b17c82510",
+        "history_sha256": "c2961b0a9c55c46138b07401f225a6a1dfaa3f62f12eb392a4841e3617014a69",
+        "nll_head_rows": [
+          1,
+          640
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.14197192899882793
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "full_input_640",
+      "target_position": 285,
+      "target_token": 43,
+      "full_prefill_logprob": -3.1682848930358887,
+      "fresh_prefix_logprob": -3.168286085128784,
+      "abs_difference_nats": 1.1920928955078125e-06,
+      "prefix_sha256": "6608749180314b3ba211fbc32e4ae8871ec8e066aeceb92874bfd7c3406145ee",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/0851b95f17d4413d83b18e80919990c1.pt",
+        "sha256": "4786b023f18d1f3cc40dc29bee6dfb7dbde35b7a4a64b70b1962949337165102"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:full_input_640",
+        "epoch": 45,
+        "input_sha256": "609ff992656dfdec0ed922fe222ad7bdd76d94fe6c59b364dd5d7c23fcb2849a",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "1e4ba0d9d71923a93489bfabe0023899b99972f8b783731f9561bb7b17c82510",
+        "history_sha256": "c2961b0a9c55c46138b07401f225a6a1dfaa3f62f12eb392a4841e3617014a69",
+        "nll_head_rows": [
+          1,
+          640
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.14197192899882793
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    },
+    {
+      "condition": "self",
+      "case": "full_input_640",
+      "target_position": 570,
+      "target_token": 44,
+      "full_prefill_logprob": -6.002572059631348,
+      "fresh_prefix_logprob": -6.0025715827941895,
+      "abs_difference_nats": 4.76837158203125e-07,
+      "prefix_sha256": "16ee971244ba52998b0cca8e0442c801938a3047d64bbe4b2111b2e3897d2153",
+      "logits_file": {
+        "path": "/mnt/disk2/wuhao/qwen38_locomo_nll_20261022_v3/gate_v1/gate/logits/738bec7180fd4501ab74b99971b14efb.pt",
+        "sha256": "08fc091046129d8272ba6bc3b77c387efb27e88023e765437e0e12e5fe2f295e"
+      },
+      "nll_observation": {
+        "arm": "delta",
+        "kind": "query",
+        "request_id": "nll-gate:self:full_input_640",
+        "epoch": 45,
+        "input_sha256": "609ff992656dfdec0ed922fe222ad7bdd76d94fe6c59b364dd5d7c23fcb2849a",
+        "rank": 0,
+        "forward_calls": 1,
+        "fresh_context": true,
+        "physical_cache_slots": [
+          4
+        ],
+        "native_ids_sha256": "1e4ba0d9d71923a93489bfabe0023899b99972f8b783731f9561bb7b17c82510",
+        "history_sha256": "c2961b0a9c55c46138b07401f225a6a1dfaa3f62f12eb392a4841e3617014a69",
+        "nll_head_rows": [
+          1,
+          640
+        ],
+        "nll_one_backbone_forward": true,
+        "elapsed_seconds": 0.14197192899882793
+      },
+      "fresh_forward_calls": 1,
+      "captured_logits_dtype": "torch.bfloat16"
+    }
+  ],
+  "resources": [
+    [
+      {
+        "rank": 0,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34464088064,
+        "peak_reserved_bytes": 34810626048,
+        "cpu_max_rss_kib": 21932976,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 1,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21782660,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 2,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21778904,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 3,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21779232,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 4,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21780776,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 5,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21785116,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 6,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21782532,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 7,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": null,
+        "selected_source": null,
+        "query_arm": "ordinary",
+        "phase": "empty",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 0
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "3e7dadaea625e10771236f399d0762f3e34a48d67b9b8edf25ef403dc0ed0d58"
+        },
+        "written_tokens": 0,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34447783424,
+        "peak_reserved_bytes": 34777071616,
+        "cpu_max_rss_kib": 21784936,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      }
+    ],
+    [
+      {
+        "rank": 0,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34597203968,
+        "peak_reserved_bytes": 35131490304,
+        "cpu_max_rss_kib": 21932976,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 1,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21782660,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 2,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21778904,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 3,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21779232,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 4,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21780776,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 5,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21785116,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 6,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21782532,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      },
+      {
+        "rank": 7,
+        "adapter_protocol": "qwen38_locomo_a800_delta_readonly_v1",
+        "sample_id": "conv-48",
+        "selected_source": "conv-48",
+        "query_arm": "delta",
+        "phase": "frozen",
+        "epochs": {
+          "ordinary": 0,
+          "delta": 45
+        },
+        "identities": {
+          "ordinary": "d6b8cef8fc52276bed9c371f95ead5e08826cf5169dd75a5b72dfb5bbad6d83a",
+          "delta": "02fa3da29975e7402d6da7708bed950ddedf353a3133ab115cd3b5ea9e9a253d"
+        },
+        "written_tokens": 22967,
+        "state_hashes": {
+          "ordinary": "8c6908648ba0abe6c5cf37c2c726acd45f6f9ffbc65340936c395c0489799deb",
+          "delta": "5a8268b685ed5476184b48e9855c16f9ba1029907696952855ec1faf7015e387"
+        },
+        "state_fields": [
+          "rows",
+          "values",
+          "counts",
+          "block_clock",
+          "cumulative_log_alpha",
+          "row_last_written_block",
+          "row_log_alpha_at_write"
+        ],
+        "writer_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+        "frozen_reader_writer": true,
+        "peak_allocated_bytes": 34580899328,
+        "peak_reserved_bytes": 35097935872,
+        "cpu_max_rss_kib": 21784936,
+        "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7"
+      }
+    ]
+  ],
+  "native_forward_calls": 18,
+  "D1_commits": 0,
+  "optimizer_steps": 0,
+  "backward_calls": 0,
+  "numerical_effect_caveat": "Effects near the observed numerical difference require sensitivity discussion.",
+  "full_input_stress_tokens": 640,
+  "finished_utc": "2026-10-22T03:33:34.727810+00:00"
+}

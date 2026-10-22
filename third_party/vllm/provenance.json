@@ -1,0 +1,79 @@
+{
+  "protocol": "qwen38_vllm_two_python_replacements_v2",
+  "prepared_utc": "2026-10-22T03:47:38.765161+00:00",
+  "upstream_distribution": "vllm",
+  "upstream_version": "0.30.0",
+  "compatibility": "Version and both original file SHA256 values must match before replacement.",
+  "frozen_fork_manifest_sha256": "18cce20af3969cfe8d705ad94a233e715e8aff7e7ca14d65dcc2f1e211a5a494",
+  "files": [
+    {
+      "installed_vllm_relative_path": "models/qwen4_exp/nvidia/model.py",
+      "staged_relative_path": "models/qwen4_exp/nvidia/model.py",
+      "original_sha256": "2d9d98054dfa4e2c2c434526ef6fbdceede06b35c38a8ea6dccb42161a666dfb",
+      "modified_sha256": "5c5d4bbe41222c846f50faf9075f45eebb84880e45eac835634948928bd260f1",
+      "original_bytes": 41449,
+      "modified_bytes": 42327,
+      "source_snapshot_relative_to_research_workspace": "artifacts/qwen38_a800_forward_20261021/live_v3_gate/vllm_fork/vllm/models/qwen4_exp/nvidia/model.py",
+      "reproduced_in_memory": true
+    },
+    {
+      "installed_vllm_relative_path": "models/qwen4_exp/nvidia/ple_layer.py",
+      "staged_relative_path": "models/qwen4_exp/nvidia/ple_layer.py",
+      "original_sha256": "b81f9372eca168157c7f3cf5646d61eb0f139b64c9420588d8288672f18a3fd2",
+      "modified_sha256": "5cde5ec75e554553079882c8d0f72244eaef9cd5cedf73b1f37bd65ba9a384c6",
+      "original_bytes": 16933,
+      "modified_bytes": 18134,
+      "source_snapshot_relative_to_research_workspace": "artifacts/qwen38_a800_forward_20261021/live_v3_gate/vllm_fork/vllm/models/qwen4_exp/nvidia/ple_layer.py",
+      "reproduced_in_memory": true
+    }
+  ],
+  "project_support_sources": {
+    "src/delta_ngram/qwen38_vllm_live.py": {
+      "sha256": "c26a474c288a52e46d806892984b8639cb962a478b512ffd91b28db3e6abe391",
+      "already_in_project_source": true
+    },
+    "src/delta_ngram/qwen38_vllm_ple.py": {
+      "sha256": "8900e73853256c0b32438af3880e161eb20538f1451cdebca57e75d13dae0f5d",
+      "already_in_project_source": true
+    },
+    "src/delta_ngram/qwen38_vllm_snapshot.py": {
+      "sha256": "036e7b76cd1498f69ccd1a8f46f6833623a7fe34a7c1d4dc614463e60a1e5e80",
+      "already_in_project_source": true
+    },
+    "scripts/native_qwen38/prepare_vllm_local.py": {
+      "sha256": "767d72583afd0827d428981d0ae6e3a4586ed5f67f446598501015e860666246",
+      "already_in_project_source": true
+    },
+    "scripts/native_qwen38/prepare_vllm_live.py": {
+      "sha256": "d8ba53748e8652c794f4084eb902699647b67231314e3e232f6973fa5c9804c9",
+      "already_in_project_source": true
+    }
+  },
+  "reproduction": {
+    "method": "Call existing prepare_vllm_local.patch_source on the two local original inputs, then apply the same three text substitutions as prepare_vllm_live; compare output bytes to the actual live_v3 source snapshots.",
+    "result": "both_exact",
+    "prepare_fork_invoked": false,
+    "installed_package_copied": false,
+    "runtime_or_GPU_imported": false
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "upstream_spdx_and_copyright_headers_preserved": true,
+    "same_distribution_metadata_sha256": "804cdf8737cfb15bd58aa059bc44c7a7ee5b657a875b85e7d915b0ef5e838d07",
+    "local_same_distribution_license_body_found": true,
+    "license_body_included": true,
+    "path": "LICENSE",
+    "bytes": 11357,
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "source_path": "/mnt/disk2/wuhao/qwen38_vllm_smoke/.venv/lib/python3.13/site-packages/vllm-0.30.0.dist-info/licenses/LICENSE",
+    "retrieval_receipt_sha256": "339beffd562f5a7a7fa1b70999cd8d4200331b7633f08a66a6bd8ec02e48ab1d"
+  },
+  "scope": {
+    "modified_python_files": 2,
+    "modified_python_bytes": 60461,
+    "remote_connections": 0,
+    "actual_repository_modified": false,
+    "license_retrieval_remote_connections": 1
+  },
+  "previous_provenance_sha256": "6165a1f13f222de7021e360d80480a1ac26456fd4b1995a3da1e0fe9659aec94"
+}

@@ -1,0 +1,446 @@
+{
+  "protocol": "qwen38_locomo_nll_explicit_method_amendment_v1",
+  "created_utc": "2026-10-22T03:47:27.642086+00:00",
+  "timing": "After inspecting the cross-shape diagnostic failure, before any formal NLL result exists. This is an explicit post-diagnostic protocol amendment, not an original gate pass.",
+  "authorization": {
+    "basis": "Latest user instruction to start the originally planned supplement directly; root explicitly authorized immediate formal launch without another GPU gate.",
+    "formal_evaluations": 4620,
+    "additional_GPU_gate_authorized": false,
+    "automatic_retry_authorized": false
+  },
+  "superseded_requirement": {
+    "original_protocol": "qwen38_locomo_nll_v1",
+    "location": [
+      "firewalls.formal",
+      "technical_gate.absolute_tolerance_nats"
+    ],
+    "change": "For this explicit formal-only entry point, failed cross-shape parity is retained as a sensitivity diagnostic rather than an admission veto. No old source, threshold, GATE, exit code or evidence is changed.",
+    "original_tolerance_nats": 0.005,
+    "new_tolerance_nats": null,
+    "original_status": "failed",
+    "original_returncode": 1
+  },
+  "computational_definition": "Unchanged fixed BF16 causal one-prefill teacher-forced NLL. Use exact frozen prompt IDs and original canonical target IDs, full 248320-token normalization, and response.prompt_logprobs[P:P+A]. No extra whitespace/BOS/EOS, no target truncation, no generated-token loss; one backbone forward per evaluation.",
+  "interpretation_limits": [
+    "No equivalence to the fresh-prefix generation execution path is claimed.",
+    "The observed maximum is specific to 14 artificial diagnostic positions, not a formal-population error bound or a noise threshold.",
+    "Differences need not cancel in self-minus-empty paired comparisons.",
+    "Conversation-cluster bootstrap intervals quantify sampling uncertainty only and exclude numerical execution-path uncertainty.",
+    "Existing evidence cannot uniquely attribute the discrepancy to the BF16 head or rule out contributions from other execution-path differences."
+  ],
+  "preserved_hard_requirements": [
+    "Original generation firewall, binding, tokenizer/fork/base and all six runtime source hashes.",
+    "Original 1540 questions, three conditions, 4620 single-prefill evaluations, 10804 target tokens per condition, ten states and original donor map.",
+    "All finite gold losses, P:P+A alignment, request identities, one forward/head row counts, original length/capacity, all per-request and thirty conversation-condition readonly checks.",
+    "Zero D1 commits, optimizer steps, backward calls, state writes and automatic retries.",
+    "Actual formal child exit, CPU verification and exact eight-GPU release are recorded separately."
+  ],
+  "structural_pass": true,
+  "cross_shape_parity_failed": true,
+  "numerical_gate_pass_claimed": false,
+  "original_runtime_modified": false,
+  "binding_sha256": "9ee5da0bfbd58531ce733e49c5e98ab5e373e961af99ce39c2bbdbf8ce8541a8",
+  "targets_sha256": "7942b508446661fcdfcb4a8764dbe86fa2ed9d75ebccc5a042870816ec30f642",
+  "state_index_sha256": "417972eb6b0dafa7bee29a6deed8382c28ee2038c3b2cdd462e22f7b451b624a",
+  "runtime_source_sha256": {
+    "qwen38_locomo_nll.py": "500012e8122220b35f663265fd1bc42c07d0031660b9ac97d5b3d581470d63d1",
+    "qwen38_locomo_nll_contract.py": "1f3d4f348ec9c84958949ea1cb9d703dc70492144cf1a6232df3f04465e49e26",
+    "qwen38_locomo_nll_engine.py": "66f14d51d52f5a7f8569b288562a4bf0640063cef663764d75d9285df6e1c926",
+    "qwen38_locomo_nll_worker.py": "b955ed09e9b72d9d83f0e1f856cf2d32593aad13e33c05cb0f88887a2083c487",
+    "qwen38_locomo_nll_summary.py": "1d4deac3ecfb169307283be5e1c8901804475a9bf3fbf7c2d07df962cfaaee2c",
+    "qwen38_locomo_nll_supervisor.py": "d6c7c257aaaed7b2c7bdd96bce24e20cc9d7084ff47274aefd28acaf2093b8e1"
+  },
+  "readonly_fields": [
+    "sample_id",
+    "selected_source",
+    "query_arm",
+    "phase",
+    "epochs",
+    "identities",
+    "written_tokens",
+    "state_hashes",
+    "state_fields",
+    "writer_sha256",
+    "frozen_reader_writer",
+    "binding_sha256"
+  ],
+  "gpu_uuids": [
+    "GPU-94d3fe7c-d91a-3dfc-7276-572c79968ad8",
+    "GPU-ee02e5c8-ab00-d911-4fca-1c3177ce7647",
+    "GPU-cc14360a-2621-f819-b156-edd831967d86",
+    "GPU-407d9998-9019-74d5-be99-028635583c02",
+    "GPU-a85c753d-d66a-f5ec-cf73-b5ff5bbc30a1",
+    "GPU-cdaa34f5-f5a8-d590-9b6e-67f774d7dd52",
+    "GPU-547cc9c7-534d-dff4-f9f6-09f6c0335f14",
+    "GPU-f516f158-5bdb-2236-0380-585b94703dbd"
+  ],
+  "preserved_v3_files": {
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/actual_sampling_params_cpu_receipt_v1.json": {
+      "sha256": "9ba74055b3fe582a03a9171c0c13e557bc2320ab5243f75739b2b74717ef0986",
+      "bytes": 6964
+    },
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/compatibility_revision.json": {
+      "sha256": "ebad5b8d81f634a09ad142d85d4a7d98168f0152ceec91fa1d2faf4d5bc13639",
+      "bytes": 3142
+    },
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/cpu_validation_receipt.json": {
+      "sha256": "0f7ff50ba91e49355566c5bfcb97ac69c3847d72aabcc9dd4ca32079639fb089",
+      "bytes": 2603
+    },
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/hardware_inventory.json": {
+      "sha256": "76754e851586fcc9986e45b0f33b5c1f48e216abd4a8a0388e8d3ca5c42446a2",
+      "bytes": 1237
+    },
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/protocol.json": {
+      "sha256": "37a99431502d8e8769faf21fc318976f5a1a59a0cfcc41b435c9dae154382a82",
+      "bytes": 5421
+    },
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/sampling_params_candidates.json": {
+      "sha256": "e7111152f421735cab381ffadd50b00aac2da344b518867249f0e902f3d4c998",
+      "bytes": 1887
+    },
+    "artifacts/qwen38_locomo_20261022/nll_cpu_v2/test_sampling_params_actual.py": {
+      "sha256": "275efade3aaeba0d5bfd3493ca0e4bdbacf633d67d7a751424c29fc1efbce180",
+      "bytes": 3102
+    },
+    "binding_v1/BINDING_COMPLETE.json": {
+      "sha256": "b511278c0d4903f54a7126ae176a71043515ae309b138b9692c61576b3574721",
+      "bytes": 236
+    },
+    "binding_v1/binding.json": {
+      "sha256": "9ee5da0bfbd58531ce733e49c5e98ab5e373e961af99ce39c2bbdbf8ce8541a8",
+      "bytes": 3789
+    },
+    "binding_v1/protocol.json": {
+      "sha256": "62822afab0a720a82ddd20e2e2239f409f2725fb9b5ad8adcdd90cf86971ea05",
+      "bytes": 5312
+    },
+    "deployment_cpu_receipt.json": {
+      "sha256": "20be4f4ac33d7193b60494cac279d04e6b9535e7f52e94ba17525d212d6ab521",
+      "bytes": 6000
+    },
+    "deployment_manifest.json": {
+      "sha256": "f2de1b06f688351c149d1fa1a43719941ce0924f9836652faa87a9c72036f807",
+      "bytes": 2604
+    },
+    "gate_launch_v1/child.json": {
+      "sha256": "904de5d5687412b49aa12c99ac8c8bc376ece40f78b1c6e320af18d93df31664",
+      "bytes": 152
+    },
+    "gate_launch_v1/cpu_verification.json": {
+      "sha256": "fadb4d99041426a1a9aa80a1414d6a2594c07cb6c23ae483dfff9dd07823524a",
+      "bytes": 237
+    },
+    "gate_launch_v1/execution.json": {
+      "sha256": "aefaefc3c7548a7a1677b6e8742b3fd0b3267f0c361c09e1bd92a0eaf041655a",
+      "bytes": 2222
+    },
+    "gate_launch_v1/gpu_before.json": {
+      "sha256": "845eef19efefa9df751a4808f2f57ac31610544e3fe12813641b56b65407eda2",
+      "bytes": 1563
+    },
+    "gate_launch_v1/launch.json": {
+      "sha256": "3044f88094c065d0062aeffe9df62d5f442201bd1557d1611b6d3b2a7134e2f6",
+      "bytes": 1283
+    },
+    "gate_launch_v1/process.log": {
+      "sha256": "327f7e9c3705921e131dea2efb26d08d27213914cd509affe5c99b46493efef6",
+      "bytes": 59196
+    },
+    "gate_v1/FAILED.json": {
+      "sha256": "5b030352a299777bf981a4cd67a25b3441f0b7a0c45eb86aae5bea4ecd1cc72b",
+      "bytes": 229
+    },
+    "gate_v1/GATE.json": {
+      "sha256": "b7629495c4df7e476e4c51485bf57a4ae438c88adf4e109c4ee2bbb681976e40",
+      "bytes": 41843
+    },
+    "gate_v1/READONLY_gate_empty.json": {
+      "sha256": "489881f5a529b7a93553e825f1fde27fc99b1d47d0e47e92bd3277708b0108f9",
+      "bytes": 12535
+    },
+    "gate_v1/READONLY_gate_self.json": {
+      "sha256": "f044ce66d276ce82cf5e75580d1278f1e7a898710abd7d179a8b73467663b021",
+      "bytes": 12665
+    },
+    "gate_v1/STARTED.json": {
+      "sha256": "b37149345224e1547374f788923c84e86f4b386db74d61ae90d574181cb7caec",
+      "bytes": 226
+    },
+    "gate_v1/engine_configuration.json": {
+      "sha256": "b42aa1ca6c3f6443240a296210035348a736d8a98f07e2d71a6459b251247c38",
+      "bytes": 2244
+    },
+    "gate_v1/gate/logits/04394a80bfb240cc9b6b6af45cee8940.pt": {
+      "sha256": "bdc91734c2d62a372df8b2dc1301a89a761571b930d92516f932723a40e66765",
+      "bytes": 506264
+    },
+    "gate_v1/gate/logits/0851b95f17d4413d83b18e80919990c1.pt": {
+      "sha256": "4786b023f18d1f3cc40dc29bee6dfb7dbde35b7a4a64b70b1962949337165102",
+      "bytes": 532056
+    },
+    "gate_v1/gate/logits/1292d57039f44a1c9660adb9c4f043c1.pt": {
+      "sha256": "905021e5607c241579154b2c947b84b9067bb7a4d2846bb9436c630c7e0e7970",
+      "bytes": 506072
+    },
+    "gate_v1/gate/logits/156d34e234d84edb9c515c7f3865754c.pt": {
+      "sha256": "13260c3378e548ff3e41a807d84ae8e5570d042c9abf3da5991223e6464b409f",
+      "bytes": 506072
+    },
+    "gate_v1/gate/logits/59741ff4c8b7428e8e4f187fb7fd132e.pt": {
+      "sha256": "f06369bf66a3cb11d8f7a0bcd22e6ee2e614caf0db123355ab2eb17771be3b47",
+      "bytes": 505944
+    },
+    "gate_v1/gate/logits/65f14a139be54957b2638abd7290d627.pt": {
+      "sha256": "a3279e4cf4243c1156d611aecae3a98465ba50c4d529f7ebaab8ee9addbd9b78",
+      "bytes": 506264
+    },
+    "gate_v1/gate/logits/738bec7180fd4501ab74b99971b14efb.pt": {
+      "sha256": "08fc091046129d8272ba6bc3b77c387efb27e88023e765437e0e12e5fe2f295e",
+      "bytes": 558552
+    },
+    "gate_v1/gate/logits/ad70bb3fa41a4ebe8b1f75fcd56252fc.pt": {
+      "sha256": "321735eec154642b7ca27a48322a11e8a09e6d64889e1d85e370927239b818ad",
+      "bytes": 558552
+    },
+    "gate_v1/gate/logits/cf83581cf334443eafcbe00a841506fb.pt": {
+      "sha256": "031f62f851ef0339d1d97fb2f2d0086495e7278d01be5ea906e9d770b9e3495c",
+      "bytes": 506008
+    },
+    "gate_v1/gate/logits/d31b3e9a58f94db58ffbeccc92412912.pt": {
+      "sha256": "4c2603a537a8cebdae6602ff0aa37f6b0d5eb421160e085803b249ace14780fb",
+      "bytes": 506008
+    },
+    "gate_v1/gate/logits/d591da4205004c288d5e30c2ff0a503c.pt": {
+      "sha256": "503ebfc0f37f564df2f65f73aa64cc8f8371f26564c1e201f6d3b0650c6c56e9",
+      "bytes": 532056
+    },
+    "gate_v1/gate/logits/d6d2677fc8ca4d65a37ea44946317b73.pt": {
+      "sha256": "3fb587c59cc5a2d83d6d693ecdfb3063ab3976b2f1088b5ca24f1447deceb304",
+      "bytes": 506136
+    },
+    "gate_v1/gate/logits/e2cf8b8442b9413182227d8b6cebda8f.pt": {
+      "sha256": "3aed94fcc07bbffb8dd87909258f7cf2b0753c8f38bba28bb2b3e1df632f9246",
+      "bytes": 505944
+    },
+    "gate_v1/gate/logits/ec7a19f175ef4921953ed9fde38dcf6a.pt": {
+      "sha256": "db3effc2c69b63dbc6a70688a3a89dbdf1cdeec4695eed9c09f727bd2d0a3a9f",
+      "bytes": 506136
+    },
+    "orchestration_v1/gate/dispatch.json": {
+      "sha256": "4bf0a148672e8b391b1dfc4d8205c890d7c50929ae28f4478b811987a5f667e8",
+      "bytes": 805
+    },
+    "orchestration_v1/gate/requested.json": {
+      "sha256": "d16073cfdcd9b45cc6047583c6f4d38288c1f764dc535b3f85ca78ef0a945a29",
+      "bytes": 1776
+    },
+    "orchestration_v1/gate/supervisor.log": {
+      "sha256": "97042f6c1801f53241c0d8f6fdc41e37bc015dd5b213dc5a8df079200877d00c",
+      "bytes": 160
+    },
+    "scripts/qwen38_locomo_nll.py": {
+      "sha256": "500012e8122220b35f663265fd1bc42c07d0031660b9ac97d5b3d581470d63d1",
+      "bytes": 26234
+    },
+    "scripts/qwen38_locomo_nll_contract.py": {
+      "sha256": "1f3d4f348ec9c84958949ea1cb9d703dc70492144cf1a6232df3f04465e49e26",
+      "bytes": 13284
+    },
+    "scripts/qwen38_locomo_nll_engine.py": {
+      "sha256": "66f14d51d52f5a7f8569b288562a4bf0640063cef663764d75d9285df6e1c926",
+      "bytes": 2172
+    },
+    "scripts/qwen38_locomo_nll_summary.py": {
+      "sha256": "1d4deac3ecfb169307283be5e1c8901804475a9bf3fbf7c2d07df962cfaaee2c",
+      "bytes": 3802
+    },
+    "scripts/qwen38_locomo_nll_supervisor.py": {
+      "sha256": "d6c7c257aaaed7b2c7bdd96bce24e20cc9d7084ff47274aefd28acaf2093b8e1",
+      "bytes": 5809
+    },
+    "scripts/qwen38_locomo_nll_worker.py": {
+      "sha256": "b955ed09e9b72d9d83f0e1f856cf2d32593aad13e33c05cb0f88887a2083c487",
+      "bytes": 2174
+    },
+    "scripts/test_qwen38_locomo_nll.py": {
+      "sha256": "0e80e3baf3dc290a204bd36b199a2d60f78dc826b2dc78b29d03f791c226ad9a",
+      "bytes": 11641
+    }
+  },
+  "sensitivity": {
+    "observed_max_abs_difference_nats": 0.34473681449890137,
+    "comparisons": 14,
+    "native_forward_calls": 18,
+    "above_original_tolerance": 9,
+    "per_position": [
+      {
+        "condition": "empty",
+        "case": "short",
+        "target_position": 0,
+        "full_prefill_logprob": -12.954486846923828,
+        "fresh_prefix_logprob": -12.92313289642334,
+        "abs_difference_nats": 0.03135395050048828
+      },
+      {
+        "condition": "empty",
+        "case": "short",
+        "target_position": 1,
+        "full_prefill_logprob": -13.377592086791992,
+        "fresh_prefix_logprob": -13.37092113494873,
+        "abs_difference_nats": 0.006670951843261719
+      },
+      {
+        "condition": "empty",
+        "case": "short",
+        "target_position": 2,
+        "full_prefill_logprob": -11.708248138427734,
+        "fresh_prefix_logprob": -11.707632064819336,
+        "abs_difference_nats": 0.0006160736083984375
+      },
+      {
+        "condition": "empty",
+        "case": "short",
+        "target_position": 3,
+        "full_prefill_logprob": -11.071310043334961,
+        "fresh_prefix_logprob": -11.040289878845215,
+        "abs_difference_nats": 0.031020164489746094
+      },
+      {
+        "condition": "empty",
+        "case": "full_input_640",
+        "target_position": 0,
+        "full_prefill_logprob": -13.064179420471191,
+        "fresh_prefix_logprob": -12.92313289642334,
+        "abs_difference_nats": 0.14104652404785156
+      },
+      {
+        "condition": "empty",
+        "case": "full_input_640",
+        "target_position": 285,
+        "full_prefill_logprob": -2.350600004196167,
+        "fresh_prefix_logprob": -2.6953368186950684,
+        "abs_difference_nats": 0.34473681449890137
+      },
+      {
+        "condition": "empty",
+        "case": "full_input_640",
+        "target_position": 570,
+        "full_prefill_logprob": -5.006972789764404,
+        "fresh_prefix_logprob": -5.255460739135742,
+        "abs_difference_nats": 0.2484879493713379
+      },
+      {
+        "condition": "self",
+        "case": "short",
+        "target_position": 0,
+        "full_prefill_logprob": -13.587377548217773,
+        "fresh_prefix_logprob": -13.587321281433105,
+        "abs_difference_nats": 5.626678466796875e-05
+      },
+      {
+        "condition": "self",
+        "case": "short",
+        "target_position": 1,
+        "full_prefill_logprob": -13.562666893005371,
+        "fresh_prefix_logprob": -13.548970222473145,
+        "abs_difference_nats": 0.013696670532226562
+      },
+      {
+        "condition": "self",
+        "case": "short",
+        "target_position": 2,
+        "full_prefill_logprob": -11.74069881439209,
+        "fresh_prefix_logprob": -11.738480567932129,
+        "abs_difference_nats": 0.0022182464599609375
+      },
+      {
+        "condition": "self",
+        "case": "short",
+        "target_position": 3,
+        "full_prefill_logprob": -10.53239631652832,
+        "fresh_prefix_logprob": -10.562838554382324,
+        "abs_difference_nats": 0.030442237854003906
+      },
+      {
+        "condition": "self",
+        "case": "full_input_640",
+        "target_position": 0,
+        "full_prefill_logprob": -13.761390686035156,
+        "fresh_prefix_logprob": -13.587321281433105,
+        "abs_difference_nats": 0.17406940460205078
+      },
+      {
+        "condition": "self",
+        "case": "full_input_640",
+        "target_position": 285,
+        "full_prefill_logprob": -3.1682848930358887,
+        "fresh_prefix_logprob": -3.168286085128784,
+        "abs_difference_nats": 1.1920928955078125e-06
+      },
+      {
+        "condition": "self",
+        "case": "full_input_640",
+        "target_position": 570,
+        "full_prefill_logprob": -6.002572059631348,
+        "fresh_prefix_logprob": -6.0025715827941895,
+        "abs_difference_nats": 4.76837158203125e-07
+      }
+    ],
+    "paired_self_minus_empty": [
+      {
+        "case": "short",
+        "target_position": 0,
+        "self_minus_empty_nll_prefill": 0.6328907012939453,
+        "self_minus_empty_nll_fresh": 0.6641883850097656,
+        "paired_difference_shift": -0.03129768371582031
+      },
+      {
+        "case": "short",
+        "target_position": 1,
+        "self_minus_empty_nll_prefill": 0.1850748062133789,
+        "self_minus_empty_nll_fresh": 0.17804908752441406,
+        "paired_difference_shift": 0.007025718688964844
+      },
+      {
+        "case": "short",
+        "target_position": 2,
+        "self_minus_empty_nll_prefill": 0.03245067596435547,
+        "self_minus_empty_nll_fresh": 0.03084850311279297,
+        "paired_difference_shift": 0.0016021728515625
+      },
+      {
+        "case": "short",
+        "target_position": 3,
+        "self_minus_empty_nll_prefill": -0.5389137268066406,
+        "self_minus_empty_nll_fresh": -0.4774513244628906,
+        "paired_difference_shift": -0.06146240234375
+      },
+      {
+        "case": "full_input_640",
+        "target_position": 0,
+        "self_minus_empty_nll_prefill": 0.6972112655639648,
+        "self_minus_empty_nll_fresh": 0.6641883850097656,
+        "paired_difference_shift": 0.03302288055419922
+      },
+      {
+        "case": "full_input_640",
+        "target_position": 285,
+        "self_minus_empty_nll_prefill": 0.8176848888397217,
+        "self_minus_empty_nll_fresh": 0.4729492664337158,
+        "paired_difference_shift": 0.34473562240600586
+      },
+      {
+        "case": "full_input_640",
+        "target_position": 570,
+        "self_minus_empty_nll_prefill": 0.9955992698669434,
+        "self_minus_empty_nll_fresh": 0.7471108436584473,
+        "paired_difference_shift": 0.2484884262084961
+      }
+    ]
+  },
+  "independent_existing_diagnostic_review": {
+    "path": "nll_cpu_v2/seven_gate_cpu_review_v1/independent_gate_review.json",
+    "sha256": "f70ec371e8ec271ab0298e07b44f0b88ab8501099ea948f3006004ab34cb9b74"
+  }
+}

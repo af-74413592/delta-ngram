@@ -6,4 +6,7 @@
 *.sh text eol=lf
 docs/reports/m1_20261020/backup_receipts/** -text
 docs/reports/m1_20261020/context_data/** -text
+docs/reports/closeout_20261022/** -text
+third_party/vllm/** -text
+docs/experiments/qwen38_native_20261020/locomo_nll_protocol_amendment_20261022.json -text
 

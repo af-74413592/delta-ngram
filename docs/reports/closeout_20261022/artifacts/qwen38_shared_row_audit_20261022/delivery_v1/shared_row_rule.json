@@ -1,0 +1,68 @@
+{
+  "rule": {
+    "protocol": "qwen38_support_structural_row_mask_v1",
+    "selection_uses_only": "locked support texts, tokenization, native hash; no state values, drift, NLL, accuracy, or query row selection",
+    "main_token_rule": "Actual token byte offset overlaps UTF-8 bytes of any structural character span (positive overlap). Field-following spaces and newlines are structural. A token crossing structural/content character spans is included and separately attributed. No re-tokenization is used for span alignment.",
+    "main_row_rule": "Union of all 16 physical rows read at selected endpoint-token positions over all 35000 supports. No query, boundary, host, or writer dependence.",
+    "excluded_character_spans": [
+      "answer",
+      "features",
+      "language",
+      "lemma"
+    ],
+    "language_value_rule": "Language concrete value is not a structural span; its overlapping-token rows are a separate diagnostic set.",
+    "strict_token_rule": "All characters of endpoint token lie in structural spans. Saved separately, not the main mask.",
+    "pure_ngram_rule": "Every token in the native reset-aware 2/3-gram lies fully within structural spans; EOS padding counts as template.",
+    "mixed_context_rule": "Selected structural endpoint but at least one n-gram token is not fully structural. Includes character-boundary tokens and content-history crossings.",
+    "collision_note": "A physical row may belong to multiple categories or also be read by content; masks do not isolate a causal pure-format fraction.",
+    "regex": "\\A(?P<chat_prefix><\\|im_start\\|>user\\n)(?P<fixed_instruction>Produce\\ the\\ requested\\ inflected\\ word\\ form\\.\\ Return\\ only\\ the\\ word\\ form,\\ with\\ its\\ original\\ spelling\\ and\\ case\\.)(?P<input_language_labels>\\n\\nInput:\\nLanguage: )(?P<language>[^\\n]+)(?P<lem_label>\\nLemma: )(?P<lemma>[^\\n]*)(?P<features_label>\\nFeatures: )(?P<features>[^\\n]*)(?P<answer_label>\\nAnswer:)(?P<chat_answer_prefix><\\|im_end\\|>\\n<\\|im_start\\|>assistant\\n<think>\\n\\n</think>\\n\\n)(?P<answer>.*?)(?P<chat_suffix><\\|im_end\\|>\\n)\\Z",
+    "character_span_labels": [
+      "chat_prefix",
+      "fixed_instruction",
+      "input_language_labels",
+      "lem_label",
+      "features_label",
+      "answer_label",
+      "chat_answer_prefix",
+      "chat_suffix"
+    ],
+    "input_manifest_sha256": "a8fd609254d5caa58c1ee65e16f421a4e691145021d1f1385307830d61eb3f21",
+    "canonical_row_list_sha256_rule": "SHA256 of UTF-8 compact JSON sorted integer list, no newline"
+  },
+  "rule_sha256": "0f7722db58212e3a81f9b756bbafba823ab3e0d1fa820e16b65fdcbb3d238dbb",
+  "row_sets": {
+    "shared_main": {
+      "count": 151623,
+      "canonical_sha256": "692c5e755fdc7cccc3268ca9a540a3d3ea4b1ce5e7bd560df91052dd8f69a815"
+    },
+    "strict_structural_endpoint": {
+      "count": 141322,
+      "canonical_sha256": "3e1d19646e65d05a6671b8065ab56b40db6a9b2631b4228fa4b46d3181cc260a"
+    },
+    "pure_structural_ngram": {
+      "count": 720,
+      "canonical_sha256": "9de262a6edfaceca86b8fa3a9d921e3bf0141a7d7b57a4245a3f6dc175c2bc58"
+    },
+    "mixed_ngram": {
+      "count": 150903,
+      "canonical_sha256": "221d2fa0b38832eccdd3c7b1d3379fca2aa54e4eb5d0629d0bd57672d81cc370"
+    },
+    "cross_character_endpoint": {
+      "count": 10304,
+      "canonical_sha256": "65f8572dcdf4b7ba1232aebe68f61e929c15962aff01ea1f814d0b7e2fa68733"
+    },
+    "language_value": {
+      "count": 656,
+      "canonical_sha256": "8ab4a0d84e2db9b2036410e6d9720599f2fb0ba325781a2b7c6d09c8f6c2c37e"
+    },
+    "content_endpoint": {
+      "count": 515399,
+      "canonical_sha256": "04bc48289dfeab7edb99a555b6d42003fccb33d865fdff0bae2b5d5d57e3d70d"
+    }
+  },
+  "overlaps": {
+    "main_with_content_endpoint": 275,
+    "main_with_language_value": 112,
+    "pure_with_mixed": 0
+  }
+}

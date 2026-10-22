@@ -1,0 +1,215 @@
+{
+  "protocol": "qwen38_locomo_four_condition_assembly_v2",
+  "status": "validated",
+  "experimental_method": {
+    "memory_conditions": "Original frozen DELTA writer checkpoint used for the seven-task evaluation; A800 live_v3 FP32 split PLE; independent empty state per conversation; 512 new tokens with at most 128 old prefix tokens; crop before writer features; one D1 per evidence frame; alpha=1; final seven-field state borrowed read-only.",
+    "full_context": "A800 BF16 full original history, no truncation, native vLLM prefetch offload; Delta disabled.",
+    "parent_protocol_role": "Unchanged prepared-data and scoring contract. Memory execution follows the separately sealed delta amendment.",
+    "memory_writer_method": "delta",
+    "device_for_all_four_conditions": "A800",
+    "fixed_instruction": "Answer the question about the conversation. Give a concise answer without explanation. If the conversation does not provide the answer, reply exactly \"No information available\".",
+    "zero_shot_transfer": "Frozen offline-trained delta writer checkpoint also used for the seven-task forward-write evaluation; LoCoMo starts each conversation from empty memory, without using the seven-task terminal Delta or any LoCoMo training/prompt tuning/score-based adaptation.",
+    "writer_training_regime": "offline",
+    "writer_updated_during_seven_task_forward_write_evaluation": false,
+    "seven_task_terminal_memory_loaded": false,
+    "limitations": [
+      "The fixed instruction explicitly requests No information available when the history does not answer the question; adversarial refusal accuracy must not substitute for retrieval F1.",
+      "Memory conditions use the original FP32 split PLE read path; full_context uses the BF16 base path with exact full history. The comparison includes this execution-path difference.",
+      "Images are represented only by the original supplied text captions."
+    ],
+    "binding_sha256": "37826dd71c6fd3798fa5aa4ddf68031571461d6fcb376023ac2e0e3155b575d7",
+    "amendment_sha256": "fab0e8f5c24a45bb7d29da5177fef0da180cbc3d65f944b0fdd3e379f63e452f",
+    "writer_archive_sha256": "51d5977845e9930f48732c73ae2503511d8976b1201f139a2be46bfab9f57308",
+    "writer_tensor_sha256": "95e9766c2d90805cede77d03ade5af97b850e9cb3bcc3c55ea103d5cf0e0cb9c",
+    "full_context_contract_sha256": "16298a251b388559678f108deed05eee1cec06698618e9ac742e4fcd4dd47768"
+  },
+  "population": {
+    "unique_pairs": 7944,
+    "questions": 1986,
+    "conversations": 10,
+    "per_condition": {
+      "full_context": 1986,
+      "self": 1986,
+      "empty": 1986,
+      "donor": 1986
+    }
+  },
+  "reporting_policy": {
+    "primary": {
+      "metric": "official category-aware token F1",
+      "categories": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "questions": 1540
+    },
+    "adversarial_separate": {
+      "metric": "official refusal-substring accuracy",
+      "category": 5,
+      "questions": 446
+    },
+    "combined_main_and_adversarial_score": false,
+    "generation_diversity_must_accompany_scores": true,
+    "fixed_prompt_and_method_unchanged_after_pilot": true
+  },
+  "output_diagnostics": {
+    "self": {
+      "questions": 1986,
+      "distinct_generated_token_sequences": 1,
+      "most_common_sequence_count": 1986,
+      "most_common_generated_token_ids": [
+        2665,
+        1928,
+        2420,
+        248046
+      ],
+      "most_common_decoded_text": "No information available",
+      "fixed_pilot_questions": 239,
+      "fixed_pilot_distinct_generated_token_sequences": 1,
+      "interpretation": "Generation diversity only; does not establish answer correctness or memory retrieval."
+    },
+    "empty": {
+      "questions": 1986,
+      "distinct_generated_token_sequences": 1,
+      "most_common_sequence_count": 1986,
+      "most_common_generated_token_ids": [
+        2665,
+        1928,
+        2420,
+        248046
+      ],
+      "most_common_decoded_text": "No information available",
+      "fixed_pilot_questions": 239,
+      "fixed_pilot_distinct_generated_token_sequences": 1,
+      "interpretation": "Generation diversity only; does not establish answer correctness or memory retrieval."
+    },
+    "donor": {
+      "questions": 1986,
+      "distinct_generated_token_sequences": 1,
+      "most_common_sequence_count": 1986,
+      "most_common_generated_token_ids": [
+        2665,
+        1928,
+        2420,
+        248046
+      ],
+      "most_common_decoded_text": "No information available",
+      "fixed_pilot_questions": 239,
+      "fixed_pilot_distinct_generated_token_sequences": 1,
+      "interpretation": "Generation diversity only; does not establish answer correctness or memory retrieval."
+    },
+    "full_context": {
+      "questions": 1986,
+      "distinct_generated_token_sequences": 1142,
+      "most_common_sequence_count": 589,
+      "most_common_generated_token_ids": [
+        2665,
+        1928,
+        2420,
+        248046
+      ],
+      "most_common_decoded_text": "No information available",
+      "fixed_pilot_questions": 239,
+      "fixed_pilot_distinct_generated_token_sequences": 145,
+      "interpretation": "Generation diversity only; does not establish answer correctness or memory retrieval."
+    }
+  },
+  "prepared_manifest_sha256": "3a5b27f86738fe6cfb1135d8bd1ef862e4aff82d07cc0f4c4dbadf1cd9250bd4",
+  "original_scorer_sha256": "5f4cb98ab27d5bec6d028f929a85f49aaba7e6313f876474e8158c4d175e1d26",
+  "source_predictions": {
+    "full_context": {
+      "path": "/mnt/disk2/wuhao/qwen38_locomo_full_context_20261022_v3/run/predictions.jsonl",
+      "sha256": "f34b3b401f8cf24c7fa4d007f61667a43c12955e6199291df84245cf9f82e499"
+    },
+    "delta": {
+      "path": "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/run_v1/delta_predictions.jsonl",
+      "sha256": "26acb4b44f905ddacb043a045a8b0cf10a44ba42176b42f0cc3a919ad8f53bb2"
+    }
+  },
+  "completion_receipts": {
+    "/mnt/disk2/wuhao/qwen38_locomo_full_context_20261022_v3/run/COMPLETE.json": "9e3377567a4fadb50333a62fba8b1f0579ab337db43c699a8fac6a88071f8587",
+    "/mnt/disk2/wuhao/qwen38_locomo_full_context_20261022_v3/formal_execution.json": "8727d2475d38d0b1f370f26f17152c867b6557f9e42af2816760eff60ac5231d",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/run_v1/COMPLETE.json": "3eb09cd5e542869c82f34781b7f526105557ac7092b8682080d151b45e6e8555",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/rest_launch_v1/execution.json": "d26d237a7b4c2e3122ce0b9f25bddf23570e1e1b9033c47380ec4478ba5a6d27"
+  },
+  "formal_launch_identity_sha256": {
+    "/mnt/disk2/wuhao/qwen38_locomo_full_context_20261022_v3/formal_launch.json": "afcf577244fbc0ba322e30c9e0e5262b27701b2108e13b2a75cf8b4705c56bdd",
+    "/mnt/disk2/wuhao/qwen38_locomo_full_context_20261022_v3/formal_launch_config.json": "8509aa0799ac71e1027833d4a05833c8c5f24f8cfc1dde7d587d7d10f6fb9a2d",
+    "/mnt/disk2/wuhao/qwen38_locomo_full_context_20261022_v3/formal_child.json": "fb6737c971e3eae40c7331ff99313bd68e0ca6456c6986e9133d8b98b64b5ae7",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/rest_launch_v1/launch.json": "7bcd70a2f514a519d816b0965e625e176beb34cbf59207e57b1d99ecc6e5a528",
+    "/mnt/disk2/wuhao/qwen38_locomo_delta_20261022_v2/rest_launch_v1/child.json": "57ac09f409984a23e1c8e6500f03387ae627041d13c70fa2804e40d03aefa5a3"
+  },
+  "pilot_reuse": {
+    "full_context_rows": 239,
+    "delta_rows": 717,
+    "no_regeneration": true,
+    "full_context_archive_manifest_sha256": "66ab4181e69e66d27f16d4c6042e86b3b93baa285904f606e7ecfc804aa0da12",
+    "delta_archive_manifest_sha256": "77f4bbe8589fccfebd68269f8bfeff997ababacaa32b65d4cbce5658481b44e0",
+    "journal_prefix_preserved": true
+  },
+  "all_prompts_bound": true,
+  "all_continuations_match_pinned_tokenizer": true,
+  "all_ten_snapshot_payloads_and_conversation_provenance_verified": true,
+  "all_thirty_seven_field_readonly_receipts_verified": true,
+  "readonly_receipt_sha256": {
+    "READONLY_conv-48_self.json": "be79f8aee61542ac325bf3c7b0776eda93edad36ecccc795a35f8362d5c68740",
+    "READONLY_conv-48_empty.json": "3a962b8afc230cb8f03fe1dffba395cfc80dfec0d17165a3e3f7bcf26e67d0cf",
+    "READONLY_conv-48_donor.json": "d3e9b57fe41639f88fe723f43a3200bb2f4d101ef92b758c0d266f5e91615ef1",
+    "READONLY_conv-26_self.json": "3c87fc62e5d1ab64d79c8d1c3e8c4b8d5b01c160cdfa45a2159e2b170b80d00e",
+    "READONLY_conv-26_empty.json": "e83b11dc81ea31f9a6ba9f8ae433f05a723dea9c767a2eb78758da44673c2b7f",
+    "READONLY_conv-26_donor.json": "1972343bd122f5bea74f8a0d8eea1f519ce2b81bea8c21c0f442c1dfc822072a",
+    "READONLY_conv-30_self.json": "2777d118a657bbc387c99833c65e9a201a283119b89753a1d761b3c865ae3c4b",
+    "READONLY_conv-30_empty.json": "de3fc0863b96a0fcfc947abb93d7a0988db64bedc7bcd9f79d825e7d1a23fbfa",
+    "READONLY_conv-30_donor.json": "2529c3d3608924882a9448bb7038e533b96534310522f04cdc794c7911ae3690",
+    "READONLY_conv-41_self.json": "a294068a7b5cc81fcd47cf4153391ca8a7783722c6b94ccd6c26e748f72efc95",
+    "READONLY_conv-41_empty.json": "0d415652d612512277b2fef4206675725fd91b1547198f1e6a19e87c87fffaef",
+    "READONLY_conv-41_donor.json": "0e61556e635e31d7881d293698bb9360c7daf558e175a25f4b18e43c794c7563",
+    "READONLY_conv-42_self.json": "3c3369afd00e3b9824631005dd459176d404ce74ee134b8c163f826025b8b574",
+    "READONLY_conv-42_empty.json": "428632beca65264552b032061a1dae3b5e1c92d106ff74c40cb7faf9fb76db1c",
+    "READONLY_conv-42_donor.json": "7c633ac272200aa44aade79faaa38a994c4cb7ad219a7945dd024dba71f45724",
+    "READONLY_conv-43_self.json": "1d819a52eadd29b6b6f746c8a89a8157073cca16eec7ed2ce0450b8b63451c43",
+    "READONLY_conv-43_empty.json": "c393af7702124882d10780bbd1fc061e181c668f96d138db223b4de27cdac894",
+    "READONLY_conv-43_donor.json": "8c272f12f3d912c980b62b5475ceccf4e53e7781e47aabf6918a56239dccf2b2",
+    "READONLY_conv-44_self.json": "a5bedd6cfb9cfb1b64d935c05d646d025486c357582e048a01c6d061fafe3893",
+    "READONLY_conv-44_empty.json": "de66efb614c1526b95feb4daefc150db0d45cc2a1771bece8e5fc0167cc899eb",
+    "READONLY_conv-44_donor.json": "303344d957ab4ad8107e48f6f1438f892435b8e6bfb64da445f4b5a9331f199f",
+    "READONLY_conv-47_self.json": "14a98fa2672c6222e115dcc0ebce65b19a42b1e7bcc2b737ad0633bb8a056e4d",
+    "READONLY_conv-47_empty.json": "591ed29cf0b00551373f8d769d422c675fbb369df0c38d84cd05896dbf40e971",
+    "READONLY_conv-47_donor.json": "116bbf207624721db77849a93ee4efeeb51d16b858c1907199dbd0c4c8825f5e",
+    "READONLY_conv-49_self.json": "9ee48709fbf61fc37103daa60ecd4113202c2097dd10389128ba9ec0eb8ae6e4",
+    "READONLY_conv-49_empty.json": "2f67327819756fc8339169ee1c3dd4b3ddd9279306de6739ccee7d9bcc3f323a",
+    "READONLY_conv-49_donor.json": "58e8abd7dd5477d6d9572d4a5143307ca1fdfb42d866f8896d9b088cff9f05f7",
+    "READONLY_conv-50_self.json": "8b05e847d289b6bef957452a208bb236e118210476f008de44e0a679ba5be85b",
+    "READONLY_conv-50_empty.json": "8e6f24cd8c06569537fb2c138fa88b4f21ce730243f27baa15b08fe46a9aa5d1",
+    "READONLY_conv-50_donor.json": "a339eae4da46e892182f94a3be87b38949c8fd4c78d74a92fd7004fcb5f8b988"
+  },
+  "event_counts": {
+    "before_evidence_forward": 426,
+    "before_D1": 426,
+    "D1_complete": 426,
+    "before_question": 5958,
+    "question_complete": 5958,
+    "before_query_forward": 23832
+  },
+  "canonical_CPU_weight_SHA256_by_rank": {
+    "0": "e91b0af42fefec62179cb2b8b7e8860b306828cc36f6c7fce8da481b66cd0077",
+    "1": "9c708a3743e9981504fb19eed4bf841cca6a0a7a37ba984fa55679b0c0d55b1d",
+    "2": "f117283f4d820e33eb9816bf30f363ea5809fa18a500014df297c4142470b11d",
+    "3": "296ea4580ee3fadfc2686eb09bfba09874caa248a38bed8831b55529679f05b4",
+    "4": "bca2fdbe101722bbc2637fe5d5b230935e90f34fb494b1dc36a73d5f4d7fe2b0",
+    "5": "45cd89f8c7751c40653be7df423218f1909a3d8ea21503f16c90e8ae29a744a2",
+    "6": "31257de1a295149bcd11a9f1674fd8d9c67be4d8ca9746daf6cdd562bbcb5b17",
+    "7": "87a9f1d47842fff172e2c5827e326e0fe7f402df0b9bffc5fd31d00f6a8a329a"
+  },
+  "query_memory_updates": 0,
+  "optimizer_steps": 0,
+  "backward_calls": 0,
+  "cpu_only": true,
+  "cuda_initialized": false,
+  "annotations_parsed_by_validator": false,
+  "scores_computed": false,
+  "assembly_source_sha256": "2f95e1543570fcb6336f0aa90f854c88068195a8833f4ee53c13fb8400aa56c3",
+  "combined_predictions_sha256": "d19c66cc058a02bca193e0518b037177d175409a224df85fddcc9a87f9d3dcf5"
+}

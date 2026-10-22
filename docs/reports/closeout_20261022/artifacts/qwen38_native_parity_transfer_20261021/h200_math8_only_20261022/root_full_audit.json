@@ -1,0 +1,288 @@
+{
+  "status": "passed",
+  "reviewer": "root",
+  "model_forwards": 0,
+  "delivery_file_count": 313,
+  "all_file_sha256_verified": true,
+  "original_K_cells": 4200,
+  "math8_K_cells": 700,
+  "all_700_original_K_cross_links_match": true,
+  "paired_math_questions": 1792,
+  "raw_NLL_recomputed_pairs": [
+    {
+      "arm": "ordinary",
+      "stage": 1,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8406531875589089,
+      "masked_nll": 0.9006884298575619,
+      "masked_minus_original": 0.06003524229865298
+    },
+    {
+      "arm": "ordinary",
+      "stage": 2,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8408461542487703,
+      "masked_nll": 0.8985105609430591,
+      "masked_minus_original": 0.05766440669428885
+    },
+    {
+      "arm": "ordinary",
+      "stage": 3,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8579815178880354,
+      "masked_nll": 0.900747115009196,
+      "masked_minus_original": 0.04276559712116057
+    },
+    {
+      "arm": "ordinary",
+      "stage": 4,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8602001747697144,
+      "masked_nll": 0.9030109600884941,
+      "masked_minus_original": 0.04281078531877969
+    },
+    {
+      "arm": "ordinary",
+      "stage": 5,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8638356620599141,
+      "masked_nll": 0.9051531188918593,
+      "masked_minus_original": 0.04131745683194521
+    },
+    {
+      "arm": "ordinary",
+      "stage": 6,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8487742693144552,
+      "masked_nll": 0.9042531833903772,
+      "masked_minus_original": 0.05547891407592198
+    },
+    {
+      "arm": "ordinary",
+      "stage": 7,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8459235771275333,
+      "masked_nll": 0.9023631037198723,
+      "masked_minus_original": 0.05643952659233897
+    },
+    {
+      "arm": "delta",
+      "stage": 1,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.848905980497565,
+      "masked_nll": 0.9015970517780117,
+      "masked_minus_original": 0.0526910712804467
+    },
+    {
+      "arm": "delta",
+      "stage": 2,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8467608398835481,
+      "masked_nll": 0.9011132229282995,
+      "masked_minus_original": 0.05435238304475143
+    },
+    {
+      "arm": "delta",
+      "stage": 3,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8731393039418889,
+      "masked_nll": 0.8986307534981409,
+      "masked_minus_original": 0.025491449556252044
+    },
+    {
+      "arm": "delta",
+      "stage": 4,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8685349982539748,
+      "masked_nll": 0.9011260794169811,
+      "masked_minus_original": 0.03259108116300624
+    },
+    {
+      "arm": "delta",
+      "stage": 5,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8706220970539159,
+      "masked_nll": 0.9014978703112472,
+      "masked_minus_original": 0.030875773257331263
+    },
+    {
+      "arm": "delta",
+      "stage": 6,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8492606742738008,
+      "masked_nll": 0.9026809766557053,
+      "masked_minus_original": 0.05342030238190454
+    },
+    {
+      "arm": "delta",
+      "stage": 7,
+      "queries": 128,
+      "identity_fields_equal": [
+        "domain",
+        "task_id",
+        "prompt_sha256",
+        "reference_sha256",
+        "prompt_token_ids_sha256",
+        "target_token_ids_sha256",
+        "input_token_ids_sha256",
+        "token_count",
+        "prompt_token_count"
+      ],
+      "original_nll": 0.8552297880162336,
+      "masked_nll": 0.9014079709669796,
+      "masked_minus_original": 0.04617818295074594
+    }
+  ],
+  "all_raw_prompt_reference_and_token_id_hashes_match": true,
+  "positive_NLL_changes": 14,
+  "sources": {
+    "delivery_final.json": "6bac5dd24a0f3e528ede5118071a3c0a707aa657394b2765bd8d145ff4e1957c",
+    "original_full_final\\compact_summary.json": "90801db13c90fc6b98aeb447d0eb7d8c905a42ea325f1964bd3e67504339c656",
+    "delivery\\final_b066e4c37b1c\\closeout_20261022\\math8_only_v1\\cpu_results\\math8_K_compact.json": "e0fb33f2e0fbbcf5815db8e3dd28c5109e530d6fcba5f35599b5786451fb3318",
+    "summary_final.json": "01c103243a5b03d5d24f0dce664a08a580fbd150956df5dfbc49597c7c7e5e95"
+  },
+  "auditor_sha256": "3381cb12ef4969fd892afd08caa737b65bae033160cf3237a751d0e7b0e2ef70"
+}

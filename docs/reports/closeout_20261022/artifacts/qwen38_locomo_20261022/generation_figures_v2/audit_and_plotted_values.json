@@ -1,0 +1,145 @@
+{
+  "protocol": "qwen38_locomo_generation_figure_v2",
+  "report_path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_locomo_20261022\\four_condition_results_v2\\report.json",
+  "report_sha256": "d539835cb8f9cfd2a5ff60c3989e58b1721114ed2c4568428c3c08c22a1ce234",
+  "per_question_sha256": "10a92b2f9d366277e3b54ab3d41a3aecfdc91e0c53b70e8985df0e132f550f78",
+  "renderer_sha256": "e1b261e727a43f000166cfe4d96baef1f207b38a36cb34b6b1298ab542527fb9",
+  "audit": {
+    "status": "passed",
+    "questions": 1986,
+    "conditions": 4,
+    "conversations": 10,
+    "condition_and_paired_intervals_recomputed": 42,
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20261022,
+    "scope": "Independent aggregation, bootstrap, rounding and wrapper audit; official answer matching uses the frozen upstream scorer."
+  },
+  "plotted_values": {
+    "main_results_1540_questions": {
+      "question_count": 1540,
+      "conditions": {
+        "self": {
+          "score_percent": 0.43910256410256404,
+          "cluster_bootstrap_95ci_percent": [
+            0.21604852188608534,
+            0.6793071555404621
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "empty": {
+          "score_percent": 0.43910256410256404,
+          "cluster_bootstrap_95ci_percent": [
+            0.21604852188608534,
+            0.6793071555404621
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "donor": {
+          "score_percent": 0.43910256410256404,
+          "cluster_bootstrap_95ci_percent": [
+            0.21604852188608534,
+            0.6793071555404621
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "full_context": {
+          "score_percent": 56.79360314929123,
+          "cluster_bootstrap_95ci_percent": [
+            55.33130765730563,
+            58.34139117137479
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      },
+      "paired_differences": {
+        "self-empty": {
+          "score_percent": 0.0,
+          "cluster_bootstrap_95ci_percent": [
+            0.0,
+            0.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "self-donor": {
+          "score_percent": 0.0,
+          "cluster_bootstrap_95ci_percent": [
+            0.0,
+            0.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "self-full_context": {
+          "score_percent": -56.35450058518866,
+          "cluster_bootstrap_95ci_percent": [
+            -57.90636728805394,
+            -54.80717819318846
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      }
+    },
+    "adversarial_results_446_questions": {
+      "question_count": 446,
+      "conditions": {
+        "self": {
+          "score_percent": 100.0,
+          "cluster_bootstrap_95ci_percent": [
+            100.0,
+            100.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "empty": {
+          "score_percent": 100.0,
+          "cluster_bootstrap_95ci_percent": [
+            100.0,
+            100.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "donor": {
+          "score_percent": 100.0,
+          "cluster_bootstrap_95ci_percent": [
+            100.0,
+            100.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "full_context": {
+          "score_percent": 90.35874439461884,
+          "cluster_bootstrap_95ci_percent": [
+            86.83602771362587,
+            92.84211602626198
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      },
+      "paired_differences": {
+        "self-empty": {
+          "score_percent": 0.0,
+          "cluster_bootstrap_95ci_percent": [
+            0.0,
+            0.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "self-donor": {
+          "score_percent": 0.0,
+          "cluster_bootstrap_95ci_percent": [
+            0.0,
+            0.0
+          ],
+          "valid_bootstrap_replicates": 10000
+        },
+        "self-full_context": {
+          "score_percent": 9.641255605381167,
+          "cluster_bootstrap_95ci_percent": [
+            7.157883973738025,
+            13.163972286374134
+          ],
+          "valid_bootstrap_replicates": 10000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "protocol": "qwen38_final64_a800_cpu_feasibility_v1",
+  "status": "original_EP4_cannot_fit_A800_40GB",
+  "conclusion": "The locked TP1/PP1/EP4 native evaluation cannot run unchanged on four 40GB A800 GPUs. Expert weights alone exceed each card capacity.",
+  "read_only": true,
+  "tensor_data_bytes_read": 0,
+  "safetensors_headers_read": 131,
+  "cuda_initialized": false,
+  "model_forwards": 0,
+  "CE_targets_consumed": 0,
+  "new_training": false,
+  "locked_evaluation": {
+    "checkpoint_archive_sha256": "523b951487cee0ec726077db0104a8fc929f4629bdb4ca46604295a4b78fbfe3",
+    "checkpoint_path_on_A800": "/mnt/disk2/wuhao/qwen38_forward_writer_20261021/checkpoints/joint-policy-stage-3-final.pt",
+    "checkpoint_bytes": 98484363,
+    "writer_method": "ordinary_main_alpha1",
+    "families": 64,
+    "CE_passes": 41,
+    "successful_attempt_CE_targets": 3417309,
+    "durable_ledger": "Unchanged original FINAL64 append-only lifetime precharge ledger, no failed-query refunds.",
+    "original_topology": {
+      "cp": 1,
+      "dp": 4,
+      "ep": 4,
+      "etp": 1,
+      "pp": 1,
+      "tp": 1
+    },
+    "original_registration_sha256": "ae99a7481589a7939f330b75fade6610eb9b6fd56701950da49c6ce50a5f3972",
+    "prepared_complete_sha256": "46419a9ca08bc4423f94a2228820036d6267042070b95aa7238c8a524201e76c"
+  },
+  "weight_lower_bound": {
+    "method": "Read the 131 safetensors JSON headers only. Select the 96 expert matrices in model.language_model.layers.0..47; exclude MTP, vision, all PLE tables, and every dense parameter.",
+    "experts": 512,
+    "base_layers": 48,
+    "expert_tensor_count": 96,
+    "dtype": "BF16",
+    "all_expert_bytes": 241591910400,
+    "EP4_expert_bytes_per_card": 60397977600,
+    "EP4_expert_GiB_per_card": 56.25,
+    "A800_total_bytes_per_card": 42600300544,
+    "A800_total_GiB_per_card": 39.67462158203125,
+    "expert_only_excess_GiB_per_card": 16.57537841796875,
+    "additional_replicated_language_dense_BF16_bytes": 9895397120,
+    "additional_language_dense_GiB": 9.215806722640991,
+    "weights_only_estimate_GiB_per_EP4_card": 65.46580672264099,
+    "not_included": [
+      "Writer and memory state",
+      "Activations and attention/CE workspace",
+      "NCCL and CUDA allocations",
+      "Allocator headroom",
+      "Any loading-time duplicate weights"
+    ],
+    "PLE_remains_CPU_offloaded_in_original_EP4": true
+  },
+  "runtime_provenance": {
+    "A800_native_python": "/mnt/disk1/wuhao/venvs/demo/bin/python",
+    "A800_actual": {
+      "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+      "executable": "/mnt/disk1/wuhao/venvs/demo/bin/python",
+      "cuda_initialized": false,
+      "torch_runtime": "2.12.0+cu132",
+      "packages": {
+        "torch": {
+          "version": "2.12.0+cu132",
+          "direct_url": null
+        },
+        "megatron-core": {
+          "version": "0.18.2+571370c82",
+          "direct_url": "{\"dir_info\": {}, \"url\": \"file:///mnt/disk1/wuhao/Megatron-LM-0.18.2\"}"
+        },
+        "transformers": {
+          "version": "5.14.1",
+          "direct_url": null
+        },
+        "tokenizers": {
+          "version": "0.22.2",
+          "direct_url": null
+        },
+        "ms-swift": {
+          "version": "4.5.2",
+          "direct_url": null
+        },
+        "mcore-bridge": {
+          "version": "1.7.0.dev0",
+          "direct_url": "{\"url\": \"https://github.com/modelscope/mcore-bridge.git\", \"vcs_info\": {\"commit_id\": \"4f2a95c9548bcd588b6f7763074debcdbf6b2d69\", \"vcs\": \"git\"}}"
+        },
+        "transformer-engine": {
+          "version": "2.18.0+a2736167",
+          "direct_url": "{\"dir_info\": {}, \"url\": \"file:///mnt/disk1/wuhao/TransformerEngine\"}"
+        },
+        "flash-attn": {
+          "version": "2.8.4",
+          "direct_url": null
+        },
+        "flash-linear-attention": {
+          "version": "0.5.2",
+          "direct_url": null
+        }
+      }
+    },
+    "training08_required": {
+      "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+      "flash-linear-attention": "0.5.2",
+      "mcore-bridge": {
+        "commit": "3a5ab71264ca0c98db9eab7cc4de58aa57e065e3",
+        "version": "1.7.0.dev0"
+      },
+      "megatron-core": "0.18.0",
+      "ms-swift": {
+        "commit": "21ada46205e0abfc6ab33ef8b6dd260cc4eccf8d",
+        "version": "4.6.0.dev0"
+      },
+      "tokenizers": "0.23.2",
+      "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+      "transformer-engine": "2.14.1+366798ef",
+      "transformers": "5.16.0"
+    },
+    "same_runtime": false,
+    "existing_A800_vLLM_stack_is_not_training08_native_EP4": true,
+    "preserved_training08_A800_directory": "/mnt/disk2/wuhao/qwen38_h200_preservation_20261022_v1/training08_support_v1",
+    "preservation_manifest_sha256": "3b64ff14bdad6561f6f6f728335c51b0a91b600858a3bd0746eb81be5ccc9d94",
+    "runtime_identity_sha256": "de30b4fc252092795d14331e17f0a882597043968b31e83539d6bbff44c648e3"
+  },
+  "future_scope_only": {
+    "implementation_started": false,
+    "GPU_execution_authorized_by_this_report": false,
+    "possible_directions": [
+      "A separately registered eight-card native topology with a new identity and numerical validation.",
+      "A separately registered expert CPU-offload path with new memory/performance and numerical validation."
+    ],
+    "must_preserve": [
+      "Exact original checkpoint and writer method",
+      "64 families, five conditions and 41-pass population",
+      "Frozen native token IDs and query target masks",
+      "Durable pre-dispatch CE accounting and no refund of failed attempts",
+      "No FINAL-based checkpoint/gate/prompt tuning"
+    ],
+    "current_action": "Archive this feasibility result. Do not change topology or implement offload. Prioritize the authorized LoCoMo queue."
+  },
+  "sources": {
+    "header_and_stack_audit": {
+      "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_final64_20261022\\a800_feasibility_cpu_v1\\header_and_stack_audit.json",
+      "sha256": "269253526562761bebc45407d80278e1a5f7ec0539631dd2190f08128c04ca3c"
+    },
+    "prior_measured_GPU_capacity": {
+      "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_native_parity_transfer_20261021\\environment_comparison_v1.json",
+      "sha256": "112a9addc90adc0c20632821f320675ee88e00ef8d25e4481b69ad68c850eaaa"
+    },
+    "training08_reference": {
+      "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_final64_20261022\\h200_ep4_runtime_cpu.json",
+      "sha256": "70bbc94e7c4bde4ec5b1c4ed6f5ef0d36e6150fab95f8669d7ec3e81b0b41b82"
+    }
+  }
+}

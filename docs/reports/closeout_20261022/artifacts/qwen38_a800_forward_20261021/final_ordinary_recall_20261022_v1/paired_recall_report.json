@@ -1,0 +1,223 @@
+{
+  "protocol": "qwen38_final_seen_recall_paired_fixed_seven_tasks_v1",
+  "status": "completed",
+  "n": 448,
+  "seen_manifest_sha256": "b32e9d38e428b7edacad4d577410e79ea76359199762c03c07cc156a2ef30e7c",
+  "both_correct": 99,
+  "ordinary_only_correct": 4,
+  "delta_only_correct": 13,
+  "both_wrong": 332,
+  "ordinary_correct": 103,
+  "delta_correct": 112,
+  "delta_minus_ordinary_correct": 9,
+  "delta_minus_ordinary_accuracy": 0.020089285714285716,
+  "delta_minus_ordinary_pp": 2.0089285714285716,
+  "exact_mcnemar_two_sided_p": 0.049041748046875,
+  "same_correctness": 431,
+  "same_normalized_answer": 380,
+  "same_generated_token_ids": 380,
+  "matched_generation_parameters": [
+    {
+      "task": "sme",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    },
+    {
+      "task": "nav",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    },
+    {
+      "task": "hye",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    },
+    {
+      "task": "afb",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    },
+    {
+      "task": "sqi",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    },
+    {
+      "task": "mkd",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    },
+    {
+      "task": "amh",
+      "same_model_identity": true,
+      "same_generation_protocol": true,
+      "source_labels": {
+        "ordinary": "A800_formal_final_ordinary_fixed_state",
+        "delta": "H200_native_fixed_boundary_restored_on_A800"
+      }
+    }
+  ],
+  "legacy_label_note": "The completed delta summary retained an inherited H200 checkpoint_state label. Its independently verified source provenance is the A800 formal final delta state; original files are preserved. Ordinary labels the A800 origin explicitly.",
+  "stratified_paired_bootstrap_95ci_correct": [
+    1.0,
+    17.0
+  ],
+  "stratified_paired_bootstrap_95ci_pp": [
+    0.2232142857142857,
+    3.7946428571428568
+  ],
+  "bootstrap_seed": 20261022,
+  "bootstrap_replicates": 200000,
+  "numpy_version": "1.26.4",
+  "tasks": [
+    {
+      "task": "sme",
+      "n": 64,
+      "both_correct": 7,
+      "ordinary_only_correct": 0,
+      "delta_only_correct": 4,
+      "both_wrong": 53,
+      "ordinary_correct": 7,
+      "delta_correct": 11,
+      "delta_minus_ordinary_correct": 4,
+      "exact_mcnemar_two_sided_p": 0.125,
+      "paired_bootstrap_95ci_correct": [
+        1.0,
+        8.0
+      ]
+    },
+    {
+      "task": "nav",
+      "n": 64,
+      "both_correct": 2,
+      "ordinary_only_correct": 0,
+      "delta_only_correct": 0,
+      "both_wrong": 62,
+      "ordinary_correct": 2,
+      "delta_correct": 2,
+      "delta_minus_ordinary_correct": 0,
+      "exact_mcnemar_two_sided_p": 1.0,
+      "paired_bootstrap_95ci_correct": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "task": "hye",
+      "n": 64,
+      "both_correct": 25,
+      "ordinary_only_correct": 0,
+      "delta_only_correct": 3,
+      "both_wrong": 36,
+      "ordinary_correct": 25,
+      "delta_correct": 28,
+      "delta_minus_ordinary_correct": 3,
+      "exact_mcnemar_two_sided_p": 0.25,
+      "paired_bootstrap_95ci_correct": [
+        0.0,
+        7.0
+      ]
+    },
+    {
+      "task": "afb",
+      "n": 64,
+      "both_correct": 1,
+      "ordinary_only_correct": 0,
+      "delta_only_correct": 2,
+      "both_wrong": 61,
+      "ordinary_correct": 1,
+      "delta_correct": 3,
+      "delta_minus_ordinary_correct": 2,
+      "exact_mcnemar_two_sided_p": 0.5,
+      "paired_bootstrap_95ci_correct": [
+        0.0,
+        5.0
+      ]
+    },
+    {
+      "task": "sqi",
+      "n": 64,
+      "both_correct": 21,
+      "ordinary_only_correct": 1,
+      "delta_only_correct": 1,
+      "both_wrong": 41,
+      "ordinary_correct": 22,
+      "delta_correct": 22,
+      "delta_minus_ordinary_correct": 0,
+      "exact_mcnemar_two_sided_p": 1.0,
+      "paired_bootstrap_95ci_correct": [
+        -3.0,
+        3.0
+      ]
+    },
+    {
+      "task": "mkd",
+      "n": 64,
+      "both_correct": 27,
+      "ordinary_only_correct": 1,
+      "delta_only_correct": 0,
+      "both_wrong": 36,
+      "ordinary_correct": 28,
+      "delta_correct": 27,
+      "delta_minus_ordinary_correct": -1,
+      "exact_mcnemar_two_sided_p": 1.0,
+      "paired_bootstrap_95ci_correct": [
+        -3.0,
+        0.0
+      ]
+    },
+    {
+      "task": "amh",
+      "n": 64,
+      "both_correct": 16,
+      "ordinary_only_correct": 2,
+      "delta_only_correct": 3,
+      "both_wrong": 43,
+      "ordinary_correct": 18,
+      "delta_correct": 19,
+      "delta_minus_ordinary_correct": 1,
+      "exact_mcnemar_two_sided_p": 1.0,
+      "paired_bootstrap_95ci_correct": [
+        -3.0,
+        5.0
+      ]
+    }
+  ],
+  "method": "Independently resample 64 paired questions within each of the seven fixed tasks, preserving both arm outcomes. Multinomial {-1,0,+1} counts exactly represent this paired mean bootstrap. McNemar is exact two-sided conditional binomial.",
+  "uncertainty_scope": "Descriptive question uncertainty for these fixed seven tasks and this single realized pair of states; no training-seed, new-task or writer variability. Non-significance does not establish equivalence.",
+  "limitation": "Both results are final seen-support recall. No same-question empty-state control exists, so correct outputs cannot uniquely be attributed to memory.",
+  "source_reports": {
+    "ordinary": {
+      "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_a800_forward_20261021\\final_ordinary_recall_20261022_v1\\recall_report.json",
+      "sha256": "55f9f536db6be137665359e23d44dfc796001272b8a2b9fcc2525f5e7781a52f"
+    },
+    "delta": {
+      "path": "C:\\Users\\shijingzi\\Documents\\ChatGPT\\cl\\artifacts\\qwen38_a800_forward_20261021\\final_delta_recall_20261022_v2\\recall_report.json",
+      "sha256": "60c73b0f454840a340bcf0a956333113a2449ed1fffa6d70b750e3161a66cf52"
+    }
+  }
+}

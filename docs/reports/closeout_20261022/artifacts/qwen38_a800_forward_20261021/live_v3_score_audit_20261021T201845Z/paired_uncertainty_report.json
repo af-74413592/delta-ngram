@@ -1,0 +1,197 @@
+{
+  "protocol": "paired_question_bootstrap_fixed_seven_tasks_v1",
+  "seed": 20261022,
+  "replicates": 200000,
+  "numpy_version": "1.26.4",
+  "population": "Seven observed tasks fixed; independently resample 64 paired question outcomes within each task, retain both arm outcomes of each pair; aggregate seven equal-size tasks. Multinomial on {-1,0,+1} is equivalent for this mean statistic.",
+  "scope": "Descriptive uncertainty over questions within these seven fixed tasks and this single realized run; does not quantify training-seed, writer, or new-task uncertainty and does not establish equivalence.",
+  "both_correct": 120,
+  "ordinary_only_correct": 5,
+  "delta_only_correct": 9,
+  "both_wrong": 314,
+  "ordinary_correct": 125,
+  "delta_correct": 129,
+  "exact_mcnemar_two_sided_p": 0.4239501953125,
+  "delta_minus_ordinary_accuracy": 0.008928571428571428,
+  "stratified_paired_bootstrap_95ci_accuracy": [
+    -0.006696428571428571,
+    0.024553571428571428
+  ],
+  "stratified_paired_bootstrap_95ci_pp": [
+    -0.6696428571428571,
+    2.455357142857143
+  ],
+  "stratified_paired_bootstrap_95ci_correct": [
+    -3.0,
+    11.0
+  ],
+  "tasks": [
+    {
+      "task": "sme",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 6,
+        "delta": 7
+      },
+      "delta_minus_ordinary_correct": 1,
+      "paired_difference_bootstrap_95ci_correct": [
+        0.0,
+        3.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.04367825258519838,
+          0.18982879599645597
+        ],
+        "delta": [
+          0.05400113344416797,
+          0.20898641326896122
+        ]
+      }
+    },
+    {
+      "task": "nav",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 5,
+        "delta": 6
+      },
+      "delta_minus_ordinary_correct": 1,
+      "paired_difference_bootstrap_95ci_correct": [
+        0.0,
+        3.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.03383117690855046,
+          0.17019537354162906
+        ],
+        "delta": [
+          0.04367825258519838,
+          0.18982879599645597
+        ]
+      }
+    },
+    {
+      "task": "hye",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 29,
+        "delta": 32
+      },
+      "delta_minus_ordinary_correct": 3,
+      "paired_difference_bootstrap_95ci_correct": [
+        -1.0,
+        8.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.3372944778061167,
+          0.5742640277994588
+        ],
+        "delta": [
+          0.3810209474394701,
+          0.6189790525605299
+        ]
+      }
+    },
+    {
+      "task": "afb",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 2,
+        "delta": 2
+      },
+      "delta_minus_ordinary_correct": 0,
+      "paired_difference_bootstrap_95ci_correct": [
+        0.0,
+        0.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.008612138346171874,
+          0.10697291770958313
+        ],
+        "delta": [
+          0.008612138346171874,
+          0.10697291770958313
+        ]
+      }
+    },
+    {
+      "task": "sqi",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 25,
+        "delta": 26
+      },
+      "delta_minus_ordinary_correct": 1,
+      "paired_difference_bootstrap_95ci_correct": [
+        0.0,
+        3.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.2805556918824008,
+          0.5130808211972754
+        ],
+        "delta": [
+          0.2945690924971961,
+          0.5285479187139549
+        ]
+      }
+    },
+    {
+      "task": "mkd",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 28,
+        "delta": 26
+      },
+      "delta_minus_ordinary_correct": -2,
+      "paired_difference_bootstrap_95ci_correct": [
+        -6.0,
+        2.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.3229400970440308,
+          0.5591379104300699
+        ],
+        "delta": [
+          0.2945690924971961,
+          0.5285479187139549
+        ]
+      }
+    },
+    {
+      "task": "amh",
+      "n": 64,
+      "final_correct": {
+        "ordinary": 30,
+        "delta": 30
+      },
+      "delta_minus_ordinary_correct": 0,
+      "paired_difference_bootstrap_95ci_correct": [
+        -3.0,
+        3.0
+      ],
+      "wilson_95ci_accuracy": {
+        "ordinary": [
+          0.35175987425176036,
+          0.5892791294852899
+        ],
+        "delta": [
+          0.35175987425176036,
+          0.5892791294852899
+        ]
+      }
+    }
+  ],
+  "corrections": [
+    "Delta final is 129/448, not 128/448.",
+    "Non-significance is not evidence of equivalence.",
+    "A universal plus/minus four-correct-answers per task is not a calibrated 95% error bar; task-level uncertainty varies with accuracy and paired discordance."
+  ],
+  "source_report_sha256": "4fc9ce8ce2305c4ffbcff4d38ae3d01d28129014c782ef9aa4da1d924049fe06"
+}
