@@ -2,6 +2,10 @@
 
 Forward-only persistent memory for frozen language models.
 
+**Paper:** [Delta N-gram: Forward-Only Continual Writing into a Language Model's Native N-gram Memory](https://arxiv.org/abs/2610.31125)
+
+Hao Wu, 2026. [PDF](https://arxiv.org/pdf/2610.31125)
+
 ## Method
 
 The model reads a frozen pretrained N-gram table plus a sparse patch: **T = T⁰ + Δ**.
@@ -44,3 +48,17 @@ The smoke run uses a tiny CPU model and needs no pretrained weights.
 
 Set model, data and output paths in the chosen configuration; evaluation also
 requires `run.checkpoint`. The native Qwen3.8 path uses a separate GPU runtime.
+
+## Citation
+
+```bibtex
+@misc{wu2026deltangram,
+  title={Delta N-gram: Forward-Only Continual Writing into a Language Model's Native N-gram Memory},
+  author={Wu, Hao},
+  year={2026},
+  eprint={2610.31125},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2610.31125}
+}
+```
