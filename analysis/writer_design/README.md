@@ -46,8 +46,24 @@ the different native input, row, and head dimensions.
 Both released layouts use orders `(2, 3)`. Adding a unigram branch requires
 an explicit address layout and reader interface. Appending another head to
 the concatenation would change the input size of the frozen native
-projections. The width of a new unigram branch is therefore not automatically
-160 or 1024.
+projections.
+
+For the proposed unigram branch, direct compatibility with token embeddings
+is a design constraint: its row width must equal the token embedding width.
+The pinned Qwen3.8 checkpoint
+(`de4b8e4d43b917e7706784d8bb445c9af86a3540`) contains
+`model.language_model.embed_tokens.weight` and `lm_head.weight`, both with
+shape `[248320, 2560]`. The tables have separate weights. Thus this branch's
+row width is **2560**, independently verified from the embedding/head tensor
+headers rather than inferred from the native PLE concatenation. The current
+8B model instead uses a **4096**-dimensional token embedding interface.
+
+Equal width is necessary for direct vector compatibility; it does not by
+itself align input and output embedding semantics or determine how the writer
+learns its target. A smaller row plus a learned projection would be a separate
+architecture, outside this direct-compatibility design. The unigram reader
+must still be specified separately from the existing 160-dimensional native
+bigram/trigram heads.
 
 ## 2. What the hidden-width bound does and does not prove
 
