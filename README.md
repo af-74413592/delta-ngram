@@ -43,6 +43,7 @@ The smoke run uses a tiny CPU model and needs no pretrained weights.
 | 0.6B raw-text training | `delta-ngram train-raw --config configs/m1_five_source_seed17.yaml` |
 | Prototype evaluation | `delta-ngram eval --config configs/eval_pilot.yaml` |
 | Qwen3.8 training and inference | [Native runtime guide](scripts/native_qwen38/README.md) |
+| Writer sizing and measured training cost | [Capacity and cost analysis](analysis/writer_design/README.md) |
 | vLLM reader setup | [vLLM modifications](third_party/vllm/README.md) |
 | LoCoMo result analysis | [Analysis commands](analysis/locomo/README.md) |
 
